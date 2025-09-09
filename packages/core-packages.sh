@@ -13,9 +13,9 @@ CORE_PACKAGES=(
     "btop"
     "dust"
     "tree"
-    "eza"
     "fastfetch"
     "ffmpeg"
+    "fd"
     "fzf"
     "ripgrep"
     "gum"
@@ -59,6 +59,7 @@ CORE_PACKAGES=(
     # --- GENERAL ---
     "obsidian"
     "libreoffice-still"
+    "thunar"
     
 )
 
