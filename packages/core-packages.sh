@@ -26,6 +26,10 @@ CORE_PACKAGES=(
     "jujutsu"
     "tealdeer"
     "lazygit"
+    "power-profiles-daemon"
+    "mako"
+    "uwsm"
+    "luarocks"
 
     # --- XDG ---
     "xdg-desktop-portal-gtk"
@@ -60,6 +64,7 @@ CORE_PACKAGES=(
     "obsidian"
     "libreoffice-still"
     "thunar"
+    "inkscape"
     
 )
 
