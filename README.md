@@ -53,6 +53,7 @@ maybe add like a double orthodox russian cross at the top
 surround it with two circles and place runes or symbols
 skull at the bottom
 R rune
+strength, courage, protection rune
 axes?
 
 name monogram
