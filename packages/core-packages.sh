@@ -24,6 +24,12 @@ CORE_PACKAGES=(
     "man"
     "tree-sitter-cli"
     "jujutsu"
+    "tealdeer"
+    "lazygit"
+
+    # --- XDG ---
+    "xdg-desktop-portal-gtk"
+    "xdg-desktop-portal-hyprland"
 
     # --- TERMINAL & SHELL ---
     "ghostty"
@@ -37,10 +43,6 @@ CORE_PACKAGES=(
 
     # --- WEB ---
     "firefox"
-
-    # --- XDG ---
-    "xdg-desktop-portal-gtk"
-    "xdg-desktop-portal-hyprland"
     
     # --- AUDIO ---
     "pipewire"
@@ -56,7 +58,7 @@ CORE_PACKAGES=(
 
     # --- GENERAL ---
     "obsidian"
-
+    "libreoffice-still"
     
 )
 

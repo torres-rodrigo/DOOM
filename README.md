@@ -1,4 +1,5 @@
 1 Base arch install
+audio setup on installer
 only added package git
 add disk encryption
 
