@@ -46,3 +46,16 @@ DOOM – Design Over Optimized Meaninglessly
 DOOM – Discipline Overcomes Our Midiocrity
 
 DOOM – Determined On Overcoming Myself
+
+Logo
+start with "italic" inverted satanic cross
+maybe add like a double orthodox russian cross at the top 
+surround it with two circles and place runes or symbols
+skull at the bottom
+R rune
+axes?
+
+name monogram
+R, could be mirrored
+T as a sword
+
