@@ -30,6 +30,7 @@ CORE_PACKAGES=(
     "mako"
     "uwsm"
     "luarocks"
+    "eza"
 
     # --- XDG ---
     "xdg-desktop-portal-gtk"
@@ -65,6 +66,7 @@ CORE_PACKAGES=(
     "libreoffice-still"
     "thunar"
     "inkscape"
+    "localsend"
     
 )
 
