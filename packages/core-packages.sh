@@ -67,6 +67,7 @@ CORE_PACKAGES=(
     "thunar"
     "inkscape"
     "localsend"
+    "gimp"
     
 )
 
