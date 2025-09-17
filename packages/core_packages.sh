@@ -6,6 +6,7 @@ echo "Installing Core Packages..."
 CORE_PACKAGES=(
     # --- SYSTEM & UTILITIES ---
     "base-devel"
+    "git"
     "curl"
     "wget"
     "unzip"

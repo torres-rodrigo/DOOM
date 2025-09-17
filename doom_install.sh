@@ -43,6 +43,10 @@ echo
 
 # PACKAGES
 echo "3. PACKAGES"
+#chmod +x "$DOOM_DIR/packages/git_install.sh"
+#"$DOOM_DIR/packages/git_install.sh"
+chmod +x "$DOOM_DIR/packages/git_setup.sh"
+"$DOOM_DIR/packages/git_setup.sh"
 chmod +x "$DOOM_DIR/packages/core-packages.sh"
 "$DOOM_DIR/packages/core-packages.sh"
 echo
