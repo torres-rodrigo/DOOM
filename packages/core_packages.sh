@@ -12,6 +12,7 @@ CORE_PACKAGES=(
     "unzip"
     "bat"
     "btop"
+    "neovim"
     "dust"
     "tree"
     "fastfetch"
@@ -43,9 +44,6 @@ CORE_PACKAGES=(
 
     # --- FONTS ---
     noto-fonts
-
-    # --- EDITORS ---
-    "neovim"
 
     # --- WEB ---
     "firefox"
