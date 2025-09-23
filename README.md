@@ -3,8 +3,31 @@ audio setup on installer
 add disk encryption
 
 TODO
+split up packages installation into base
+and those that require other configuration firefox, go, rust, etc
+
 Check if swap is necesary 
 What to do about btrfs sub partitions
+
+# XDG Base Directory defaults
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+
+# Rust
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export PATH="$CARGO_HOME/bin:$PATH"
+
+# Firefox (manual workaround)
+export MOZILLA_HOME="$XDG_CONFIG_HOME/firefox"
+export MOZ_CACHE_DIR="$XDG_CACHE_HOME/firefox"
+
+# Go
+export GOPATH="$XDG_DATA_HOME/go"
+export GOCACHE="$XDG_CACHE_HOME/go-build"
+export PATH="$GOPATH/bin:$PATH"
+
 
 git section
 git install public version
@@ -63,4 +86,9 @@ axes?
 name monogram
 R, could be mirrored
 T as a sword
+
+DOOM mascot a combination of conan the barberian and the black knight from MP
+Have a funny attitude Deadpool/Mask/Johnny Cage
+Have a clippy like behavior
+Big fucking sword and swole
     
