@@ -32,12 +32,16 @@ DOOM_PATH="$HOME/.local/share/doom"
 DOOM_INSTALL="$DOOM_PATH/install"
 export PATH="$DOOM_PATH/bin:$PATH"
 echo
+echo "=================================================="
+echo
 # END ENVIORMENT SET-UP
 
 # SYSTEM UPDATE
 echo "2. SYSTEM UPDATE"
 echo "Updating system ..."
 sudo pacman -Syu --noconfirm
+echo
+echo "=================================================="
 echo
 # END SYSTEM UPDATE
 
@@ -47,7 +51,9 @@ echo "3. PACKAGES"
 #"$DOOM_DIR/packages/git_install.sh"
 # chmod +x "$DOOM_DIR/packages/git_setup.sh"
 # "$DOOM_DIR/packages/git_setup.sh"
-chmod +x "$DOOM_DIR/packages/core-packages.sh"
-"$DOOM_DIR/packages/core-packages.sh"
+chmod +x "$DOOM_DIR/packages/core_packages.sh"
+"$DOOM_DIR/packages/core_packages.sh"
+chmod +x "$DOOM_DIR/packages/aur_setup.sh"
+"$DOOM_DIR/packages/aur_setup.sh"
 echo
 # END PACKAGES

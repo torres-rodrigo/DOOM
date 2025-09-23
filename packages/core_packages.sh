@@ -5,6 +5,7 @@ echo "Installing Core Packages..."
 # Create an array of packages to install.
 CORE_PACKAGES=(
     "base-devel"
+    "xdg-desktop-portal"
     "xdg-desktop-portal-gtk"
     "xdg-desktop-portal-hyprland"
     "git"
@@ -14,11 +15,11 @@ CORE_PACKAGES=(
     "less"
     "man"
     "bat"
-    "btop"
+    #"btop"
     "uwsm"
-    "power-profiles-daemon"
+    #"power-profiles-daemon"
     "neovim"
-    "dust"
+    #"dust"
     "tree"
     "fastfetch"
     "ffmpeg"
@@ -26,39 +27,39 @@ CORE_PACKAGES=(
     "fzf"
     "ripgrep"
     "gum"
-    "yazi"
+    #"yazi"
     "qt5-wayland"
     "tree-sitter-cli"
     "jujutsu"
     "tealdeer"
-    "lazygit"
-    "mako"
+    #"lazygit"
+    #"mako"
     "luarocks"
     "eza"
     # --- XDG ---
     # --- TERMINAL & SHELL ---
-    "ghostty"
+    #"ghostty"
     "zsh"
 
     # --- FONTS ---
     noto-fonts
 
     # --- WEB ---
-    "firefox"
+    #"firefox"
     
     # --- AUDIO ---
 
     # --- HYPR ---
-    "hyprland"
-    "hypridle"
-    "hyprland-qtutils"
-    "hyprlock"
-    "hyprshot"
+    #"hyprland"
+    #"hypridle"
+    #"hyprland-qtutils"
+    #"hyprlock"
+    #"hyprshot"
 
     # --- GENERAL ---
     #"obsidian"
     #"libreoffice-still"
-    "thunar"
+    #"thunar"
     #"inkscape"
     #"localsend"
     #"gimp"
