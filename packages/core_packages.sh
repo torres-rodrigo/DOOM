@@ -12,7 +12,7 @@ CORE_PACKAGES=(
     #"power-profiles-daemon"
     #"dust"
     "fastfetch"
-    "ffmpeg"
+    #"ffmpeg"
     #"yazi"
     #"qt5-wayland"
     "tree-sitter-cli"
@@ -25,7 +25,7 @@ CORE_PACKAGES=(
     #"ghostty"
 
     # --- FONTS ---
-    noto-fonts
+    #noto-fonts
 
     # --- WEB ---
     #"firefox"
@@ -33,7 +33,7 @@ CORE_PACKAGES=(
     # --- AUDIO ---
 
     # --- HYPR ---
-    #"hyprland"
+    "hyprland"
     #"hypridle"
     #"hyprland-qtutils"
     #"hyprlock"

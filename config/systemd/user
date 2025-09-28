@@ -1,0 +1,15 @@
+# ~/.config/systemd/user/hyprland.service
+[Unit]
+Description=Start Hyprland Wayland compositor
+After=graphical.target
+
+[Service]
+ExecStart=/usr/bin/Hyprland
+Restart=always
+Environment=XDG_SESSION_TYPE=wayland
+Environment=QT_QPA_PLATFORM=wayland
+Environment=SDL_VIDEODRIVER=wayland
+Environment=_JAVA_AWT_WM_NONREPARENTING=1
+
+[Install]
+WantedBy=default.target

@@ -58,8 +58,8 @@ chmod +x "$DOOM_DIR/packages/base_packages.sh"
 "$DOOM_DIR/packages/base_packages.sh"
 chmod +x "$DOOM_DIR/packages/aur_setup.sh"
 "$DOOM_DIR/packages/aur_setup.sh"
-#chmod +x "$DOOM_DIR/packages/core_packages.sh"
-#"$DOOM_DIR/packages/core_packages.sh"
+chmod +x "$DOOM_DIR/packages/core_packages.sh"
+"$DOOM_DIR/packages/core_packages.sh"
 echo
 echo "=================================================="
 echo
@@ -69,6 +69,7 @@ echo
 echo "4. CONFIGS"
 echo "Copying configs to ~/.config"
 cp -R "$DOOM_DIR/config/*" ~/.config
+systemctl --user enable hyprland.service
 echo
 echo "=================================================="
 echo
