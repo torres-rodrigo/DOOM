@@ -48,7 +48,7 @@ CORE_PACKAGES=(
     #"gimp"
 )
 
-pacman -S --noconfirm --needed "${CORE_PACKAGES[@]}"
+sudo pacman -S --noconfirm --needed "${CORE_PACKAGES[@]}"
 
 echo "Core packages installed successfully."
 echo "=================================================="
