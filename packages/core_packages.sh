@@ -28,7 +28,7 @@ CORE_PACKAGES=(
     "ripgrep"
     "gum"
     #"yazi"
-    "qt5-wayland"
+    #"qt5-wayland"
     "tree-sitter-cli"
     "jujutsu"
     "tealdeer"
