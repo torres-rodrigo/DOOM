@@ -1,0 +1,47 @@
+[alias]
+    addp = add --patch
+    b = branch
+    diffp = diff --diff-algorithm=patience
+    log = log --all --graph
+    st = status -s
+
+[branch]
+    sort = -committerdate
+
+[core]
+    #excludesfiles = ~/.config/git/ignore
+
+[diff]
+    algorithm = histogram
+    mnemonicPrefix = true
+    renames = true
+
+[fetch]
+    prune = true
+
+[init]
+    defaultBranch = master
+
+[interactive]
+    singleKey = true
+
+[push]
+    autoSetupRemote = true
+    followTags = true
+
+[pull]
+    rebase = pull
+
+[status]
+    branch = true
+    showStash = true
+    showUntrackedFiles = all
+
+[tag]
+    sort = -taggerdate
+
+[url "git@github.com:torres-rodrigo/"]
+insteadOf = "rt:"
+
+[url "git@github.com:"]
+insteadOf = "gh:'
