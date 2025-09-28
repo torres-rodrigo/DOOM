@@ -21,7 +21,7 @@ BASE_PACKAGES=(
     "zsh"
 )
 
-pacman -S --noconfirm --needed "${BASE_PACKAGES[@]}"
+sudo pacman -S --noconfirm --needed "${BASE_PACKAGES[@]}"
 
 echo "Base packages installed successfully."
 echo "=================================================="

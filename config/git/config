@@ -44,4 +44,4 @@
 insteadOf = "rt:"
 
 [url "git@github.com:"]
-insteadOf = "gh:'
+insteadOf = "gh:"

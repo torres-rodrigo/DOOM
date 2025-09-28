@@ -67,7 +67,7 @@ echo
 
 # CONFIGS
 echo "4. CONFIGS"
-echo "Copying configs to ~/.config
+echo "Copying configs to ~/.config"
 cp -R "$DOOM_DIR/config/*" ~/.config
 echo
 echo "=================================================="
