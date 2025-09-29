@@ -20,6 +20,7 @@ CORE_PACKAGES=(
     #"lazygit"
     #"mako"
     "luarocks"
+    "rofi-wayland"
 
     # --- TERMINAL & SHELL ---
     "kitty"

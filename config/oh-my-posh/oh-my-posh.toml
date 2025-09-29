@@ -1,0 +1,60 @@
+version = 3
+final_space = true
+
+[[blocks]]
+	type = 'prompt'
+	alignment = 'left'
+	#newline = true
+
+	[[blocks.segments]]
+		type = 'text'
+		style = 'plain'
+		foreground = 'red'
+		background = 'transparent'
+		template = "ᚱ" #  󰚟 
+
+	[[blocks.segments]]
+		type = 'path'
+		style = 'plain'
+		background = 'transparent'
+		foreground = 'blue'
+
+	[blocks.segments.properties]
+		style = 'full'
+
+	[[blocks.segments]]
+		type = 'text'
+		style = 'plain'
+		foreground = 'green'
+		background = 'transparent'
+		template = "󰅂"
+
+
+	#[transient_prompt]
+		#foreground = 'green'
+		#background = 'transparent'
+		#Template = "󰅂 "
+
+#[[blocks]]
+#type = 'rprompt'
+#overflow = 'hidden'
+#
+	#[[blocks.segments]]
+		#type = 'executiontime'
+		#style = 'plain'
+		#foreground = 'yellow'
+		#background = 'transparent'
+		#template = '{{ .FormattedMs }}'
+		#newline = true
+#
+		#[blocks.segments.properties]
+			#style = 'austin'
+			#newline = true
+	#
+	#[[blocks.segments]]
+		#type = 'text'
+		#foreground = 'white'
+		#background = 'transparent'
+		#template = ''
+		#newline = true
+
