@@ -70,7 +70,17 @@ echo "4. CONFIGS"
 echo "Copying configs to ~/.config"
 cp -R "$DOOM_DIR/config/." "$HOME/.config"
 systemctl --user enable hyprland.service
+systemctl --user start hyprland.service
 echo
 echo "=================================================="
 echo
-# ENDCONFIGS
+# END CONFIGS
+
+# CLEAN UP
+echo "X. CLEAN UP"
+paru -Rns $(paru -Qdtq)
+reboot
+echo
+echo "=================================================="
+echo
+# END CLEAN UP

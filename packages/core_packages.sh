@@ -19,10 +19,11 @@ CORE_PACKAGES=(
     "jujutsu" 
     #"lazygit"
     #"mako"
-    "luarocks"  
+    "luarocks"
 
     # --- TERMINAL & SHELL ---
-    #"ghostty"
+    "kitty"
+    "ghostty"
 
     # --- FONTS ---
     #noto-fonts
