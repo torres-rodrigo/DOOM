@@ -68,7 +68,7 @@ echo
 # CONFIGS
 echo "4. CONFIGS"
 echo "Copying configs to ~/.config"
-cp -R "$DOOM_DIR/config/*" "~/.config"
+cp -R "$DOOM_DIR/config/." "~/.config"
 systemctl --user enable hyprland.service
 echo
 echo "=================================================="
