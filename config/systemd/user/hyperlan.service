@@ -1,4 +1,3 @@
-# ~/.config/systemd/user/hyprland.service
 [Unit]
 Description=Start Hyprland Wayland compositor
 After=graphical.target
