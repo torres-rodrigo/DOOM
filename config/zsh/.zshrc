@@ -62,4 +62,3 @@ alias config='cd $HOME/.config/'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-
