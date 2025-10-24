@@ -28,7 +28,6 @@ export GOPATH="$XDG_DATA_HOME/go"
 export GOCACHE="$XDG_CACHE_HOME/go-build"
 export PATH="$GOPATH/bin:$PATH"
 
-
 git section
 git install public version
 git setup private version
@@ -43,10 +42,8 @@ DOOM – DOOM Overengineered Obsolete Malware
 DOOM – DOOM Over Optimized Meaninglessly
 
 DOOM - Daemon Overrun OS Malware
-DOOM – Daemon Operated Obliteration Mechanism
 
 DOOM – Daemonized OS Of Mayhem
-DOOM – Daemonized OS Offering Malware
 
 DOOM – Domination OS Of Mayhem
 DOOM – Domination Of Oppressed Minds
@@ -55,7 +52,6 @@ DOOM – Domination Of One’s Mind
 DOOM – Duct-taped OS Of Mediocrity
 
 DOOM – Documentation Obfuscated Or Missing
-DOOM – Documentation Of Obsolete Manuals
 
 DOOM – Doomscrolling Over Outrage Media
 DOOM – Doomscrolling Over Opinions & Misinformation
@@ -71,8 +67,6 @@ DOOM – Doomed Outcome Of Mismanagement
 DOOM – Design Over Optimized Meaninglessly
 
 DOOM – Discipline Overcomes Our Midiocrity
-
-DOOM – Determined On Overcoming Myself
 
 Logo
 start with "italic" inverted satanic cross

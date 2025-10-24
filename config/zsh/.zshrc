@@ -55,4 +55,6 @@ source <(fzf --zsh)
 
 # ALIASES
 alias v='nvim'
+alias g='git'
+alias lg='lazygit'
 alias ls='ls -la --color'
