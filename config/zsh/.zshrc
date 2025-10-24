@@ -58,3 +58,8 @@ alias v='nvim'
 alias g='git'
 alias lg='lazygit'
 alias ls='ls -la --color'
+alias config='cd $HOME/.config/'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
