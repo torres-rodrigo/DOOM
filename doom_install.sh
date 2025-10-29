@@ -72,6 +72,7 @@ echo "4. CONFIGS"
 echo "Copying configs to ~/.config"
 rm -rf "$HOME/.config/."
 cp -R "$DOOM_DIR/config/." "$HOME/.config"
+# Change shell to zsh
 chsh -s $(which zsh)
 echo
 echo "=================================================="
@@ -81,8 +82,8 @@ echo
 # CLEAN UP
 echo "X. CLEAN UP"
 paru -Rns $(paru -Qdtq)
-systemctl --user enable hyprland.service
-systemctl --user start hyprland.service
+#systemctl --user enable hyprland.service
+#systemctl --user start hyprland.service
 echo
 echo "=================================================="
 echo

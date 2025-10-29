@@ -53,11 +53,17 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 # FZF
 source <(fzf --zsh)
 
+# DEFAULTS
+export EDITOR="nvim"
+export SUDO_EDITOR="$EDITOR"
+export BAT_THEME=ansi
+
 # ALIASES
 alias v='nvim'
 alias g='git'
 alias lg='lazygit'
 alias ls='ls -la --color'
+alias sp='sudo pacman'
 alias config='cd $HOME/.config/'
 alias ..='cd ..'
 alias ...='cd ../..'

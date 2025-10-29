@@ -5,6 +5,7 @@ add disk encryption
 TODO
 split up packages installation into base
 and those that require other configuration firefox, go, rust, etc
+switch oh-my-posh for starship
 
 Check if swap is necesary 
 What to do about btrfs sub partitions
