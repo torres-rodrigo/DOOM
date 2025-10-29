@@ -4,6 +4,7 @@
     diffp = diff --diff-algorithm=patience
     log = log --all --graph
     st = status -s
+    blame = blame -w -C -C -C
 
 [branch]
     sort = -committerdate
