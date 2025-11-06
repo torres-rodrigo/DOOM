@@ -6,6 +6,60 @@ TODO
 split up packages installation into base
 and those that require other configuration firefox, go, rust, etc
 switch oh-my-posh for starship
+create alias vf vim file, open file in vim using fzf
+Create alias vd vim dir, open vim on directory
+
+z() {
+  local search_dir
+
+  if [ -n "$1" ]; then
+    search_dir="$1"
+  else
+    search_dir="."
+  fi
+
+  local dir
+  dir=$(fd --type d . "$search_dir" 2>/dev/null | fzf)
+
+  if [ -n "$dir" ]; then
+    cd "$dir" || return
+  fi
+}
+
+_z_completion() {
+  local cur="${COMP_WORDS[COMP_CWORD]}"
+  COMPREPLY=( $(compgen -d -- "$cur") )
+}
+complete -F _z_completion z
+
+zf() {
+  local search_dir
+
+  if [ -n "$1" ]; then
+    search_dir="$1"
+  else
+    search_dir="."
+  fi
+
+  local file
+  file=$(fd --type f . "$search_dir" 2>/dev/null | fzf)
+
+  if [ -n "$file" ]; then
+    cd "$(dirname "$file")" || return
+  fi
+}
+
+_zf_completion() {
+  local cur="${COMP_WORDS[COMP_CWORD]}"
+  COMPREPLY=( $(compgen -d -- "$cur") )
+}
+complete -F _zf_completion zf
+
+
+# Register the same function for both z and zf
+complete -F _z_completion z
+complete -F _z_completion zf
+
 
 Check if swap is necesary 
 What to do about btrfs sub partitions
