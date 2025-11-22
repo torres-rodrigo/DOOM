@@ -90,9 +90,7 @@ git setup private version
 
 DOOM
 DOOM – DOOM OS Of Machines
-DOOM – DOOM Operates On Machines
 DOOM – DOOM OS Of Malevolence
-DOOM – DOOM Overengineered Obsolete Machine
 DOOM – DOOM Overengineered Obsolete Malware
 DOOM – DOOM Over Optimized Meaninglessly
 
@@ -116,8 +114,6 @@ DOOM – Deploying Outdated Obsolete Modules
 DOOM – Debugging Our Own Madness
 
 DOOM – Deploy Once, Ommit Mistakes
-
-DOOM – Doomed Outcome Of Mismanagement
 
 DOOM – Design Over Optimized Meaninglessly
 
