@@ -21,6 +21,7 @@ CORE_PACKAGES=(
     #"mako"
     "luarocks"
     "rofi-wayland"
+    "caligula"
 
     # --- TERMINAL & SHELL ---
     "kitty"

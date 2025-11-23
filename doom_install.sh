@@ -18,7 +18,7 @@ trap catch_errors ERR
 #PRE-FlIGHT CHECKUP
 echo "0. PRE-FLIGHT CHECKUP"
 if [[ $EUID -eq 0 ]]; then
-  echo "Error: This script must not be run with root privileges. Ex: './doom_install.sh'"
+  echo "Error: This script must not be run with root privileges."
   exit 1
 fi
 echo
