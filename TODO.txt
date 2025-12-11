@@ -1,0 +1,28 @@
+Categorize packages
+Desktop Environment: Hyprland (Wayland compositor), SDDM (login manager), Waybar (status bar), Walker (app launcher)
+Core Tools: Docker, Git, Neovim, PostgreSQL/MariaDB libs, Poetry, Mise, Yay (AUR helper)
+Programming: Rust, Ruby, Python, LLVM, Clang, Node.js (via mise)
+Terminal Tools: Starship, Zoxide, Fzf, Ripgrep, Bat, Eza, Dust, Btop, Lazygit, Lazydocker
+Browsers/Apps: Chromium (omarchy-chromium), Obsidian, Signal, Spotify, 1Password
+Media: MPV, IMV, OBS Studio, GPU Screen Recorder, Kdenlive
+Utilities: Gum (TUI prompts), Nautilus, GNOME Calculator, LibreOffice, Evince (PDF)
+System: UFW (firewall), Bluetooth, Cups (printing), Avahi (mDNS), Plymouth (boot splash)
+Fonts: Nerd Fonts (Cascadia, JetBrains), IA Writer, Font Awesome, Noto Fonts (all variants)
+
+
+Way to get the working path 
+
+install AUR DONE
+update aur paru -S paru
+
+repect xdg spec DONE
+
+web apps 90%
+
+tuis 90%
+
+zsh /etc/zsh/zshenv --> export ZDOTDIR="$HOME/.config/zsh" DONE
+
+add scripts to path
+firewall
+put librewolf config on zen

@@ -1,0 +1,68 @@
+PACKAGES=(
+    #System
+    "base-devel"
+    "power-profiler-daemon"
+    "qt5-wayland"
+    "xdg-desktop-portal"
+    "xdg-desktop-portal-gtk"
+    "xdg-desktop-portal-hyprland"
+    "zsh"
+
+    #Desktop Enviorment
+    "hypridle" # Idle management daemon
+    "hyprland" # Dynamic tiling Wayland compositor
+    "hyprland-guiutils" # GUI utilities for Hyprland
+    "hyprlock" # Screen locker
+    "hyprpicker" # Color picker
+    "mako" # Notification daemon
+    "plymouth" # Boot splash screen
+    "swaybg" # Wallpaper setter
+    "swayosd" # On-screen display (volume/brightness)
+    "uwsm" # Universal Wayland Session Manager
+
+    #Terminal
+    "bat" # Improved cat
+    "btop" # TUI resource monitor
+    "caligula" # dd TUI
+    "curl" # Command-line tool for transferring data with URLs
+    "dust" # Disk usage analyzer
+    "eza" # Modern replacement for ls
+    "fastfetch" # Fast system information tool
+    "fd" # Improved find
+    "ffmpeg" # Powerful multimedia framework for audio and video processing
+    "ffmpegthumbnailer" # Utility to create video thumbnails using FFmpeg
+    "fzf" # Command-line fuzzy finder
+    "ghostty" # Terminal emulator
+    "github-cli" # Github cli
+    "gum" # Tool to build rich shell scripts with styled text and prompts
+    "jq" # JSON parser and processor
+    "jujutsu" # Version control system
+    "kitty" # Terminal emulator
+    "lazygit" # Git TUI
+    "less" # File pager for viewing text files and command output
+    "luarocks" # Package manager for Lua modules
+    "man" # Manual pages
+    "neovim" # Vim-based text editor
+    "ripgrep" # Fast text searching tool (like grep, but better)
+    "starship" # Minimal, fast, and customizable shell prompt
+    "tealdeer" # Fast tldr client for simplified command help pages
+    "tree" # Recursively list directories in a tree-like format
+    "tree-sitter-cli" # CLI for building syntax parsers using Tree-sitter
+    "unzip" # Utility for extracting files from .zip archives
+    "wget" # Command-line downloader for HTTP, HTTPS, and FTP
+    "yazi" # Fast, TUI-based file manager written in Rust
+
+    #Progrmas
+    "gimp" # Image editor
+    "inkscape" # Vector graphics editor
+    "libreoffice-fresh" # Office suite
+    "localsend" # Cross-platform local file sharing
+    "mpv" # Media player
+    "obsidian" # Kknowledge management and note-taking app
+    "thunar" # File manager
+)
+
+sudo pacman -S --noconfirm --needed "${PACKAGES[@]}"
+
+echo "Packages installed"
+echo

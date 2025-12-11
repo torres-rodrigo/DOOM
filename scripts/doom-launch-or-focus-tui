@@ -1,0 +1,6 @@
+#!/bin/bash
+
+APP_ID="doom.$(basename $1)"
+LAUNCH_COMMAND="doom-launch-tui $@"
+
+exec doom-launch-or-focus "$APP_ID" "$LAUNCH_COMMAND"
