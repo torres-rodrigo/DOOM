@@ -10,8 +10,10 @@ fi
 # Source zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
-# Oh my posh
-eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/oh-my-posh.toml)"
+# Starship
+if command -v starship &> /dev/null; then
+  eval "$(starship init zsh)"
+fi
 
 # Plugins
 zinit light zsh-users/zsh-syntax-highlighting

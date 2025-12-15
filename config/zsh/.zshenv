@@ -16,3 +16,6 @@ export ZIG_GLOBAL_PACKAGE_DIR="$XDG_DATA_HOME/zig"
 export NUGET_PACKAGES="$XDG_CACHE_HOME/nuget"
 export DOTNET_CLI_HOME="$XDG_CONFIG_HOME/dotnet"
 export DOTNET_CLI_CACHE_HOME="$XDG_CACHE_HOME/dotnet"
+
+# Starship
+export STARSHIP_CONFIG="~/.config/starship/starship.toml"
