@@ -1,3 +1,7 @@
+CalOS: https://github.com/criticalart/calos
+Symphony: https://github.com/vyrx-dev/dotfiles
+omarchy
+
 Categorize packages
 Desktop Environment: Hyprland (Wayland compositor), SDDM (login manager), Waybar (status bar), Walker (app launcher)
 Core Tools: Docker, Git, Neovim, PostgreSQL/MariaDB libs, Poetry, Mise, Yay (AUR helper)
@@ -26,3 +30,4 @@ zsh /etc/zsh/zshenv --> export ZDOTDIR="$HOME/.config/zsh" DONE
 add scripts to path
 firewall
 put librewolf config on zen
+https://github.com/criticalart/calos
