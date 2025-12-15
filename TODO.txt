@@ -30,4 +30,3 @@ zsh /etc/zsh/zshenv --> export ZDOTDIR="$HOME/.config/zsh" DONE
 add scripts to path
 firewall
 put librewolf config on zen
-https://github.com/criticalart/calos
