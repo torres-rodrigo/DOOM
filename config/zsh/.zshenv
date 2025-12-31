@@ -18,4 +18,4 @@ export DOTNET_CLI_HOME="$XDG_CONFIG_HOME/dotnet"
 export DOTNET_CLI_CACHE_HOME="$XDG_CACHE_HOME/dotnet"
 
 # Starship
-export STARSHIP_CONFIG="~/.config/starship/starship.toml"
+export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
