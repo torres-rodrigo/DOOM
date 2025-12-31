@@ -1,14 +1,18 @@
 PACKAGES=(
     #System
     "base-devel"
+    "gnome-keyring"
+    "polkit-gnome"
     "power-profiler-daemon"
     "qt5-wayland"
+    "qt6-wayland"
     "xdg-desktop-portal"
     "xdg-desktop-portal-gtk"
     "xdg-desktop-portal-hyprland"
     "zsh"
 
     #Desktop Enviorment
+    "brightnessctl" # Backlight brightness control
     "hypridle" # Idle management daemon
     "hyprland" # Dynamic tiling Wayland compositor
     "hyprland-guiutils" # GUI utilities for Hyprland
@@ -19,6 +23,7 @@ PACKAGES=(
     "swaybg" # Wallpaper setter
     "swayosd" # On-screen display (volume/brightness)
     "uwsm" # Universal Wayland Session Manager
+    "wl-clipboard" # Clipboard manager for Wayland
 
     #Terminal
     "bat" # Improved cat
