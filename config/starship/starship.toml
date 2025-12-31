@@ -1,3 +1,11 @@
 format = """\
-[╭╴](238)$directory
-[╰─](238)$character"""
+[╭╴ ](238)$directory
+[╰─ ](238)$character"""
+
+[directory]
+truncation_length = 0
+truncate_to_repo = false
+
+[character]
+error_symbol = "[❯](bold green)"
+success_symbol = "[❯](bold green)"
