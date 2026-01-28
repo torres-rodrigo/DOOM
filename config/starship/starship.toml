@@ -34,7 +34,7 @@ symbol = ' '
 [cmd_duration]
 min_time = 250
 show_milliseconds = true
-format = 'took [󱦟$duration]($style) '
+format = 'took [󱦟 $duration]($style) '
 
 [character]
 error_symbol = "[❯](bold green)"
