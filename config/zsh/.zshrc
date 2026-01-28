@@ -59,17 +59,32 @@ alias lg='lazygit'
 alias ls='ls -la --color'
 alias sp='sudo pacman'
 alias config='cd $HOME/.config/'
+alias today='date "+%Y-%m-%d %H:%M:%S"'
+
 
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
-alias gf='git fetch'       # git fetch
-alias gaa='git add .'      # git add all
-alias gau='git add -u'     # git add updated
-alias gst='git status'     # git status
-alias gs='git status -s'   # git status -s
-alias gc='git commit'      # git commit
-alias gcm='git commit -m'  # git commit -m
-alias gp='git push'        # git push
-alias gpl='git pull'       # git pull
+alias gf='git fetch'                               # git fetch
+alias gp='git pull'                                # git pull
+alias gaa='git add .'                              # git add all
+alias gau='git add -u'                             # git add updated
+alias gap='git add --patch'                        # git add patch
+alias gc='git commit'                              # git commit
+alias gcm='git commit -m'                          # git commit message
+alias gca='git commit --amend'                     # git commit amend
+alias gpu='git push'                               # git push
+alias gst='git status'                             # git status
+alias gs='git status -s'                           # git status short
+alias gl='git log'                                 # git log
+alias gb='git branch'                              # git branch opt -d and -D for deleting
+alias gbr='git branch -r'                          # git branch remote
+alias gsb='git switch'                             # git switch branch
+alias gcb='git switch -c'                          # git create branch
+alias gd='git diff'                                # git diff
+alias gdp='git diff --diff-algorithm=patience'     # git diff patience
+alias gsl='git stash list'                         # gits stash list
+alias gsa='git stash push -u -m'                   # git stash all message ''
+alias gss='git stash push --staged -m'             # git stash staged message ''
+gsap() {  git stash apply "stash@{${1:-0}}" }      # git stash apply opt X for specific, latest default
