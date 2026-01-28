@@ -30,3 +30,6 @@ zsh /etc/zsh/zshenv --> export ZDOTDIR="$HOME/.config/zsh" DONE
 add scripts to path
 firewall
 put librewolf config on zen
+add aliases to common places
+add path and file coompletion to certain methods
+add contrl functionality to terminal
