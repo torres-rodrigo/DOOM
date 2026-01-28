@@ -10,18 +10,18 @@ fi
 # Source zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
+# Plugins
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+
+# Load completions
+autoload -U compinit && compinit
+
 # Starship
 if command -v starship &> /dev/null; then
   eval "$(starship init zsh)"
 fi
-
-# Plugins
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-
-# Load completions
-autoload -U compinit && compinit
 
 # Autosuggestions settings
 HISTSIZE=1000
@@ -63,11 +63,11 @@ alias config='cd $HOME/.config/'
 alias today='date "+%Y-%m-%d"'
 alias dat='date "+%Y-%m-%d %H:%M:%S"' # date and time 
 
-alias ld='cd -'                       # last dir
+alias ld='cd -'                      # last dir
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias ..l='cd .. && ls -lha'          # go up one dir and list
+alias ..l='cd .. && ls -lha'         # go up one dir and list
 alias ...l='cd ../.. && ls -lha'
 alias ....l='cd ../../.. && ls -lha'
 
@@ -93,3 +93,5 @@ alias gsl='git stash list'                             # gits stash list
 gsa() { git stash push -u -m ${*:-WIP $(dat)}; }       # git stash all message ''
 gss() { git stash push --staged -m ${*:-WIP $(dat)}; } # git stash staged message ''
 gsap() { git stash apply "stash@{${1:-0}}" }           # git stash apply opt X for specific, latest default
+
+zinit light zsh-users/zsh-syntax-highlighting

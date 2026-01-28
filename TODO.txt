@@ -98,8 +98,131 @@ Opens both files in nvim -d for a side-by-side diff/edit
 After editing, optionally copies changes back to the working directory
 Cleans up temporary files automatically
 
+is there a way that for selecting the files i want to bring into my current branch to select them with fzf?
+I want to be able to select them from multiple branches if necessary
+I want to be able to select multiple files if necessary
+
+the result should be to put the file in the same path it belongs to in its original branch with the name modified to represent it example original/path/file1_b1_temp.c
+the structure being original file name_branchName_temp.extension
+Or if the user specifies a path for the files to be created in the specified path.
+
+how should the workflow go
+user gets prompted to select a branch confirm (if nothing is selected it does nothing) or cancel/quit out.
+if the user selects a branch  then gets prompted to select all the files from that branch they want. after confirming the selection
+they are again presented with the options of selecting a branch confirming or canceling/quiting.
+
+if the user confirms and there where files selected they get created as disscussed .
+
+When calling the function myMethod if the user adds a valid directory as a parameter then all the files are created there, if invalid say invalid directory and if no parameter is given then the files should be created in the original path they where on the original branch
+myMethod() {
+  local output_dir=""
+  local selections=()
+
+  # -------------
+  # Validate output directory
+  # -------------
+  if [ -n "$1" ]; then
+    if [ ! -d "$1" ]; then
+      echo "Invalid directory: $1"
+      return 1
+    fi
+    output_dir="$(cd "$1" && pwd)"
+  fi
+
+  # -------------
+  # Branch selection loop
+  # -------------
+  while true; do
+    local branch
+    branch=$(git branch --all --format='%(refname:short)' \
+      | sed 's|^origin/||' \
+      | sort -u \
+      | fzf --prompt="Select branch (ESC to finish): ")
+
+    [ -z "$branch" ] && break
+
+    # -------------
+    # File selection for branch
+    # -------------
+    local files
+    files=$(git ls-tree -r --name-only "$branch" \
+      | fzf --multi --prompt="Select files from $branch (ESC to skip): ")
+
+    [ -z "$files" ] && continue
+
+    while IFS= read -r file; do
+      selections+=("$branch:$file")
+    done <<< "$files"
+  done
+
+  # -------------
+  # No selections → nothing to do
+  # -------------
+  if [ "${#selections[@]}" -eq 0 ]; then
+    echo "No files selected. Nothing to do."
+    return 0
+  fi
+
+  # -------------
+  # Create files
+  # -------------
+  for entry in "${selections[@]}"; do
+    local branch="${entry%%:*}"
+    local file="${entry#*:}"
+
+    local dir base name ext target_dir target_file
+
+    dir="$(dirname "$file")"
+    base="$(basename "$file")"
+    name="${base%.*}"
+    ext="${base##*.}"
+
+    if [ "$name" = "$ext" ]; then
+      ext=""
+    else
+      ext=".$ext"
+    fi
+
+    if [ -n "$output_dir" ]; then
+      target_dir="$output_dir"
+    else
+      target_dir="$dir"
+      mkdir -p "$target_dir"
+    fi
+
+    target_file="${target_dir}/${name}_${branch}_temp${ext}"
+
+    if [ -e "$target_file" ]; then
+      echo "Skipping existing file: $target_file"
+      continue
+    fi
+
+    git show "$branch:$file" > "$target_file" || {
+      echo "Failed to extract $file from $branch"
+      continue
+    }
+
+    echo "Created: $target_file"
+  done
+}
+
+
+add ctrl command to open file explorer on current dir
+
 z alias cd
+zl function cd location && list
 zd Zearch dir
 zf Zearch file
- 
 
+fzf default env variables
+
+mise
+
+vz vim zearch
+
+zen plugin/extenssion alt f to highlight links and navigate to them, alt shift f open in new tab, ctrl alt f preview, ctrl alt shift f open on new browser
+alt hjkl scroll
+ 
+vim mode for terminal
+
+curl "wttr.in"
