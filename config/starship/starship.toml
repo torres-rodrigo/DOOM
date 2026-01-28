@@ -12,7 +12,7 @@ truncate_to_repo = false
 style = "bold #7dcfff"
 
 [git_branch]
-format = '$symbol- [$branch]($style)'
+format = '$symbol- [$branch]($style) '
 style = "bold #F9C70C"
 
 [git_status]
