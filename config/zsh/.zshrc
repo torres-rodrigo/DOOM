@@ -24,8 +24,9 @@ if command -v starship &> /dev/null; then
 fi
 
 # Autosuggestions settings
+mkdir -p "$XDG_STATE_HOME/zsh"
 HISTSIZE=1000
-HISTFILE="$XDG_STATE_HOME/zsh/history"
+HISTFILE="$XDG_STATE_HOME/zsh/.zsh_history"
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
 setopt appendhistory
@@ -40,12 +41,20 @@ bindkey '^y' autosuggest-accept
 bindkey '^g' autosuggest-accept
 bindkey '^n' history-search-forward
 bindkey '^p' history-search-backward
+# Ctrl + a: Go to begining of prompt
+# Ctrl + e: Go to end of prompt
+# Ctrl + f: Go foward in prompt
+# Ctrl + b: Go backwards in prompt
 
 # Completion styling
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # FZF
 source <(fzf --zsh)
+# Ctrl + r: Command history
+# Ctrl + t: Selector
+# **<TAB>: Fuzzy Finding
+# Alt + c: Directory switching
 
 # DEFAULTS
 export EDITOR="nvim"
@@ -57,7 +66,7 @@ alias v='nvim'
 alias z='cd'
 alias g='git'
 alias lg='lazygit'
-alias ls='ls -lha --color'
+alias ls='eza -lha --icons'
 alias sp='sudo pacman'
 alias config='cd $HOME/.config/'
 alias today='date "+%Y-%m-%d"'
@@ -67,9 +76,9 @@ alias ld='cd -'                      # last dir
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias ..l='cd .. && ls -lha'         # go up one dir and list
-alias ...l='cd ../.. && ls -lha'
-alias ....l='cd ../../.. && ls -lha'
+alias ..l='cd .. && eza -lha --icons'         # go up one dir and list
+alias ...l='cd ../.. && eza -lha --icons'
+alias ....l='cd ../../.. && eza -lha --icons'
 
 alias gf='git fetch'                                   # git fetch
 alias gp='git pull'                                    # git pull
