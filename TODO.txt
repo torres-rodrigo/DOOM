@@ -33,3 +33,68 @@ put librewolf config on zen
 add aliases to common places
 add path and file coompletion to certain methods
 add contrl functionality to terminal
+kill process function
+
+Ah! Got it — you want a true interactive “compare & edit” workflow, where:
+You pick a branch and a file → this is the “base file”
+You pick another branch and a file → this is the “comparison file”
+Both files are opened in Neovim (or your editor) as a diff, so you can see differences and edit either file on the fly
+Temporary files are used so your working directory is safe
+Perfect — we can do that with nvim -d (diff mode) or vimdiff and git show to extract the files.
+
+gdiffedit() {
+    local branch1 branch2 file1 file2 tmp1 tmp2 editor
+
+    # Choose first branch
+    echo "Select the first branch:"
+    select branch1 in $(git branch --all | sed 's/^[* ]*//'); do
+        [ -n "$branch1" ] && break
+    done
+
+    # Choose file from first branch
+    echo "Select a file from $branch1:"
+    select file1 in $(git ls-tree -r --name-only "$branch1"); do
+        [ -n "$file1" ] && break
+    done
+
+    # Choose second branch
+    echo "Select the second branch:"
+    select branch2 in $(git branch --all | sed 's/^[* ]*//'); do
+        [ -n "$branch2" ] && break
+    done
+
+    # Choose file from second branch
+    echo "Select a file from $branch2:"
+    select file2 in $(git ls-tree -r --name-only "$branch2"); do
+        [ -n "$file2" ] && break
+    done
+
+    # Create temporary files
+    tmp1=$(mktemp /tmp/gitfile1.XXXX)
+    tmp2=$(mktemp /tmp/gitfile2.XXXX)
+
+    # Extract files into temp files
+    git show "$branch1:$file1" > "$tmp1"
+    git show "$branch2:$file2" > "$tmp2"
+
+    # Open in Neovim diff mode (editable)
+    editor="${EDITOR:-nvim}"  # default to nvim if $EDITOR not set
+    "$editor" -d "$tmp1" "$tmp2"
+
+    # Ask if you want to copy changes back to working directory
+    read -p "Do you want to save changes back to working tree? [y/N] " save_changes
+    if [[ "$save_changes" =~ ^[Yy]$ ]]; then
+        cp "$tmp1" "$file1"
+        cp "$tmp2" "$file2"
+        echo "Changes saved to $file1 and $file2"
+    fi
+
+    # Cleanup
+    rm -f "$tmp1" "$tmp2"
+}
+Prompts for branch and file twice (base and comparison)
+Uses git show → extracts files into temporary files
+Opens both files in nvim -d for a side-by-side diff/edit
+After editing, optionally copies changes back to the working directory
+Cleans up temporary files automatically
+
