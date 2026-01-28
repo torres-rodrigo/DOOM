@@ -54,6 +54,7 @@ export BAT_THEME=ansi
 
 # ALIASES
 alias v='nvim'
+alias z='cd'
 alias g='git'
 alias lg='lazygit'
 alias ls='ls -lha --color'

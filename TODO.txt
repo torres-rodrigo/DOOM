@@ -98,3 +98,8 @@ Opens both files in nvim -d for a side-by-side diff/edit
 After editing, optionally copies changes back to the working directory
 Cleans up temporary files automatically
 
+z alias cd
+zd Zearch dir
+zf Zearch file
+ 
+
