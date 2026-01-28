@@ -21,7 +21,7 @@ diverged = '⇕⇡${ahead_count}⇣${behind_count}'
 behind = '⇣${count}'
 staged = '+++\($count\)'
 deleted = '---\($count\)'
-up_to_date = '(bold green)'
+up_to_date = 'YES(bold green)'
 
 [fill]
 symbol = ' '
