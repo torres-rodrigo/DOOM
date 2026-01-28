@@ -19,6 +19,8 @@ style = "bold #F9C70C"
 ahead = '⇡${count}'
 diverged = '⇕⇡${ahead_count}⇣${behind_count}'
 behind = '⇣${count}'
+staged = '+++\($count\)'
+deleted = '---\($count\)'
 
 [fill]
 symbol = ' '
