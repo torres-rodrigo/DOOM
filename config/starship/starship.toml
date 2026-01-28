@@ -1,10 +1,31 @@
 format = """\
-[╭╴ ](238)$directory
-[╰─ ](238)$character"""
+[╭╴](bold 238)[ᚱ](bold #FF4450) $directory\
+$git_branch\
+$git_status\
+$fill\
+$cmd_duration
+[╰─ ](bold 238)$character"""
 
 [directory]
 truncation_length = 0
 truncate_to_repo = false
+style = "bold #7dcfff"
+
+[git_branch]
+format = '$symbol- [$branch]($style)'
+style = "bold #F9C70C"
+
+[git_status]
+ahead = '⇡${count}'
+diverged = '⇕⇡${ahead_count}⇣${behind_count}'
+behind = '⇣${count}'
+
+[fill]
+symbol = ' '
+
+[cmd_duration]
+min_time = 250
+show_milliseconds = true
 
 [character]
 error_symbol = "[❯](bold green)"
