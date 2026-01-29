@@ -1,10 +1,10 @@
 format = """\
-[╭╴](bold 238)[ᚱ](bold #FF4450) $directory\
+[╭─](bold 238)[ᚱ](bold #FF4450) $directory\
 $git_branch\
 $git_status\
 $fill\
 $cmd_duration
-[╰─ ](bold 238)$character"""
+[╰──](bold 238)$character"""
 
 [directory]
 truncation_length = 0

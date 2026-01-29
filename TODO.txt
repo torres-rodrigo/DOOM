@@ -206,16 +206,9 @@ myMethod() {
   done
 }
 
-
 add ctrl command to open file explorer on current dir
 
-z alias cd
-
-fzf default env variables
-
 mise
-
-vz vim zearch
 
 zen plugin/extenssion alt f to highlight links and navigate to them, alt shift f open in new tab, ctrl alt f preview, ctrl alt shift f open on new browser
 alt hjkl scroll
