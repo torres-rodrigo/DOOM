@@ -15,6 +15,9 @@ zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 
+zstyle ':fzf-tab:*' use-fzf-default-opts yes
+zstyle ':fzf-tab:*' fzf-flags --bind=tab:accept
+
 # Load completions
 autoload -U compinit && compinit
 
@@ -63,20 +66,29 @@ export BAT_THEME=ansi
 
 # ALIASES
 alias v='nvim'
-alias z='cd'
+z() {
+  local dir=$(fd --type d --hidden --exclude .git | fzf --height=40%) || return
+  cd "$dir"
+}
+alias zh='cd'                        # zearch home
 alias g='git'
 alias lg='lazygit'
 alias ls='eza -lha --icons'
+alias tree='eza --tree --icons'
 alias sp='sudo pacman'
 alias config='cd $HOME/.config/'
 alias today='date "+%Y-%m-%d"'
 alias dat='date "+%Y-%m-%d %H:%M:%S"' # date and time 
 
-alias ld='cd -'                      # last dir
+alias ld='cd -'                                                                         # last dir
+zl() { local dir=$(fd --type d --hidden --exclude .git | fzf --height=40%) || return
+       cd "$dir"
+       eza -lha --icons 
+}                                                                                       # change dir and list
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias ..l='cd .. && eza -lha --icons'         # go up one dir and list
+alias ..l='cd .. && eza -lha --icons'                                                   # go up one dir and list
 alias ...l='cd ../.. && eza -lha --icons'
 alias ....l='cd ../../.. && eza -lha --icons'
 
@@ -102,5 +114,96 @@ alias gsl='git stash list'                             # gits stash list
 gsa() { git stash push -u -m ${*:-WIP $(dat)}; }       # git stash all message ''
 gss() { git stash push --staged -m ${*:-WIP $(dat)}; } # git stash staged message ''
 gsap() { git stash apply "stash@{${1:-0}}" }           # git stash apply opt X for specific, latest default
+
+zd() {
+    local original_dir="$PWD"
+    local search_dir="$PWD"
+
+    # Only change directory if parameter is given and valid
+    if [ -n "$1" ] && [ -d "$1" ]; then
+        search_dir="$1"
+        cd "$search_dir" || return
+    fi
+
+    # Use fd to find directories (and optionally switch to files) with fzf
+    local dir=$(fd --type directory --follow --hidden --exclude .git --no-ignore \
+        | fzf \
+            --prompt 'Directory : ' \
+            --layout=reverse \
+            --header-first \
+            --preview 'eza --tree --color=always --icons=always {};'
+    )
+
+    if [ -n "$dir" ]; then
+        cd "$dir" || return
+    else
+        # No selection: return to original directory if we had changed it
+        if [ "$PWD" != "$original_dir" ]; then
+            cd "$original_dir" || return
+        fi
+    fi
+}
+
+zf() {
+    local original_dir="$PWD"
+    local search_dir="$PWD"
+
+    # Only change directory if parameter is given and valid
+    if [ -n "$1" ] && [ -d "$1" ]; then
+        search_dir="$1"
+        cd "$search_dir" || return
+    fi
+
+    # Use fd to find directories (and optionally switch to files) with fzf
+    local file=$(fd --type file --follow --hidden --exclude .git --no-ignore \
+        | fzf \
+            --prompt 'Files : ' \
+            --layout=reverse \
+            --header-first \
+            --preview 'bat --color=always {};'
+    )
+
+    if [ -n "$file" ]; then
+        cd "${file:h}" || return
+    else
+        # No selection: return to original directory if we had changed it
+        if [ "$PWD" != "$original_dir" ]; then
+            cd "$original_dir" || return
+        fi
+    fi
+}
+
+vz() {
+  local original_dir="$PWD"
+    local search_dir="$PWD"
+
+    # Only change directory if parameter is given and valid
+    if [ -n "$1" ] && [ -d "$1" ]; then
+        search_dir="$1"
+        cd "$search_dir" || return
+    fi
+
+    # Use fd to find directories (and optionally switch to files) with fzf
+    local files=$(fd --type file --follow --hidden --exclude .git --no-ignore \
+        | fzf \
+            --prompt 'Files : ' \
+            --layout=reverse \
+            --header-first \
+            --multi \
+            --bind "tab:accept,ctrl-space:toggle,ctrl-g:accept" \
+            --preview 'bat --color=always {};' \
+            --height=40%
+    )
+
+    if [ -n "$files" ]; then
+    #if [ ${#files[@]} -gt 0 ]; then        
+        v $(echo "$files" | tr '\n' ' ')
+    else
+        # No selection: return to original directory if we had changed it
+        if [ "$PWD" != "$original_dir" ]; then
+            cd "$original_dir" || return
+        fi
+    fi
+}
 
 zinit light zsh-users/zsh-syntax-highlighting

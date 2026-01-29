@@ -17,5 +17,9 @@ export NUGET_PACKAGES="$XDG_CACHE_HOME/nuget"
 export DOTNET_CLI_HOME="$XDG_CONFIG_HOME/dotnet"
 export DOTNET_CLI_CACHE_HOME="$XDG_CACHE_HOME/dotnet"
 
-# Starship
+# STARSHIP
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
+
+# FZF
+export FZF_DEFAULT_COMMAND='fd --hidden --follow --exclude .git --no-ignore'
+export FZF_DEFAULT_OPTS='--layout=reverse --prompt="> " --border --ansi --multi --bind "tab:accept,ctrl-space:toggle,ctrl-g:accept"'

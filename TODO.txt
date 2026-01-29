@@ -210,9 +210,6 @@ myMethod() {
 add ctrl command to open file explorer on current dir
 
 z alias cd
-zl function cd location && list
-zd Zearch dir
-zf Zearch file
 
 fzf default env variables
 
