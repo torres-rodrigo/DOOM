@@ -98,7 +98,6 @@ alias gaa='git add .'                                  # git add all
 alias gau='git add -u'                                 # git add updated
 alias gap='git add --patch'                            # git add patch
 gc() { git commit -m "${*:-WIP}" }                     # git commit
-alias gcm='git commit -m'                              # git commit message
 alias gca='git commit --amend'                         # git commit amend
 alias gpu='git push'                                   # git push
 alias gst='git status'                                 # git status
@@ -110,10 +109,14 @@ alias gsb='git switch'                                 # git switch branch
 alias gcb='git switch -c'                              # git create branch
 alias gd='git diff'                                    # git diff
 alias gdp='git diff --diff-algorithm=patience'         # git diff patience
-alias gsl='git stash list'                             # gits stash list
+alias gsl='git stash list'                             # git stash list
 gsa() { git stash push -u -m ${*:-WIP $(dat)}; }       # git stash all message ''
 gss() { git stash push --staged -m ${*:-WIP $(dat)}; } # git stash staged message ''
 gsap() { git stash apply "stash@{${1:-0}}" }           # git stash apply opt X for specific, latest default
+gsd() { git stash drop "stash@{${1:-0}}" }             # git stash drop opt X for specific, latest default
+alias gr='git restore'                                 # git restore
+alias grr='git reset --hard @{u}'                      # git reset to remote
+alias grl='git reset --hard HEAD'                      # git reset local 
 
 zd() {
     local original_dir="$PWD"
@@ -125,7 +128,6 @@ zd() {
         cd "$search_dir" || return
     fi
 
-    # Use fd to find directories (and optionally switch to files) with fzf
     local dir=$(fd --type directory --follow --hidden --exclude .git --no-ignore \
         | fzf \
             --prompt 'Directory : ' \
@@ -154,7 +156,6 @@ zf() {
         cd "$search_dir" || return
     fi
 
-    # Use fd to find directories (and optionally switch to files) with fzf
     local file=$(fd --type file --follow --hidden --exclude .git --no-ignore \
         | fzf \
             --prompt 'Files : ' \
@@ -183,7 +184,6 @@ vz() {
         cd "$search_dir" || return
     fi
 
-    # Use fd to find directories (and optionally switch to files) with fzf
     local files=$(fd --type file --follow --hidden --exclude .git --no-ignore \
         | fzf \
             --prompt 'Files : ' \
@@ -196,7 +196,6 @@ vz() {
     )
 
     if [ -n "$files" ]; then
-    #if [ ${#files[@]} -gt 0 ]; then        
         v $(echo "$files" | tr '\n' ' ')
     else
         # No selection: return to original directory if we had changed it
