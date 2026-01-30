@@ -51,7 +51,6 @@ PACKAGES=(
     "ripgrep" # Fast text searching tool (like grep, but better)
     "starship" # Minimal, fast, and customizable shell prompt
     "tealdeer" # Fast tldr client for simplified command help pages
-    "tree" # Recursively list directories in a tree-like format
     "tree-sitter-cli" # CLI for building syntax parsers using Tree-sitter
     "unzip" # Utility for extracting files from .zip archives
     "wget" # Command-line downloader for HTTP, HTTPS, and FTP
