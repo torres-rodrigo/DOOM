@@ -99,6 +99,8 @@ alias gau='git add -u'                                 # git add updated
 alias gap='git add --patch'                            # git add patch
 gc() { git commit -m "${*:-WIP}" }                     # git commit
 alias gca='git commit --amend'                         # git commit amend
+alias guc='git reset HEAD~1 --soft'                    # git undo commit but keep changes'
+alias guch='git reset HEAD~1 --hard'                   # git undo commit and discard changes
 alias gpu='git push'                                   # git push
 alias gst='git status'                                 # git status
 alias gs='git status -s'                               # git status short

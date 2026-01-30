@@ -1,10 +1,9 @@
 [alias]
-    addp = add --patch
-    b = branch
-    diffp = diff --diff-algorithm=patience
     log = log --all --graph
-    st = status -s
     blame = blame -w -C -C -C
+    status = status -b
+    diff = diff --patch-with-stat
+    branch = branch -v
 
 [branch]
     sort = -committerdate
@@ -19,6 +18,7 @@
 
 [fetch]
     prune = true
+    tags = true
 
 [init]
     defaultBranch = master
