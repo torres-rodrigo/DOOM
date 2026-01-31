@@ -70,3 +70,8 @@ run_script "$DOOM_DIR/packages/aur.sh"
 echo "$SPACER"
 echo 
 #END PACKAGES
+
+#CONFIG SETUP
+cp -r config/* ~/.config/
+#END CONFIG SETUP
+
