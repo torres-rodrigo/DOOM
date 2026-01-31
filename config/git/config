@@ -1,9 +1,9 @@
 [alias]
-    log = log --all --graph
-    blame = blame -w -C -C -C
-    status = status -b
-    diff = diff --patch-with-stat
-    branch = branch -v
+    xlog = log --all --graph
+    xblame = blame -w -C -C -C
+    xstatus = status -b
+    xdiff = diff --patch-with-stat
+    xbranch = branch -v
 
 [branch]
     sort = -committerdate

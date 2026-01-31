@@ -122,15 +122,15 @@ alias gca='git commit --amend'                         # git commit amend
 alias guc='git reset HEAD~1 --soft'                    # git undo commit but keep changes'
 alias guch='git reset HEAD~1 --hard'                   # git undo commit and discard changes
 alias gpu='git push'                                   # git push
-alias gst='git status'                                 # git status
-alias gs='git status -s'                               # git status short
-alias gl='git log'                                     # git log
-alias gb='git branch'                                  # git branch opt -d and -D for deleting
-alias gbr='git branch -r'                              # git branch remote
+alias gst='git xstatus'                                # git status
+alias gs='git xstatus -s'                              # git status short
+alias gl='git xlog'                                    # git log
+alias gb='git xbranch'                                 # git branch opt -d and -D for deleting
+alias gbr='git xbranch -r'                             # git branch remote
 alias gsb='git switch'                                 # git switch branch
 alias gcb='git switch -c'                              # git create branch
-alias gd='git diff'                                    # git diff
-alias gdp='git diff --diff-algorithm=patience'         # git diff patience
+alias gd='git xdiff'                                   # git diff
+alias gdp='git xdiff --diff-algorithm=patience'        # git diff patience
 alias gsl='git stash list'                             # git stash list
 gsa() { git stash push -u -m ${*:-WIP $(dat)}; }       # git stash all message ''
 gss() { git stash push --staged -m ${*:-WIP $(dat)}; } # git stash staged message ''
@@ -138,7 +138,8 @@ gsap() { git stash apply "stash@{${1:-0}}" }           # git stash apply opt X f
 gsd() { git stash drop "stash@{${1:-0}}" }             # git stash drop opt X for specific, latest default
 alias gr='git restore'                                 # git restore
 alias grr='git reset --hard @{u}'                      # git reset to remote
-alias grl='git reset --hard HEAD'                      # git reset local 
+alias grl='git reset --hard HEAD'                      # git reset local
+alias gbl='git xblame'                                 # git blame
 
 zd() {
     local parameter=(.)
