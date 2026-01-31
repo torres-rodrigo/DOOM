@@ -72,7 +72,9 @@ export BAT_THEME=ansi
 # ALIASES
 alias v='nvim'
 z() {
-  local dir=$(fd --type d --hidden --exclude .git | fzf --height=40%) || return
+  local dir=$(fd --type d --hidden --exclude .git \
+              | fzf --height=60% \
+                    --preview 'eza --tree --color=always --icons=always {};') || return
   cd "$dir"
 }
 alias zh='cd'                        # zearch home
@@ -86,7 +88,9 @@ alias today='date "+%Y-%m-%d"'
 alias dat='date "+%Y-%m-%d %H:%M:%S"' # date and time 
 
 alias ld='cd -'                                                                         # last dir
-zl() { local dir=$(fd --type d --hidden --exclude .git | fzf --height=40%) || return
+zl() { local dir=$(fd --type d --hidden --exclude .git \
+        | fzf --height=60% \
+              --preview 'eza --tree --color=always --icons=always {};' ) || return
        cd "$dir"
        eza -lha --icons 
 }                                                                                       # change dir and list
@@ -126,89 +130,60 @@ alias grr='git reset --hard @{u}'                      # git reset to remote
 alias grl='git reset --hard HEAD'                      # git reset local 
 
 zd() {
-    local original_dir="$PWD"
-    local search_dir="$PWD"
+    local parameter=(.)
 
-    # Only change directory if parameter is given and valid
     if [ -n "$1" ] && [ -d "$1" ]; then
-        search_dir="$1"
-        cd "$search_dir" || return
+        parameter+=("$1")
     fi
 
-    local dir=$(fd --type directory --follow --hidden --exclude .git --no-ignore \
+    local dir=$(fd --type directory --follow --hidden --exclude .git --no-ignore "${parameter[@]}" \
         | fzf \
             --prompt 'Directory : ' \
-            --layout=reverse \
-            --header-first \
-            --preview 'eza --tree --color=always --icons=always {};'
+            --preview 'eza --tree --color=always --icons=always {};' \
+            --height=95% \
     )
 
     if [ -n "$dir" ]; then
         cd "$dir" || return
-    else
-        # No selection: return to original directory if we had changed it
-        if [ "$PWD" != "$original_dir" ]; then
-            cd "$original_dir" || return
-        fi
     fi
 }
 
 zf() {
-    local original_dir="$PWD"
-    local search_dir="$PWD"
+    local parameter=(.)
 
-    # Only change directory if parameter is given and valid
     if [ -n "$1" ] && [ -d "$1" ]; then
-        search_dir="$1"
-        cd "$search_dir" || return
+        parameter+=("$1")
     fi
 
-    local file=$(fd --type file --follow --hidden --exclude .git --no-ignore \
+    local file=$(fd --type file --follow --hidden --exclude .git --no-ignore "${parameter[@]}" \
         | fzf \
             --prompt 'Files : ' \
-            --layout=reverse \
-            --header-first \
-            --preview 'bat --color=always {};'
+            --preview 'bat --color=always {};' \
+            --height=95% \
     )
 
     if [ -n "$file" ]; then
         cd "${file:h}" || return
-    else
-        # No selection: return to original directory if we had changed it
-        if [ "$PWD" != "$original_dir" ]; then
-            cd "$original_dir" || return
-        fi
     fi
 }
 
 vz() {
-  local original_dir="$PWD"
-    local search_dir="$PWD"
+    local parameter=(.)
 
-    # Only change directory if parameter is given and valid
     if [ -n "$1" ] && [ -d "$1" ]; then
-        search_dir="$1"
-        cd "$search_dir" || return
+        parameter+=("$1")
     fi
 
-    local -a files=("${(@f)$(fd --type file --follow --hidden --exclude .git --no-ignore \
+    local -a files=("${(@f)$(fd --type file --follow --hidden --exclude .git --no-ignore "${parameter[@]}" \
         | fzf \
             --prompt 'Files : ' \
-            --layout=reverse \
-            --header-first \
             --multi \
-            --bind 'tab:accept,ctrl-space:toggle,ctrl-g:accept' \
             --preview 'bat --color=always {};' \
-            --height=40%
+            --height=60%
     )}")
 
-    if (( ${#files[@]} )); then  
+    if [ -n "$files" ]; then  
         v "${files[@]}"
-    else
-        # No selection: return to original directory if we had changed it
-        if [ "$PWD" != "$original_dir" ]; then
-            cd "$original_dir" || return
-        fi
     fi
 }
 
