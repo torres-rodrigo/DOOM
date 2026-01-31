@@ -71,13 +71,8 @@ export BAT_THEME=ansi
 
 # ALIASES
 alias v='nvim'
-z() {
-  local dir=$(fd --type d --hidden --exclude .git \
-              | fzf --height=60% \
-                    --preview 'eza --tree --color=always --icons=always {};') || return
-  cd "$dir"
-}
-alias zh='cd'                        # zearch home
+alias z='cd'
+alias ld='cd -'
 alias g='git'
 alias lg='lazygit'
 alias ls='eza -lha --icons'
@@ -87,17 +82,33 @@ alias config='cd $HOME/.config/'
 alias today='date "+%Y-%m-%d"'
 alias dat='date "+%Y-%m-%d %H:%M:%S"' # date and time 
 
-alias ld='cd -'                                                                         # last dir
-zl() { local dir=$(fd --type d --hidden --exclude .git \
-        | fzf --height=60% \
-              --preview 'eza --tree --color=always --icons=always {};' ) || return
+zle_z() {
+    local dir=$(fd --type d --hidden --exclude .git \
+              | fzf --height=60% --preview 'eza --tree --color=always --icons=always {};') || return
+
+    if [ -n "$dir" ]; then
+        cd "$dir"
+    fi
+
+    zle reset-prompt
+}
+zle -N zle_z
+bindkey '\e.' zle_z
+
+zl() {
+    local dir=$(fd --type d --hidden --exclude .git \
+        | fzf --height=60% --preview 'eza --tree --color=always --icons=always {};' ) || return
+
+    if [ -n "$dir" ]; then
        cd "$dir"
-       eza -lha --icons 
-}                                                                                       # change dir and list
+       eza -lha --icons
+    fi
+}
+
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias ..l='cd .. && eza -lha --icons'                                                   # go up one dir and list
+alias ..l='cd .. && eza -lha --icons'
 alias ...l='cd ../.. && eza -lha --icons'
 alias ....l='cd ../../.. && eza -lha --icons'
 
