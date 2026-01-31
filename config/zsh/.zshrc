@@ -10,16 +10,22 @@ fi
 # Source zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
+# Load completions
+autoload -U compinit && compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
+
 # Plugins
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
+zinit wait lucid for \
+  zsh-users/zsh-autosuggestions \
+  zsh-users/zsh-completions
+
+zinit wait lucid for Aloxaf/fzf-tab
 
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
 zstyle ':fzf-tab:*' fzf-flags --bind=tab:accept
 
-# Load completions
-autoload -U compinit && compinit
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^X' edit-command-line
 
 # Starship
 if command -v starship &> /dev/null; then
@@ -27,7 +33,6 @@ if command -v starship &> /dev/null; then
 fi
 
 # Autosuggestions settings
-mkdir -p "$XDG_STATE_HOME/zsh"
 HISTSIZE=1000
 HISTFILE="$XDG_STATE_HOME/zsh/.zsh_history"
 SAVEHIST=$HISTSIZE
@@ -186,19 +191,19 @@ vz() {
         cd "$search_dir" || return
     fi
 
-    local files=$(fd --type file --follow --hidden --exclude .git --no-ignore \
+    local -a files=("${(@f)$(fd --type file --follow --hidden --exclude .git --no-ignore \
         | fzf \
             --prompt 'Files : ' \
             --layout=reverse \
             --header-first \
             --multi \
-            --bind "tab:accept,ctrl-space:toggle,ctrl-g:accept" \
+            --bind 'tab:accept,ctrl-space:toggle,ctrl-g:accept' \
             --preview 'bat --color=always {};' \
             --height=40%
-    )
+    )}")
 
-    if [ -n "$files" ]; then
-        v $(echo "$files" | tr '\n' ' ')
+    if (( ${#files[@]} )); then  
+        v "${files[@]}"
     else
         # No selection: return to original directory if we had changed it
         if [ "$PWD" != "$original_dir" ]; then

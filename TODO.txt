@@ -26,6 +26,28 @@ web apps 90%
 tuis 90%
 
 zsh /etc/zsh/zshenv --> export ZDOTDIR="$HOME/.config/zsh" DONE
+# Copy output to clipboard (macOS)
+alias -g C='| pbcopy'
+
+# Copy output to clipboard (Linux with xclip)
+# alias -g C='| xclip -selection clipboard'
+# Copy current command buffer to clipboard (macOS)
+function copy-buffer-to-clipboard() {
+  echo -n "$BUFFER" | pbcopy
+  zle -M "Copied to clipboard"
+}
+zle -N copy-buffer-to-clipboard
+bindkey '^Xc' copy-buffer-to-clipboard
+
+# For Linux with wl-copy:
+# function copy-buffer-to-clipboard() {
+#   echo -n "$BUFFER" | wl-copy
+#   zle -M "Copied to clipboard"
+# }
+
+make all necessary dirs
+mkdir -p "$XDG_STATE_HOME/zsh"
+
 
 add scripts to path
 firewall
