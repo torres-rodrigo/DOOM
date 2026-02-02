@@ -13,7 +13,9 @@ Utilities: Gum (TUI prompts), Nautilus, GNOME Calculator, LibreOffice, Evince (P
 System: UFW (firewall), Bluetooth, Cups (printing), Avahi (mDNS), Plymouth (boot splash)
 Fonts: Nerd Fonts (Cascadia, JetBrains), IA Writer, Font Awesome, Noto Fonts (all variants)
 
-Way to get the working path 
+Way to get the working path
+
+change ghostty for wezterm
 
 install AUR DONE
 update aur paru -S paru
