@@ -1,0 +1,7 @@
+cursor-style = block
+cursor-style-blink = true
+copy-on-select = clipboard
+maximize = true
+background-opacity = 0.80
+font-style = bold
+app-notifications = config-reload

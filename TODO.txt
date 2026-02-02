@@ -13,6 +13,7 @@ Utilities: Gum (TUI prompts), Nautilus, GNOME Calculator, LibreOffice, Evince (P
 System: UFW (firewall), Bluetooth, Cups (printing), Avahi (mDNS), Plymouth (boot splash)
 Fonts: Nerd Fonts (Cascadia, JetBrains), IA Writer, Font Awesome, Noto Fonts (all variants)
 
+UPDATE vz so that if parameter is a file to open it
 
 Way to get the working path 
 
