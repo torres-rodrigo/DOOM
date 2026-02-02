@@ -150,7 +150,7 @@ zd() {
 
     local dir=$(fd --type directory --follow --hidden --exclude .git --no-ignore "${parameter[@]}" \
         | fzf \
-            --prompt 'Directory : ' \
+            --prompt 'Directory  : ' \
             --preview 'eza --tree --color=always --icons=always {};' \
             --height=95% \
     )
@@ -169,7 +169,7 @@ zf() {
 
     local file=$(fd --type file --follow --hidden --exclude .git --no-ignore "${parameter[@]}" \
         | fzf \
-            --prompt 'Files : ' \
+            --prompt 'Files  : ' \
             --preview 'bat --color=always {};' \
             --height=95% \
     )
@@ -188,7 +188,7 @@ vz() {
 
     local -a files=("${(@f)$(fd --type file --follow --hidden --exclude .git --no-ignore "${parameter[@]}" \
         | fzf \
-            --prompt 'Files : ' \
+            --prompt 'Files  : ' \
             --multi \
             --preview 'bat --color=always {};' \
             --height=60%
