@@ -9,6 +9,8 @@ vim.o.guicursor = ""
 vim.o.mouse = 'a'
 
 -- UI ==================================================
+vim.g.have_nerd_fonts = true
+
 vim.o.number = true
 vim.o.relativenumber = true
 
@@ -53,6 +55,8 @@ vim.o.incsearch = true
 
 vim.o.virtualedit = 'block'
 
+vim.o.inccommand = 'split'
+
 -- Search / Grep ==================================================
 vim.o.grepformat = "%f:%l:%c:%m"
 vim.o.grepprg    = "rg --vimgrep"
@@ -62,7 +66,7 @@ vim.o.completeopt = "menu,menuone,noselect" -- "menuone,noselect,fuzzy,nosort"
 
 -- Times ==================================================
 vim.o.timeoutlen = 900
-vim.o.updatetime = 500
+vim.o.updatetime = 300
 
 -- Windows / Scrolling ==================================================
 vim.o.jumpoptions = "view"
