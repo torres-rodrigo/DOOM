@@ -84,7 +84,7 @@ alias dat='date "+%Y-%m-%d %H:%M:%S"' # date and time
 
 zle_z() {
     local dir=$(fd --type d --hidden --exclude .git \
-              | fzf --height=60% --preview 'eza --tree --color=always --icons=always {};') || return
+              | fzf --prompt 'Directory  : ' --height=60% --preview 'eza --tree --color=always --icons=always {};') || return
 
     if [ -n "$dir" ]; then
         cd "$dir"
@@ -97,7 +97,7 @@ bindkey '\e.' zle_z
 
 zl() {
     local dir=$(fd --type d --hidden --exclude .git \
-        | fzf --height=60% --preview 'eza --tree --color=always --icons=always {};' ) || return
+        | fzf --prompt 'Directory  : ' --height=60% --preview 'eza --tree --color=always --icons=always {};' ) || return
 
     if [ -n "$dir" ]; then
        cd "$dir"
