@@ -180,6 +180,11 @@ zf() {
 }
 
 vz() {
+    if [[ -n "$1" && -f "$1" ]]; then
+        v "$1"
+        return
+    fi
+
     local parameter=(.)
 
     if [ -n "$1" ] && [ -d "$1" ]; then
