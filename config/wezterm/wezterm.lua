@@ -1,6 +1,13 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
+local is_wayland = os.getenv('WAYLAND_DISPLAY') ~= nil or
+                   os.getenv('XDG_SESSION_TYPE') == 'wayland'
+config.enable_wayland = is_wayland
+config.front_end = 'OpenGL'
+config.webgpu_power_preference = 'HighPerformance'
+config.prefer_egl = true
+
 config.automatically_reload_config = true
 
 config.max_fps = 240
