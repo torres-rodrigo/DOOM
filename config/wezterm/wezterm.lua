@@ -19,7 +19,7 @@ config.window_padding = {
     bottom = 0
 }
 
-config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = false
 config.tab_bar_at_bottom = true
 config.use_fancy_tab_bar = false
 config.tab_and_split_indices_are_zero_based = true
@@ -56,8 +56,30 @@ config.keys = {
     { key = '7', mods = 'CTRL', action = act.ActivateTab(7) },
     { key = '8', mods = 'CTRL', action = act.ActivateTab(8) },
     { key = '9', mods = 'CTRL', action = act.ActivateTab(9) },
-
+    { key = 't', mods = 'LEADER', action = act.EmitEvent("toggle-tabbar") },
 }
+
+wezterm.on('toggle-tabbar', function(window, pane)
+  local overrides = window:get_config_overrides() or {}
+
+  local tabs_enabled = overrides.show_tabs_in_tab_bar ~= false
+
+  if tabs_enabled then
+    -- Disable tab bar completely
+    overrides.show_tabs_in_tab_bar = false
+    overrides.show_new_tab_button_in_tab_bar = false
+    overrides.hide_tab_bar_if_only_one_tab = true
+  else
+    -- Restore tab bar
+    overrides.show_tabs_in_tab_bar = true
+    overrides.show_new_tab_button_in_tab_bar = true
+    overrides.hide_tab_bar_if_only_one_tab = false
+  end
+
+  window:set_config_overrides(overrides)
+end)
+
+
 
 wezterm.on("update-status", function(window, _)
     local prefix = ""
