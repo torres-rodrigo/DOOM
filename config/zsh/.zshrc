@@ -27,6 +27,15 @@ autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey '^X' edit-command-line
 
+bindkey '^[' undo
+bindkey '^]' redo
+
+bindkey '^H' backward-kill-word
+bindkey '^[[3;5~' kill-word
+
+bindkey '\e[1;5D' backward-word
+bindkey '\e[1;5C' forward-word
+
 # Starship
 if command -v starship &> /dev/null; then
   eval "$(starship init zsh)"
