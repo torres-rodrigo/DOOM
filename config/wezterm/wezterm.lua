@@ -12,6 +12,7 @@ config.line_height = 1.2
 
 config.window_close_confirmation = 'NeverPrompt'
 config.window_decorations = 'RESIZE'
+config.window_background_opacity = 0.85
 config.window_padding = {
     left = 2,
     right = 2,
