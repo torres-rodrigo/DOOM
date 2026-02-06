@@ -41,7 +41,7 @@ map({'n', 'v'}, '<leader>d', [["_d]], 'Delete to NULL')
 map({'n', 'v'}, '<leader>c', [["_c]], 'Change to NULL')
 
 map('n', '<leader>vs', ':vsplit ', 'Open vertical split with a file')
-map('n', '<leader>hs', ':hsplit ', 'Open horizontal split with a file')
+map('n', '<leader>hs', ':split ', 'Open horizontal split with a file')
 
 map('n', '<C-h>', '<C-w><C-h>', 'Move focus to the left window')
 map('n', '<C-l>', '<C-w><C-l>', 'Move focus to the right window')
