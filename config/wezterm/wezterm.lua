@@ -79,8 +79,6 @@ wezterm.on('toggle-tabbar', function(window, pane)
   window:set_config_overrides(overrides)
 end)
 
-
-
 wezterm.on("update-status", function(window, _)
     local prefix = ""
     local leader_prefix = '💀 '
