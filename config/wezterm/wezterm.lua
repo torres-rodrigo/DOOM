@@ -139,8 +139,6 @@ config.key_tables = {
           act.CopyMode { MoveBackwardZoneOfType = "Output" },
           -- Select that whole Output zone
           act.CopyMode { SetSelectionMode = "SemanticZone" },
-          -- Go forward to the end of that Output zone
-          act.CopyMode { MoveForwardZoneOfType = "Output" },
         },
       },
     },
