@@ -10,6 +10,8 @@ config.prefer_egl = true
 
 config.automatically_reload_config = true
 
+config.color_scheme = 'Tomorrow Night (Gogh)'
+
 config.max_fps = 240
 config.animation_fps = 240
 
