@@ -18,7 +18,7 @@ map('i', ',', ',<c-g>u', 'Undo break point on ,')
 map('i', '.', '.<c-g>u', 'Undo break point on .')
 map('i', ';', ';<c-g>u', 'Undo break point on ;')
 map('i', '(', '(<c-g>u', 'Undo break point on (')
-map('i', '{', '(<c-g>u', 'Undo break point on {')
+map('i', '{', '{<c-g>u', 'Undo break point on {')
 
 map('i', '<C-h>', '<C-w>', 'Delete word backwards')
 map('i', '<C-l>', '<C-o>dw', 'Delete word forwards')
