@@ -53,8 +53,8 @@ PACKAGES=(
     "tealdeer" # Fast tldr client for simplified command help pages
     "tree-sitter-cli" # CLI for building syntax parsers using Tree-sitter
     "unzip" # Utility for extracting files from .zip archives
+    "wezterm" # Terminal emilator
     "wget" # Command-line downloader for HTTP, HTTPS, and FTP
-    "yazi" # Fast, TUI-based file manager written in Rust
 
     #Progrmas
     "gimp" # Image editor
