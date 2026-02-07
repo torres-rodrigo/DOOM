@@ -8,6 +8,9 @@
 [branch]
     sort = -committerdate
 
+[commit]
+    verbose = true
+
 [core]
     #excludesFile = ~/.config/git/ignore
 
