@@ -15,8 +15,6 @@ Fonts: Nerd Fonts (Cascadia, JetBrains), IA Writer, Font Awesome, Noto Fonts (al
 
 Way to get the working path
 
-wezterm finish creating splits, moving between splits, closing splits, resizing splits
-
 install AUR DONE
 update aur paru -S paru
 

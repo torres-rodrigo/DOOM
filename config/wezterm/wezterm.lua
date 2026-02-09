@@ -67,6 +67,17 @@ config.keys = {
     { key = '8', mods = 'CTRL', action = act.ActivateTab(8) },
     { key = '9', mods = 'CTRL', action = act.ActivateTab(9) },
     { key = 't', mods = 'LEADER', action = act.EmitEvent("toggle-tabbar") },
+    { key = 'q', mods = 'ALT', action = act.CloseCurrentPane{confirm=false} },
+    { key = '\\', mods = 'ALT', action = act.SplitHorizontal{ domain = 'CurrentPaneDomain' } },
+    { key = '-', mods = 'ALT', action = act.SplitVertical{ domain = 'CurrentPaneDomain' } },
+    { key = 'h', mods = 'ALT', action = act.ActivatePaneDirection 'Left' },
+    { key = 'j', mods = 'ALT', action = act.ActivatePaneDirection 'Down' },
+    { key = 'k', mods = 'ALT', action = act.ActivatePaneDirection 'Up' },
+    { key = 'l', mods = 'ALT', action = act.ActivatePaneDirection 'Right' }
+    { key = 'LeftArrow', mods = 'ALT', action = act.AdjustPaneSize{ 'Left', 5 } },
+    { key = 'DownArrow', mods = 'ALT', action = act.AdjustPaneSize{ 'Down', 5 } },
+    { key = 'UpArrow', mods = 'ALT', action = act.AdjustPaneSize{ 'Up', 5 } },
+    { key = 'RightArrow', mods = 'ALT', action = act.AdjustPaneSize{ 'Right', 5 } },
 }
 
 config.key_tables = {
