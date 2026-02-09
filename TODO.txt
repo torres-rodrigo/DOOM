@@ -15,6 +15,8 @@ Fonts: Nerd Fonts (Cascadia, JetBrains), IA Writer, Font Awesome, Noto Fonts (al
 
 Way to get the working path
 
+gopass research
+
 install AUR DONE
 update aur paru -S paru
 
