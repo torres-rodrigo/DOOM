@@ -12,7 +12,6 @@ local function map(modes, lhs, rhs, desc, opts)
     vim.keymap.set(modes, lhs, rhs, opts)
 end
 
-
 -- Insert Mode ==================================================
 map('i', ',', ',<c-g>u', 'Undo break point on ,')
 map('i', '.', '.<c-g>u', 'Undo break point on .')
