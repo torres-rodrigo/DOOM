@@ -73,7 +73,7 @@ config.keys = {
     { key = 'h', mods = 'ALT', action = act.ActivatePaneDirection 'Left' },
     { key = 'j', mods = 'ALT', action = act.ActivatePaneDirection 'Down' },
     { key = 'k', mods = 'ALT', action = act.ActivatePaneDirection 'Up' },
-    { key = 'l', mods = 'ALT', action = act.ActivatePaneDirection 'Right' }
+    { key = 'l', mods = 'ALT', action = act.ActivatePaneDirection 'Right' },
     { key = 'LeftArrow', mods = 'ALT', action = act.AdjustPaneSize{ 'Left', 5 } },
     { key = 'DownArrow', mods = 'ALT', action = act.AdjustPaneSize{ 'Down', 5 } },
     { key = 'UpArrow', mods = 'ALT', action = act.AdjustPaneSize{ 'Up', 5 } },
