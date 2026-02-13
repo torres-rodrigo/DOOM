@@ -14,9 +14,8 @@ source "${ZINIT_HOME}/zinit.zsh"
 autoload -U compinit && compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 
 # Plugins
-zinit wait lucid for \
-  zsh-users/zsh-autosuggestions \
-  zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-completions
 
 zinit wait lucid for Aloxaf/fzf-tab
 
