@@ -17,6 +17,10 @@ Way to get the working path
 
 gopass research
 
+systemd startup delay
+/boot/loader/loader.conf
+
+
 install AUR DONE
 update aur paru -S paru
 
