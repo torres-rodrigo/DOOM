@@ -16,6 +16,11 @@ Fonts: Nerd Fonts (Cascadia, JetBrains), IA Writer, Font Awesome, Noto Fonts (al
 Way to get the working path
 
 gopass research
+ledger/hledger finances
+
+systemd startup delay
+/boot/loader/loader.conf
+
 
 systemd startup delay
 /boot/loader/loader.conf
