@@ -21,6 +21,8 @@ ledger/hledger finances
 systemd startup delay
 /boot/loader/loader.conf
 
+eza -l -a -h --icons --group-directories-first
+
 new icon can be used for fastfetch "󰧨 "
 
 wezterm
