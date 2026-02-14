@@ -13,6 +13,8 @@ PACKAGES=(
 
     #Desktop Enviorment
     "brightnessctl" # Backlight brightness control
+    "greetd" # Minimal display manager
+    "greetd-tuigreet" # TUI greeter for greetd
     "hypridle" # Idle management daemon
     "hyprland" # Dynamic tiling Wayland compositor
     "hyprland-guiutils" # GUI utilities for Hyprland

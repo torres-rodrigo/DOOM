@@ -72,6 +72,17 @@ echo
 #END PACKAGES
 
 #CONFIG SETUP
+echo "3. CONFIG SETUP"
 cp -r config/* ~/.config/
+echo "$SPACER"
+echo
 #END CONFIG SETUP
+
+#LOGIN & DISPLAY MANAGER SETUP
+echo "4. LOGIN & DISPLAY MANAGER SETUP"
+run_script "$DOOM_DIR/login/plymouth.sh"
+run_script "$DOOM_DIR/login/greetd.sh"
+echo "$SPACER"
+echo
+#END LOGIN & DISPLAY MANAGER SETUP
 
