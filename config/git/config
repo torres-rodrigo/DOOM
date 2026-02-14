@@ -1,5 +1,5 @@
 [alias]
-    xlog = log --all --graph
+    xlog = log --all --graph --decorate
     xblame = blame -w -C -C -C
     xstatus = status -b
     xdiff = diff --patch-with-stat
