@@ -32,4 +32,4 @@ export FZF_DEFAULT_OPTS='--layout=reverse --prompt="> " --border --ansi --bind "
 export LESSHISTFILE="-"
 
 # PATH
-export PATH="$CARGO_HOME/bin:$GOPATH/bin:$PATH"
+export PATH="$HOME/.local/bin:$CARGO_HOME/bin:$GOPATH/bin:$PATH"
