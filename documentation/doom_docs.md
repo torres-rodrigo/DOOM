@@ -127,5 +127,18 @@ If you want slightly more flexibility (easier to disable auto-login later), use 
   ---
 ```
 
+# Git multi user per dir
+gitconfig
+```
+[includeIf "gitdir/i:C:/Users/rodrigo.torrescosta/Documents/LOCAL_DOCS/my_projects/"]
+	path = C:/Users/rodrigo.torrescosta/.gitconfig-personal
+```
 
+gitconfig-personal
+```
+[user]
+	name = 
+	email = 
+```
 
+# new subject
