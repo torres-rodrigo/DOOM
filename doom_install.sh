@@ -73,10 +73,53 @@ echo
 
 #CONFIG SETUP
 echo "3. CONFIG SETUP"
-cp -r config/* ~/.config/
+if [[ -d "$DOOM_DIR/config" ]]; then
+    cp -rf "$DOOM_DIR/config"/* ~/.config/ || {
+        echo "Warning: Some config files failed to copy"
+    }
+    echo "Configuration files copied"
+else
+    echo "Error: config directory not found at $DOOM_DIR/config"
+    exit 1
+fi
 echo "$SPACER"
 echo
 #END CONFIG SETUP
+
+#HARDWARE & SYSTEM SETUP
+echo "3.5. HARDWARE & SYSTEM SETUP"
+run_script "$DOOM_DIR/install/hardware/laptop-detect.sh"
+run_script "$DOOM_DIR/install/hardware/nvidia-detect.sh"
+run_script "$DOOM_DIR/install/hardware/bluetooth.sh"
+run_script "$DOOM_DIR/install/security/firewall.sh"
+run_script "$DOOM_DIR/install/security/fingerprint.sh"
+run_script "$DOOM_DIR/install/security/fido2.sh"
+
+# Deploy utility scripts
+echo "Installing DOOM utility scripts..."
+mkdir -p "$HOME/.local/bin"
+
+# Copy scripts safely with validation
+if compgen -G "$DOOM_DIR/scripts/doom-*" > /dev/null; then
+    cp -f "$DOOM_DIR/scripts/"doom-* "$HOME/.local/bin/" || {
+        echo "Warning: Some scripts failed to copy"
+    }
+
+    # Make scripts executable (only if they exist)
+    if compgen -G "$HOME/.local/bin/doom-*" > /dev/null; then
+        chmod +x "$HOME/.local/bin/"doom-*
+        echo "DOOM utility scripts installed to ~/.local/bin"
+    fi
+else
+    echo "Warning: No doom-* scripts found in $DOOM_DIR/scripts/"
+fi
+
+# Enable clipboard service
+systemctl --user enable --now doom-cliphist.service
+
+echo "$SPACER"
+echo
+#END HARDWARE & SYSTEM SETUP
 
 #LOGIN & DISPLAY MANAGER SETUP
 echo "4. LOGIN & DISPLAY MANAGER SETUP"
@@ -85,4 +128,34 @@ run_script "$DOOM_DIR/login/greetd.sh"
 echo "$SPACER"
 echo
 #END LOGIN & DISPLAY MANAGER SETUP
+
+#INSTALLATION COMPLETE
+echo ""
+echo "============================================="
+echo "       DOOM INSTALLATION COMPLETE!          "
+echo "============================================="
+echo ""
+echo "Automatic Features Configured:"
+echo "✓ Battery monitoring (laptops only)"
+echo "✓ NVIDIA drivers (if GPU detected)"
+echo "✓ Firewall enabled (UFW)"
+echo "✓ Clipboard history (auto-save)"
+echo "✓ Power profile optimized"
+echo "✓ Bluetooth ready"
+echo ""
+echo "Optional Setup (run manually):"
+echo "• Fingerprint: doom-setup-fingerprint"
+echo "• FIDO2/Yubikey: doom-setup-fido2"
+echo ""
+echo "New Keybindings:"
+echo "• Super+V: Clipboard history"
+echo "• Super+Print: Screenshot with editor"
+echo "• Super+R: Screen recording (toggle)"
+echo "• Super+B: Bluetooth manager"
+echo "• Print: Quick screenshot"
+echo ""
+echo "Reboot recommended for all changes to take effect."
+echo "============================================="
+echo ""
+#END INSTALLATION COMPLETE
 

@@ -27,6 +27,35 @@ PACKAGES=(
     "uwsm" # Universal Wayland Session Manager
     "wl-clipboard" # Clipboard manager for Wayland
 
+    #System - Hardware Detection & Management
+    "pciutils" # PCI device detection (lspci)
+    "upower" # Battery/power monitoring
+    "usbutils" # USB device detection (lsusb)
+
+    #System - Bluetooth
+    "bluez" # Bluetooth protocol stack
+    "bluez-utils" # Bluetooth utilities
+    "bluetui" # Minimal TUI Bluetooth manager (Rust)
+
+    #Security
+    "fprintd" # Fingerprint authentication daemon
+    "libfido2" # FIDO2 library
+    "pam-u2f" # FIDO2/Yubikey PAM module
+    "ufw" # Uncomplicated Firewall
+
+    #UX - Clipboard
+    "cliphist" # Clipboard history manager (Go)
+    "wl-clip-persist" # Persist clipboard after app closes
+
+    #UX - Screenshots
+    "grim" # Screenshot utility for Wayland
+    "satty" # Screenshot annotation tool (Rust)
+    "slurp" # Region selector for Wayland
+
+    #UX - Screen Recording
+    "gpu-screen-recorder" # Hardware-accelerated screen recorder
+    "v4l-utils" # Webcam utilities
+
     #Terminal
     "bat" # Improved cat
     "btop" # TUI resource monitor
