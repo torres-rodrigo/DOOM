@@ -23,9 +23,6 @@ systemd startup delay
 
 new icon can be used for fastfetch "󰧨 "
 
-systemd startup delay
-/boot/loader/loader.conf
-
 wezterm
 { key = 'phys:Space', mods = 'SHIFT|CTRL', action = act.QuickSelect },
 { key = 'f', mods = 'SHIFT|CTRL', action = act.Search 'CurrentSelectionOrEmptyString' },
@@ -64,6 +61,8 @@ bindkey '^Xc' copy-buffer-to-clipboard
 
 make all necessary dirs
 mkdir -p "$XDG_STATE_HOME/zsh"
+also the ones to for zshenv
+script for creating all dirs
 
 
 add scripts to path
