@@ -1,0 +1,72 @@
+#!/bin/bash
+set -euo pipefail
+
+# GPU screen recorder based on dotfiles implementation
+
+# Safely load XDG user directories if available
+if [[ -f "$HOME/.config/user-dirs.dirs" ]]; then
+    XDG_VIDEOS_DIR=$(grep '^XDG_VIDEOS_DIR=' "$HOME/.config/user-dirs.dirs" 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo "")
+    XDG_VIDEOS_DIR="${XDG_VIDEOS_DIR/\$HOME/$HOME}"
+fi
+
+OUTPUT_DIR="${XDG_VIDEOS_DIR:-$HOME/Videos}"
+
+mkdir -p "$OUTPUT_DIR"
+
+DESKTOP_AUDIO="false"
+MICROPHONE_AUDIO="false"
+
+for arg in "$@"; do
+  case "$arg" in
+    --with-desktop-audio) DESKTOP_AUDIO="true" ;;
+    --with-microphone-audio) MICROPHONE_AUDIO="true" ;;
+  esac
+done
+
+start_recording() {
+  local filename="$OUTPUT_DIR/recording-$(date +'%Y-%m-%d_%H-%M-%S').mp4"
+  local audio_devices=""
+  local audio_args=""
+
+  [[ "$DESKTOP_AUDIO" == "true" ]] && audio_devices+="default_output"
+
+  if [[ "$MICROPHONE_AUDIO" == "true" ]]; then
+    [[ -n "$audio_devices" ]] && audio_devices+="|"
+    audio_devices+="default_input"
+  fi
+
+  [[ -n "$audio_devices" ]] && audio_args="-a $audio_devices"
+
+  # shellcheck disable=SC2086
+  gpu-screen-recorder -w portal -f 60 -o "$filename" $audio_args -ac aac &
+  notify-send "Screen Recording Started" "Recording to Videos/" -t 2000
+}
+
+stop_recording() {
+  if ! pkill -SIGINT -f "^gpu-screen-recorder"; then
+    notify-send "Screen Recording" "No active recording found" -t 2000 -u normal
+    return 1
+  fi
+
+  # Wait for process to terminate (max 5 seconds)
+  local count=0
+  while pgrep -f "^gpu-screen-recorder" >/dev/null && [[ $count -lt 50 ]]; do
+    sleep 0.1
+    count=$((count + 1))
+  done
+
+  # Check if process is still running (force kill if necessary)
+  if pgrep -f "^gpu-screen-recorder" >/dev/null; then
+    echo "Warning: Recording didn't stop cleanly, force killing..." >&2
+    pkill -SIGKILL -f "^gpu-screen-recorder" || true
+    notify-send "Screen Recording" "Recording force stopped" -t 2000 -u critical
+  else
+    notify-send "Screen Recording Saved" "File saved to $OUTPUT_DIR" -t 2000
+  fi
+}
+
+if pgrep -f "^gpu-screen-recorder" >/dev/null; then
+  stop_recording
+else
+  start_recording
+fi
