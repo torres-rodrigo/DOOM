@@ -1,0 +1,42 @@
+#!/bin/bash
+set -euo pipefail
+
+# Low battery notification script (run by systemd timer)
+
+BATTERY_THRESHOLD=10
+LOCK_DIR="/run/user/$UID/doom_battery_lock"
+NOTIFICATION_FLAG="/run/user/$UID/doom_battery_notified"
+
+send_notification() {
+  notify-send -u critical "Battery Low!" "Battery is down to ${1}%" -i battery-caution -t 30000
+}
+
+# Get battery level
+BATTERY_LEVEL=$(doom-battery-remaining || echo "")
+
+# Get battery state
+BATTERY_PATH=$(upower -e | grep 'BAT' | head -1 || echo "")
+if [[ -z "$BATTERY_PATH" ]]; then
+    # No battery found, exit silently
+    exit 0
+fi
+
+BATTERY_STATE=$(upower -i "$BATTERY_PATH" | grep -E "state" | awk '{print $2}' || echo "unknown")
+
+# Validate battery level is numeric
+if [[ -n "$BATTERY_LEVEL" && "$BATTERY_LEVEL" =~ ^[0-9]+$ ]]; then
+  if [[ "$BATTERY_STATE" == "discharging" && "$BATTERY_LEVEL" -le "$BATTERY_THRESHOLD" ]]; then
+    # Use atomic directory creation for lock (prevents race condition)
+    if mkdir "$LOCK_DIR" 2>/dev/null; then
+      # We got the lock
+      if [[ ! -f "$NOTIFICATION_FLAG" ]]; then
+        send_notification "$BATTERY_LEVEL"
+        touch "$NOTIFICATION_FLAG"
+      fi
+      rmdir "$LOCK_DIR"
+    fi
+  else
+    # Battery is charging or above threshold - remove flag
+    rm -f "$NOTIFICATION_FLAG"
+  fi
+fi
