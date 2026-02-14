@@ -22,6 +22,7 @@ systemd startup delay
 /boot/loader/loader.conf
 
 eza -l -a -h --icons --group-directories-first
+learn more about stow
 
 new icon can be used for fastfetch "󰧨 "
 
