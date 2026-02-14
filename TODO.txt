@@ -26,6 +26,8 @@ learn more about stow
 
 new icon can be used for fastfetch "󰧨 "
 
+zsh aliases/scripts dry run delete orphans, fzf list orphans and multi select to delete them
+
 wezterm
 { key = 'phys:Space', mods = 'SHIFT|CTRL', action = act.QuickSelect },
 { key = 'f', mods = 'SHIFT|CTRL', action = act.Search 'CurrentSelectionOrEmptyString' },
