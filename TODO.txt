@@ -21,9 +21,16 @@ ledger/hledger finances
 systemd startup delay
 /boot/loader/loader.conf
 
+new icon can be used for fastfetch "󰧨 "
 
 systemd startup delay
 /boot/loader/loader.conf
+
+wezterm
+{ key = 'phys:Space', mods = 'SHIFT|CTRL', action = act.QuickSelect },
+{ key = 'f', mods = 'SHIFT|CTRL', action = act.Search 'CurrentSelectionOrEmptyString' },
+{ key = 'U', mods = 'CTRL', action = act.CharSelect{ copy_on_select = true, copy_to =  'ClipboardAndPrimarySelection' } },
+{ key = 'U', mods = 'SHIFT|CTRL', action = act.CharSelect{ copy_on_select = true, copy_to =  'ClipboardAndPrimarySelection' } },
 
 
 install AUR DONE
