@@ -1,0 +1,5 @@
+# Maximum clipboard history entries
+max_items=1000
+
+# Enable image support
+store_images=true
