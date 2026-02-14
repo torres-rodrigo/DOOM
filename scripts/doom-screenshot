@@ -1,0 +1,79 @@
+#!/bin/bash
+set -euo pipefail
+
+# Smart screenshot tool based on omarchy/dotfiles implementation
+
+# Safely load XDG user directories if available
+if [[ -f "$HOME/.config/user-dirs.dirs" ]]; then
+    # Source in a subshell and validate before using
+    XDG_PICTURES_DIR=$(grep '^XDG_PICTURES_DIR=' "$HOME/.config/user-dirs.dirs" 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo "")
+    # Expand $HOME if present
+    XDG_PICTURES_DIR="${XDG_PICTURES_DIR/\$HOME/$HOME}"
+fi
+
+OUTPUT_DIR="${XDG_PICTURES_DIR:-$HOME/Pictures}/Screenshots"
+
+mkdir -p "$OUTPUT_DIR"
+
+# Kill any existing slurp instance
+pkill slurp && exit 0
+
+MODE="${1:-smart}"
+PROCESSING="${2:-edit}"
+
+get_rectangles() {
+  local active_workspace
+  active_workspace=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true) | .activeWorkspace.id')
+
+  if [[ -z "$active_workspace" ]]; then
+    echo "Error: Could not determine active workspace" >&2
+    return 1
+  fi
+
+  hyprctl monitors -j | jq -r --arg ws "$active_workspace" '.[] | select(.activeWorkspace.id == ($ws | tonumber)) | "\(.x),\(.y) \((.width / .scale) | floor)x\((.height / .scale) | floor)"'
+  hyprctl clients -j | jq -r --arg ws "$active_workspace" '.[] | select(.workspace.id == ($ws | tonumber)) | "\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"'
+}
+
+case "$MODE" in
+  fullscreen)
+    SELECTION=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true) | "\(.x),\(.y) \((.width / .scale) | floor)x\((.height / .scale) | floor)"')
+    ;;
+  region)
+    SELECTION=$(slurp 2>/dev/null)
+    ;;
+  smart|*)
+    RECTS=$(get_rectangles)
+    SELECTION=$(echo "$RECTS" | slurp 2>/dev/null)
+
+    # Prevent accidental 2px snapshots
+    if [[ -n "$SELECTION" ]]; then
+      width=$(echo "$SELECTION" | awk '{split($2,a,"x"); print a[1]}')
+      height=$(echo "$SELECTION" | awk '{split($2,a,"x"); print a[2]}')
+      area=$((width * height))
+      if [[ $area -lt 20 ]]; then
+        exit 0
+      fi
+    fi
+    ;;
+esac
+
+[ -z "$SELECTION" ] && exit 0
+
+if [[ "$PROCESSING" == "edit" ]]; then
+  FILENAME="$OUTPUT_DIR/screenshot-$(date +'%Y-%m-%d_%H-%M-%S').png"
+  grim -g "$SELECTION" - | \
+    satty --filename - \
+      --output-filename "$FILENAME" \
+      --early-exit \
+      --copy-command 'wl-copy' || {
+        notify-send "Screenshot Failed" "Could not open editor" -t 2000 -u critical
+        exit 1
+      }
+else
+  if grim -g "$SELECTION" - | wl-copy; then
+    notify-send "Screenshot" "Copied to clipboard" -t 2000
+  else
+    notify-send "Screenshot Failed" "Could not capture screenshot" -t 2000 -u critical
+    exit 1
+  fi
+fi
