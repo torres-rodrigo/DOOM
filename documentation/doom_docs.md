@@ -440,4 +440,21 @@ gitconfig-personal
   - Hardware detection
   - Full documentation
 ```
+# zen setup
+download zen tar.xz
+tar -xvf zen.linux-x86_64.tar.xz
+chmod +x zen/.zen
+sudo mv zen /opt/
+sudo v /usr/share/applications/zen.desktop
+```
+[Desktop Entry]
+Name=Zen
+Exec=/opt/zen/zen
+Icon=/opt/zen/browser/chrome/icons/default/default128.png
+Type=Application
+Categories=Network;WebBrowser;
+
+```
+
+
 # New subject

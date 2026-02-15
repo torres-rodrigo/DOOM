@@ -291,3 +291,12 @@ alias -g J='| jq'
 
 # Copy output to clipboard (macOS)
 alias -g C='| pbcopy'
+
+vim.api.nvim_create_user_command("W", function()
+  vim.cmd("write !sudo tee % > /dev/null")
+  vim.cmd("edit!")
+end, {})
+
+didnt work
+usage
+:W
