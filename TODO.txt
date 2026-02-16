@@ -23,7 +23,6 @@ systemd startup delay
 /boot/loader/loader.conf
 
 TODO
-  new icon can be used for fastfetch "󰧨 " Can be used as DE icon
   Finish up fastfetch config
   Check how to delete temp files
   wezterm copy command shortcut && delete entire line command

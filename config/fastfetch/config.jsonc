@@ -50,7 +50,7 @@
     },
     {
       "type": "swap",
-      "key": "└ └ 󰓡 ",
+      "key": "│ └ 󰓡 ",
       "keyColor": "green"
     },
     {
@@ -92,7 +92,7 @@
     },
     {
       "type": "de",
-      "key": "│ ├  ",
+      "key": "│ ├ 󰧨 ",
       "keyColor": "blue"
     },
     {
@@ -117,7 +117,7 @@
     },
     {
       "type": "command",
-      "key": "└ └ 󰸌 ",
+      "key": "│ └ 󰸌 ",
       "keyColor": "blue",
       "text": "theme=$(omarchy-theme-current); echo -e \"$theme \\e[38m●\\e[37m●\\e[36m●\\e[35m●\\e[34m●\\e[33m●\\e[32m●\\e[31m●\""
     },
@@ -128,22 +128,22 @@
     "break",
     {
       "type": "custom",
-      "format": "\u001b[90m┌────────────────Age / Uptime / Update───────────────┐"
+      "format": "\u001b[90m┌────────────────Uptime / Update───────────────┐"
     },
-    {
-      "type": "command",
-      "key": "󱦟 OS Age",
-      "keyColor": "magenta",
-      "text": "echo $(( ($(date +%s) - $(stat -c %W /)) / 86400 )) days"
-    },
+    // {
+    //   "type": "command",
+    //   "key": "󱦟 OS Age",
+    //   "keyColor": "magenta",
+    //   "text": "echo $(( ($(date +%s) - $(stat -c %W /)) / 86400 )) days"
+    // },
     {
       "type": "uptime",
-      "key": "󱫐 Uptime",
+      "key": "│ ├ 󱦟 Uptime",
       "keyColor": "magenta"
     },
     {
       "type": "command",
-      "key": " Update",
+      "key": "│ ├  Update",
       "keyColor": "magenta",
       "text": "updated=$(omarchy-version-pkgs); echo \"$updated\""
     },
