@@ -29,6 +29,9 @@ new icon can be used for fastfetch "󰧨 "
 zsh aliases/scripts dry run delete orphans, fzf list orphans and multi select to delete them
 Check how to delete temp files
 
+copy command shortcut
+delete entire line command
+
 wezterm
 { key = 'phys:Space', mods = 'SHIFT|CTRL', action = act.QuickSelect },
 { key = 'f', mods = 'SHIFT|CTRL', action = act.Search 'CurrentSelectionOrEmptyString' },
