@@ -70,7 +70,7 @@ echo "Created backup: $BACKUP_FILE"
 
 # Create temporary file for safe editing
 TEMP_CONF="$(mktemp)"
-trap "rm -f $TEMP_CONF" EXIT
+trap "rm -f \"$TEMP_CONF\"" EXIT
 
 # Process the file: remove old nvidia modules, add new ones
 sudo cat "$MKINITCPIO_CONF" | \
@@ -100,7 +100,7 @@ sudo mkinitcpio -P
 
 # Add NVIDIA env vars to Hyprland config
 HYPR_ENV="$HOME/.config/hypr/envs.conf"
-if [ -f "$HYPR_ENV" ] && ! grep -q "NVD_BACKEND" "$HYPR_ENV"; then
+if [[ -f "$HYPR_ENV" ]] && ! grep -q "NVD_BACKEND" "$HYPR_ENV"; then
     cat >> "$HYPR_ENV" <<'EOF'
 
 # NVIDIA environment variables (auto-configured)

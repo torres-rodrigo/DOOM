@@ -307,4 +307,3 @@ if [[ -f "$CHECKPOINT_FILE" ]]; then
     checkpoint_clear
 fi
 #END INSTALLATION COMPLETE
-
