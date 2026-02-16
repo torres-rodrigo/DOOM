@@ -2,35 +2,42 @@ CalOS: https://github.com/criticalart/calos
 Symphony: https://github.com/vyrx-dev/dotfiles
 omarchy
 
-Categorize packages
-Desktop Environment: Hyprland (Wayland compositor), SDDM (login manager), Waybar (status bar), Walker (app launcher)
-Core Tools: Docker, Git, Neovim, PostgreSQL/MariaDB libs, Poetry, Mise, Yay (AUR helper)
-Programming: Rust, Ruby, Python, LLVM, Clang, Node.js (via mise)
-Terminal Tools: Starship, Zoxide, Fzf, Ripgrep, Bat, Eza, Dust, Btop, Lazygit, Lazydocker
-Browsers/Apps: Chromium (omarchy-chromium), Obsidian, Signal, Spotify, 1Password
-Media: MPV, IMV, OBS Studio, GPU Screen Recorder, Kdenlive
-Utilities: Gum (TUI prompts), Nautilus, GNOME Calculator, LibreOffice, Evince (PDF)
-System: UFW (firewall), Bluetooth, Cups (printing), Avahi (mDNS), Plymouth (boot splash)
-Fonts: Nerd Fonts (Cascadia, JetBrains), IA Writer, Font Awesome, Noto Fonts (all variants)
+CHECK:
+  orphans
+  eza aliases
+  All aliases
+
+Fonts:
+  My custom caskadia
+  Excalidraw Font
+
+Research packages:
+  gopass research
+  ledger/hledger finances
+  learn more about stow
+  mise
 
 Way to get the working path
-
-gopass research
-ledger/hledger finances
 
 systemd startup delay
 /boot/loader/loader.conf
 
-eza -l -a -h --icons --group-directories-first
-learn more about stow
-
-new icon can be used for fastfetch "󰧨 "
-
-zsh aliases/scripts dry run delete orphans, fzf list orphans and multi select to delete them
-Check how to delete temp files
-
-copy command shortcut
-delete entire line command
+TODO
+  new icon can be used for fastfetch "󰧨 " Can be used as DE icon
+  Finish up fastfetch config
+  Check how to delete temp files
+  wezterm copy command shortcut && delete entire line command
+  re order zshrc
+  make all necessary dirs
+  mkdir -p "$XDG_STATE_HOME/zsh"
+  also the ones to for zshenv
+  script for creating all dirs
+  firewall
+  put librewolf config on zen
+  add aliases to common places
+  add contrl functionality to terminal ctrl + e open file browser
+  kill process function
+  zen plugin/extenssion alt f to highlight links and navigate to them, alt shift f open in new tab, ctrl alt f preview, ctrl alt shift f open on new browser alt hjkl scroll
 
 wezterm
 { key = 'phys:Space', mods = 'SHIFT|CTRL', action = act.QuickSelect },
@@ -39,13 +46,43 @@ wezterm
 { key = 'U', mods = 'SHIFT|CTRL', action = act.CharSelect{ copy_on_select = true, copy_to =  'ClipboardAndPrimarySelection' } },
 
 
-install AUR DONE
-update aur paru -S paru
+knowledge
+  update aur: paru -S paru
+  # -------------------------------------------
+  # 5. Suffix Aliases - Open Files by Extension
+  # -------------------------------------------
+  # Just type the filename to open it with the associated program
+  alias -s json=jless
+  alias -s md=bat
+  alias -s go='$EDITOR'
+  alias -s rs='$EDITOR'
+  alias -s txt=bat
+  alias -s log=bat
+  alias -s py='$EDITOR'
+  alias -s js='$EDITOR'
+  alias -s ts='$EDITOR'
+  alias -s html=open  # macOS: open in default browser
 
-repect xdg spec DONE
+  # -------------------------------------------
+  # 6. Global Aliases - Use Anywhere in Commands
+  # -------------------------------------------
+  # Redirect stderr to /dev/null
+  alias -g NE='2>/dev/null'
+
+  # Redirect stdout to /dev/null
+  alias -g NO='>/dev/null'
+
+  # Redirect both stdout and stderr to /dev/null
+  alias -g NUL='>/dev/null 2>&1'
+
+# Pipe to jq
+alias -g J='| jq'
+
+# Copy output to clipboard (macOS)
+alias -g C='| pbcopy'
+
 
 web apps 90%
-
 tuis 90%
 
 zsh /etc/zsh/zshenv --> export ZDOTDIR="$HOME/.config/zsh" DONE
@@ -68,19 +105,8 @@ bindkey '^Xc' copy-buffer-to-clipboard
 #   zle -M "Copied to clipboard"
 # }
 
-make all necessary dirs
-mkdir -p "$XDG_STATE_HOME/zsh"
-also the ones to for zshenv
-script for creating all dirs
 
 
-add scripts to path
-firewall
-put librewolf config on zen
-add aliases to common places
-add path and file coompletion to certain methods
-add contrl functionality to terminal
-kill process function
 
 Ah! Got it — you want a true interactive “compare & edit” workflow, where:
 You pick a branch and a file → this is the “base file”
@@ -252,54 +278,8 @@ myMethod() {
     echo "Created: $target_file"
   done
 }
-
-add ctrl command to open file explorer on current dir
-
-mise
-
-zen plugin/extenssion alt f to highlight links and navigate to them, alt shift f open in new tab, ctrl alt f preview, ctrl alt shift f open on new browser
-alt hjkl scroll
  
 curl "wttr.in"
 
-# -------------------------------------------
-# 5. Suffix Aliases - Open Files by Extension
-# -------------------------------------------
-# Just type the filename to open it with the associated program
-alias -s json=jless
-alias -s md=bat
-alias -s go='$EDITOR'
-alias -s rs='$EDITOR'
-alias -s txt=bat
-alias -s log=bat
-alias -s py='$EDITOR'
-alias -s js='$EDITOR'
-alias -s ts='$EDITOR'
-alias -s html=open  # macOS: open in default browser
 
-# -------------------------------------------
-# 6. Global Aliases - Use Anywhere in Commands
-# -------------------------------------------
-# Redirect stderr to /dev/null
-alias -g NE='2>/dev/null'
 
-# Redirect stdout to /dev/null
-alias -g NO='>/dev/null'
-
-# Redirect both stdout and stderr to /dev/null
-alias -g NUL='>/dev/null 2>&1'
-
-# Pipe to jq
-alias -g J='| jq'
-
-# Copy output to clipboard (macOS)
-alias -g C='| pbcopy'
-
-vim.api.nvim_create_user_command("W", function()
-  vim.cmd("write !sudo tee % > /dev/null")
-  vim.cmd("edit!")
-end, {})
-
-didnt work
-usage
-:W
