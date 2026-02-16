@@ -16,6 +16,7 @@ Research packages:
   ledger/hledger finances
   learn more about stow
   mise
+  dankmaterialshell
 
 Way to get the working path
 
