@@ -83,7 +83,9 @@ alias z='cd'
 alias ld='cd -'
 alias g='git'
 alias lg='lazygit'
-alias ls='eza -lha --icons'
+alias ls='eza -lha --icons --group'
+alias lsf='eza -lha --icons --only-files' # List only files
+alias lsd='eza -lha --icons --only-dirs'  # List only directories
 alias tree='eza --tree --icons'
 alias sp='sudo pacman'
 alias config='cd $HOME/.config/'
@@ -109,16 +111,16 @@ zl() {
 
     if [ -n "$dir" ]; then
        cd "$dir"
-       eza -lha --icons
+       eza -lha --icons --group
     fi
 }
 
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias ..l='cd .. && eza -lha --icons'
-alias ...l='cd ../.. && eza -lha --icons'
-alias ....l='cd ../../.. && eza -lha --icons'
+alias ..l='cd .. && eza -lha --icons --group'
+alias ...l='cd ../.. && eza -lha --icons --group'
+alias ....l='cd ../../.. && eza -lha --icons --group'
 
 alias gf='git fetch'                                   # git fetch
 alias gp='git pull'                                    # git pull
