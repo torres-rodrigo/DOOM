@@ -16,8 +16,8 @@ autoload -U compinit && compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdu
 # Plugins
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-completions
-
 zinit wait lucid for Aloxaf/fzf-tab
+zinit light zsh-users/zsh-syntax-highlighting
 
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
 zstyle ':fzf-tab:*' fzf-flags --bind=tab:accept
@@ -219,4 +219,48 @@ vz() {
     fi
 }
 
-zinit light zsh-users/zsh-syntax-highlighting
+# Remove Orphans
+orphans() {
+    orphans=$(paru -Qdtq 2>/dev/null || true)
+
+    if [[ -z "$orphans" ]]; then
+        echo "✓ No orphan packages found!"
+        return
+    fi
+
+    selected=$(echo "$orphans" | fzf --multi \
+        --prompt="Select packages to remove > " \
+        --header="Enter: confirm | Esc: cancel | Ctrl-A: select all" \
+        --preview='paru -Qi {} 2>/dev/null || echo "Package info not available"' \
+        --preview-window=right:60%:wrap \
+        --border \
+        --height=80% \
+        --bind='ctrl-a:select-all' \
+        --reverse) || {
+        return
+    }
+
+    if [[ -z "$selected" ]]; then
+      return
+    fi
+
+    selected_count=$(echo "$selected" | wc -l)
+    echo ""
+    echo "Selected $selected_count package(s) for removal:"
+    echo "─────────────────────────────────────────"
+    echo "$selected"
+    echo "─────────────────────────────────────────"
+    echo ""
+
+    read -p "Remove these packages? (y/n): " -n 1 -r
+    echo ""
+
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo ""
+        echo "Removing packages..."
+        # Use xargs to pass packages to paru, -Rns removes with dependencies
+        echo "$selected" | xargs paru -Rns --noconfirm
+        echo ""
+        echo "✓ Packages removed successfully"
+    fi
+}
