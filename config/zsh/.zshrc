@@ -24,16 +24,16 @@ zstyle ':fzf-tab:*' fzf-flags --bind=tab:accept
 
 autoload -Uz edit-command-line
 zle -N edit-command-line
-bindkey '^X' edit-command-line
+bindkey '^X' edit-command-line      # Ctrl + X vim mode for command
 
-bindkey '^[' undo
-bindkey '^]' redo
+bindkey '^[' undo                   # Ctrl + [ undo
+bindkey '^]' redo                   # Ctrl + ] redo
 
-bindkey '^H' backward-kill-word
-bindkey '^[[3;5~' kill-word
+bindkey '^H' backward-kill-word     # Ctrl + H delete word backwards
+bindkey '^[[3;5~' kill-word         # Ctrl + Delete delete word forwards
 
-bindkey '\e[1;5D' backward-word
-bindkey '\e[1;5C' forward-word
+bindkey '\e[1;5D' backward-word     # Ctrl + Left move word backwards
+bindkey '\e[1;5C' forward-word      # Ctrl + Right move word forwards
 
 # Starship
 if command -v starship &> /dev/null; then
@@ -71,6 +71,7 @@ source <(fzf --zsh)
 # Ctrl + t: Selector
 # **<TAB>: Fuzzy Finding
 # Alt + c: Directory switching
+# Alt + .: Directory switching with preview
 
 # DEFAULTS
 export EDITOR="nvim"
@@ -81,13 +82,13 @@ export BAT_THEME=ansi
 alias v='nvim'
 alias z='cd'
 alias ld='cd -'
-alias g='git'
+alias g='git'                             # Possible delete
 alias lg='lazygit'
 alias ls='eza -lha --icons --group'
 alias lsf='eza -lha --icons --only-files' # List only files
 alias lsd='eza -lha --icons --only-dirs'  # List only directories
 alias tree='eza --tree --icons'
-alias sp='sudo pacman'
+alias sp='sudo pacman'                    # Possible delete
 alias config='cd $HOME/.config/'
 alias today='date "+%Y-%m-%d"'
 alias dat='date "+%Y-%m-%d %H:%M:%S"' # date and time 
@@ -104,6 +105,7 @@ zle_z() {
 }
 zle -N zle_z
 bindkey '\e.' zle_z
+# Alt + .: Directory switching with preview
 
 zl() {
     local dir=$(fd --type d --hidden --exclude .git \
@@ -151,6 +153,7 @@ alias grr='git reset --hard @{u}'                      # git reset to remote
 alias grl='git reset --hard HEAD'                      # git reset local
 alias gbl='git xblame'                                 # git blame
 
+# Zearch Dir
 zd() {
     local parameter=(.)
 
@@ -170,6 +173,7 @@ zd() {
     fi
 }
 
+# Zearch File Dir
 zf() {
     local parameter=(.)
 
@@ -189,6 +193,7 @@ zf() {
     fi
 }
 
+# Vim Zearch
 vz() {
     if [[ -n "$1" && -f "$1" ]]; then
         v "$1"
