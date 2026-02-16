@@ -6,6 +6,7 @@ CHECK:
   orphans
   eza aliases
   All aliases
+  re order zshrc
 
 Fonts:
   My custom caskadia
@@ -25,13 +26,8 @@ systemd startup delay
 
 TODO
   Finish up fastfetch config
-  Check how to delete temp files
   wezterm copy command shortcut && delete entire line command
-  re order zshrc
-  make all necessary dirs
-  mkdir -p "$XDG_STATE_HOME/zsh"
-  also the ones to for zshenv
-  script for creating all dirs
+  make all necessary dir mkdir -p "$XDG_STATE_HOME/zsh" also the ones to for zshenv script for creating all dirs
   firewall
   put librewolf config on zen
   add aliases to common places
