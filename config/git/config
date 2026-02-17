@@ -11,6 +11,10 @@
 [commit]
     verbose = true
 
+[color "diff"]
+    oldMoved = magenta
+    newMoved = cyan
+
 [core]
     #excludesFile = ~/.config/git/ignore
 
@@ -20,7 +24,6 @@
     renames = true
     colorMoved = default
     colorMovedWS = allow-indentation-change
-    wordRegex = .
 
 [fetch]
     prune = true
