@@ -1,10 +1,13 @@
+# ============================================
+# ZINIT INITIALIZATION
+# ============================================
 # Set dir to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
 # Download Zinit, if it's not there yet
 if [ ! -d "$ZINIT_HOME" ]; then
-   mkdir -p "$(dirname $ZINIT_HOME)"
-   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+    mkdir -p "$(dirname $ZINIT_HOME)"
+    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
 # Source zinit
@@ -13,35 +16,37 @@ source "${ZINIT_HOME}/zinit.zsh"
 # Load completions
 autoload -U compinit && compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 
-# Plugins
+# ============================================
+# PLUGINS
+# ============================================
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-completions
 zinit wait lucid for Aloxaf/fzf-tab
 zinit light zsh-users/zsh-syntax-highlighting
 
+# ============================================
+# PLUGIN CONFIGURATION
+# ============================================
+# FZF-tab settings
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
 zstyle ':fzf-tab:*' fzf-flags --bind=tab:accept
 
-autoload -Uz edit-command-line
-zle -N edit-command-line
-bindkey '^X' edit-command-line      # Ctrl + X vim mode for command
+# FZF
+source <(fzf --zsh)
+# Ctrl + r: Command history
+# Ctrl + t: Selector
+# **<TAB>: Fuzzy Finding
+# Alt + c: Directory switching
+# Alt + .: Directory switching with preview
 
-bindkey '^[' undo                   # Ctrl + [ undo
-bindkey '^]' redo                   # Ctrl + ] redo
+# Completion styling
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
-bindkey '^H' backward-kill-word     # Ctrl + H delete word backwards
-bindkey '^[[3;5~' kill-word         # Ctrl + Delete delete word forwards
-
-bindkey '\e[1;5D' backward-word     # Ctrl + Left move word backwards
-bindkey '\e[1;5C' forward-word      # Ctrl + Right move word forwards
-
-# Starship
-if command -v starship &> /dev/null; then
-  eval "$(starship init zsh)"
-fi
-
-# Autosuggestions settings
-HISTSIZE=1000
+# ============================================
+# SHELL CONFIGURATION
+# ============================================
+# History settings
+HISTSIZE=5000
 HISTFILE="$XDG_STATE_HOME/zsh/.zsh_history"
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
@@ -52,78 +57,72 @@ setopt hist_ignore_all_dups
 setopt hist_save_no_dups
 setopt hist_find_no_dups
 
-# Keymaps
 bindkey '^y' autosuggest-accept
 bindkey '^g' autosuggest-accept
 bindkey '^n' history-search-forward
 bindkey '^p' history-search-backward
-# Ctrl + a: Go to begining of prompt
+# Ctrl + a: Go to beginning of prompt
 # Ctrl + e: Go to end of prompt
-# Ctrl + f: Go foward in prompt
+# Ctrl + f: Go forward in prompt
 # Ctrl + b: Go backwards in prompt
 
-# Completion styling
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+bindkey '^[' undo                   # Ctrl + [ undo
+bindkey '^]' redo                   # Ctrl + ] redo
 
-# FZF
-source <(fzf --zsh)
-# Ctrl + r: Command history
-# Ctrl + t: Selector
-# **<TAB>: Fuzzy Finding
-# Alt + c: Directory switching
-# Alt + .: Directory switching with preview
+bindkey '^H' backward-kill-word     # Ctrl + H delete word backwards
+bindkey '^[[3;5~' kill-word         # Ctrl + Delete delete word forwards
+bindkey '\e[1;5D' backward-word     # Ctrl + Left move word backwards
+bindkey '\e[1;5C' forward-word      # Ctrl + Right move word forwards
 
-# DEFAULTS
+bindkey '^[k' clear-line            # Alt + K: Clear line TODO
+bindkey '^[y' copy-line             # Alt + Y: Copy line
+
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^X' edit-command-line      # Ctrl + X vim mode for command
+
+# ============================================
+# ENVIRONMENT VARIABLES
+# ============================================
 export EDITOR="nvim"
 export SUDO_EDITOR="$EDITOR"
 export BAT_THEME=ansi
 
-# ALIASES
+# ============================================
+# PROMPT
+# ============================================
+# Starship
+if command -v starship &> /dev/null; then
+eval "$(starship init zsh)"
+fi
+
+# ============================================
+# ALIASES & FUNCTIONS
+# ============================================
+# Basic utilities
 alias v='nvim'
 alias z='cd'
 alias ld='cd -'
 alias g='git'                             # Possible delete
 alias lg='lazygit'
-alias ls='eza -lha --icons --group'
+alias ls='eza -lha --icons --group-directories-first'
 alias lsf='eza -lha --icons --only-files' # List only files
 alias lsd='eza -lha --icons --only-dirs'  # List only directories
 alias tree='eza --tree --icons'
 alias sp='sudo pacman'                    # Possible delete
 alias config='cd $HOME/.config/'
 alias today='date "+%Y-%m-%d"'
-alias dat='date "+%Y-%m-%d %H:%M:%S"' # date and time 
+alias dat='date "+%Y-%m-%d %H:%M:%S"'     # date and time
 
-zle_z() {
-    local dir=$(fd --type d --hidden --exclude .git \
-              | fzf --prompt 'Directory  : ' --height=60% --preview 'eza --tree --color=always --icons=always {};') || return
-
-    if [ -n "$dir" ]; then
-        cd "$dir"
-    fi
-
-    zle reset-prompt
-}
-zle -N zle_z
-bindkey '\e.' zle_z
-# Alt + .: Directory switching with preview
-
-zl() {
-    local dir=$(fd --type d --hidden --exclude .git \
-        | fzf --prompt 'Directory  : ' --height=60% --preview 'eza --tree --color=always --icons=always {};' ) || return
-
-    if [ -n "$dir" ]; then
-       cd "$dir"
-       eza -lha --icons --group
-    fi
-}
-
+# Navigation aliases
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias ..l='cd .. && eza -lha --icons --group'
-alias ...l='cd ../.. && eza -lha --icons --group'
-alias ....l='cd ../../.. && eza -lha --icons --group'
+alias ..l='cd .. && eza -lha --icons --group-directories-first'
+alias ...l='cd ../.. && eza -lha --icons --group-directories-first'
+alias ....l='cd ../../.. && eza -lha --icons --group-directories-first'
 
+# Git aliases
 alias gf='git fetch'                                   # git fetch
 alias gp='git pull'                                    # git pull
 alias gaa='git add .'                                  # git add all
@@ -152,6 +151,32 @@ alias gr='git restore'                                 # git restore
 alias grr='git reset --hard @{u}'                      # git reset to remote
 alias grl='git reset --hard HEAD'                      # git reset local
 alias gbl='git xblame'                                 # git blame
+
+# [Z]earch Functions
+zle_z() {
+    local dir=$(fd --type d --hidden --exclude .git \
+              | fzf --prompt 'Directory  : ' --height=69% --preview 'eza --tree --color=always --icons=always {};') || return
+
+    if [ -n "$dir" ]; then
+        cd "$dir"
+    fi
+
+    zle reset-prompt
+}
+zle -N zle_z
+bindkey '\e.' zle_z
+# Alt + .: Directory switching with preview
+
+# Zearch & List
+zl() {
+    local dir=$(fd --type d --hidden --exclude .git \
+        | fzf --prompt 'Directory  : ' --height=69% --preview 'eza --tree --color=always --icons=always {};' ) || return
+
+    if [ -n "$dir" ]; then
+       cd "$dir"
+       eza -lha --icons --group-directories-first
+    fi
+}
 
 # Zearch Dir
 zd() {
