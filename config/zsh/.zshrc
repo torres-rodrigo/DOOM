@@ -151,6 +151,8 @@ alias gr='git restore'                                 # git restore
 alias grr='git reset --hard @{u}'                      # git reset to remote
 alias grl='git reset --hard HEAD'                      # git reset local
 alias gbl='git xblame'                                 # git blame
+alias grv='git revert -n'                              # git revert and stage <commit hashes>
+alias grvc='git revert'                                # git revert and commit <commit hashes>
 
 # [Z]earch Functions
 zle_z() {
