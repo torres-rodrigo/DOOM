@@ -160,7 +160,27 @@ case $BOOTLOADER in
 esac
 
 # ============================================
-# 5. FINAL SUMMARY
+# 5. CONFIGURE SYSTEMD FOR VERBOSE SHUTDOWN
+# ============================================
+echo "Configuring systemd for verbose shutdown messages..."
+
+# Enable showing shutdown messages
+if [ ! -f /etc/systemd/system.conf.d/show-status.conf ]; then
+    sudo mkdir -p /etc/systemd/system.conf.d
+
+    sudo tee /etc/systemd/system.conf.d/show-status.conf >/dev/null <<'EOF'
+[Manager]
+# Show detailed status messages during boot and shutdown
+ShowStatus=yes
+EOF
+
+    echo "✓ Systemd configured for verbose shutdown"
+else
+    echo "✓ Systemd already configured for verbose shutdown"
+fi
+
+# ============================================
+# 6. FINAL SUMMARY
 # ============================================
 echo ""
 echo "============================================="
@@ -169,17 +189,24 @@ echo "============================================="
 echo ""
 echo "✓ mkinitcpio hooks configured (plymouth before encrypt)"
 echo "✓ DOOM theme installed and set as default"
+echo "✓ DOOM theme configured to show boot/shutdown messages"
 echo "✓ Initramfs rebuilt with Plymouth support"
 echo "✓ Bootloader configured with 'splash' parameter"
+echo "✓ Systemd configured for verbose shutdown"
 echo ""
 echo "What to expect on next boot:"
-echo "1. Boot messages scrolling with [OK] indicators"
-echo "2. Plymouth splash screen with DOOM logo"
-echo "3. Graphical password prompt for LUKS encryption"
-echo "4. Boot into Hyprland"
+echo "1. Boot messages scrolling with [OK] indicators (visible!)"
+echo "2. DOOM splash screen appears ONLY for password prompt"
+echo "3. Graphical password prompt for LUKS encryption with DOOM logo"
+echo "4. More boot messages after password (visible!)"
+echo "5. Boot into Hyprland"
 echo ""
-echo "Tip: Run 'doom-toggle-boot-messages' to hide boot messages"
-echo "     if you prefer a clean boot experience"
+echo "What to expect on shutdown:"
+echo "1. Shutdown messages scrolling with [OK] indicators (visible!)"
+echo "2. Clean shutdown without Plymouth covering messages"
+echo ""
+echo "Tip: Run 'doom-toggle-boot-messages' to hide boot messages completely"
+echo "     if you prefer Plymouth to cover everything"
 echo ""
 echo "NOTE: Reboot required for changes to take effect"
 echo "============================================="

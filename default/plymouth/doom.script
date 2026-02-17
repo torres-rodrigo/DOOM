@@ -1,13 +1,15 @@
-# Omarchy Plymouth Theme Script
+# DOOM Plymouth Theme Script
+# Modified to show boot messages until password prompt
 
-Window.SetBackgroundTopColor(0.101, 0.105, 0.149);
-Window.SetBackgroundBottomColor(0.101, 0.105,  0.149);
+# Start with TRANSPARENT background to show boot messages
+# Background will be set to solid color when password prompt appears
+global.background_visible = 0;
 
 logo.image = Image("logo.png");
 logo.sprite = Sprite(logo.image);
 logo.sprite.SetX (Window.GetWidth()  / 2 - logo.image.GetWidth()  / 2);
 logo.sprite.SetY (Window.GetHeight() / 2 - logo.image.GetHeight() / 2);
-logo.sprite.SetOpacity (1);
+logo.sprite.SetOpacity (0);  # Hidden initially to show boot messages
 
 # Use these to adjust the progress bar timing
 global.fake_progress_limit = 0.7;  # Target percentage for fake progress (0.0 to 1.0)
@@ -80,8 +82,21 @@ fun hide_progress_bar()
     progress_bar.sprite.SetOpacity(0);
   }
 
+fun show_background()
+  {
+    if (global.background_visible == 0)
+      {
+        # Set solid background when showing splash for first time
+        Window.SetBackgroundTopColor(0.101, 0.105, 0.149);
+        Window.SetBackgroundBottomColor(0.101, 0.105, 0.149);
+        logo.sprite.SetOpacity(1);
+        global.background_visible = 1;
+      }
+  }
+
 fun show_password_dialog()
   {
+    show_background();  # Show background and logo when password prompt appears
     lock.sprite.SetOpacity(1);
     entry.sprite.SetOpacity(1);
   }
@@ -232,7 +247,12 @@ Plymouth.SetBootProgressFunction(progress_callback);
 
 fun quit_callback ()
 {
-  logo.sprite.SetOpacity (1);
+  # Keep background transparent during quit if it was never shown
+  # This allows shutdown messages to be visible
+  if (global.background_visible == 1)
+    {
+      logo.sprite.SetOpacity (1);
+    }
 }
 
 Plymouth.SetQuitFunction(quit_callback);
