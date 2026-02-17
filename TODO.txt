@@ -16,6 +16,9 @@ Research packages:
   learn more about stow
   mise
   dankmaterialshell
+  zellij tmux
+  mangowc, https://github.com/DreamMaoMao/mangowc, https://www.tonybtw.com/tutorial/mangowc/, https://github.com/tonybanters/mangowc-btw,
+          https://www.reddit.com/r/unixporn/comments/1ojwts6/mangowc_green_mango/, https://www.reddit.com/r/unixporn/comments/1og1szq/mangowc_i_was_kinda_drunk_when_i_made_this/
 
 Way to get the working path
 
@@ -23,6 +26,7 @@ systemd startup delay
 /boot/loader/loader.conf
 
 TODO
+  git revert <commitHashes>, -n <stage changes dont auto commit>,
   Finish up fastfetch config
   wezterm copy command shortcut && delete entire line command
   make all necessary dir mkdir -p "$XDG_STATE_HOME/zsh" also the ones to for zshenv script for creating all dirs
