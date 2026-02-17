@@ -105,7 +105,7 @@ alias z='cd'
 alias ld='cd -'
 alias g='git'                             # Possible delete
 alias lg='lazygit'
-alias ls='eza -lha --icons --group'
+alias ls='eza -lha --icons --group-directories-first'
 alias lsf='eza -lha --icons --only-files' # List only files
 alias lsd='eza -lha --icons --only-dirs'  # List only directories
 alias tree='eza --tree --icons'
@@ -118,9 +118,9 @@ alias dat='date "+%Y-%m-%d %H:%M:%S"'     # date and time
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias ..l='cd .. && eza -lha --icons --group'
-alias ...l='cd ../.. && eza -lha --icons --group'
-alias ....l='cd ../../.. && eza -lha --icons --group'
+alias ..l='cd .. && eza -lha --icons --group-directories-first'
+alias ...l='cd ../.. && eza -lha --icons --group-directories-first'
+alias ....l='cd ../../.. && eza -lha --icons --group-directories-first'
 
 # Git aliases
 alias gf='git fetch'                                   # git fetch
@@ -174,7 +174,7 @@ zl() {
 
     if [ -n "$dir" ]; then
        cd "$dir"
-       eza -lha --icons --group
+       eza -lha --icons --group-directories-first
     fi
 }
 
