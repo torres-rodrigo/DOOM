@@ -277,7 +277,7 @@ orphans() {
     echo "─────────────────────────────────────────"
     echo ""
 
-    read -p "Remove these packages? (y/n): " -n 1 -r
+    read -k 1 "REPLY?Remove these packages? (y/n): "
     echo ""
 
     if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -322,7 +322,7 @@ rmpkgs() {
     echo "─────────────────────────────────────────"
     echo ""
 
-    read -p "Remove these packages? (y/n): " -n 1 -r
+    read -k 1 "REPLY?Remove these packages? (y/n): "
     echo ""
 
     if [[ $REPLY =~ ^[Yy]$ ]]; then
