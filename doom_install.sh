@@ -218,29 +218,6 @@ if ! checkpoint_exists "phase_3_config_setup"; then
             echo "Warning: Some config files failed to copy"
         }
         echo "Configuration files copied"
-
-        # Verify critical Hyprland config files
-        echo "Verifying Hyprland configuration..."
-        HYPR_CONFIG="$HOME/.config/hypr/hyprland.conf"
-        if [[ -f "$HYPR_CONFIG" ]]; then
-            echo "✓ Hyprland config found at: $HYPR_CONFIG"
-        else
-            echo "✗ ERROR: Hyprland config NOT found at: $HYPR_CONFIG"
-            echo "This will cause Hyprland to not load properly!"
-        fi
-
-        # Verify UWSM env file
-        UWSM_ENV="$HOME/.config/uwsm/env"
-        if [[ -f "$UWSM_ENV" ]]; then
-            echo "✓ UWSM env found at: $UWSM_ENV"
-            if grep -q "PATH.*local/bin" "$UWSM_ENV"; then
-                echo "✓ PATH includes ~/.local/bin"
-            else
-                echo "✗ WARNING: PATH might not include ~/.local/bin"
-            fi
-        else
-            echo "✗ ERROR: UWSM env NOT found at: $UWSM_ENV"
-        fi
     else
         echo "Error: config directory not found at $DOOM_DIR/config"
         exit 1

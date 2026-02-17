@@ -16,8 +16,7 @@ vt = 1
 
 [default_session]
 # Auto-login directly to Hyprland via UWSM
-# Note: Must use capital H - binary is named 'Hyprland' not 'hyprland'
-command = "uwsm start -F -S Hyprland"
+command = "uwsm start hyprland"
 user = "$USER"
 EOF
 

@@ -1,21 +1,5 @@
 # UWSM General Environment Configuration
-# This file is loaded by UWSM BEFORE Hyprland starts
-# It must set up the environment so programs can be found
-
-# XDG Base Directories
-export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
-export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
-export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
-
-# PATH - CRITICAL! Without this, keybindings can't find programs
-export PATH="$HOME/.local/bin:$PATH"
 
 # Cursor Theme
 export XCURSOR_THEME=Bibata-Modern-Ice
 export XCURSOR_SIZE=24
-
-# Default applications
-export TERMINAL=wezterm
-export EDITOR=nvim
-export VISUAL=nvim
