@@ -1,0 +1,100 @@
+#!/bin/bash
+
+echo "DOOM Hyprland Diagnostic Tool"
+echo "=============================="
+echo ""
+
+echo "1. Checking if Hyprland binary exists..."
+which hyprland
+if command -v Hyprland &>/dev/null; then
+    echo "✓ Hyprland found at: $(which Hyprland)"
+else
+    echo "✗ Hyprland not found in PATH"
+fi
+echo ""
+
+echo "2. Checking Hyprland config file..."
+if [ -f "$HOME/.config/hypr/hyprland.conf" ]; then
+    echo "✓ Config exists at: $HOME/.config/hypr/hyprland.conf"
+    echo "   First 10 lines:"
+    head -10 "$HOME/.config/hypr/hyprland.conf"
+else
+    echo "✗ Config NOT found at: $HOME/.config/hypr/hyprland.conf"
+fi
+echo ""
+
+echo "3. Checking sourced config files..."
+for file in envs.conf monitors.conf input.conf looknfeel.conf windows.conf bindings.conf autostart.conf; do
+    if [ -f "$HOME/.config/hypr/$file" ]; then
+        echo "✓ $file exists"
+    else
+        echo "✗ $file MISSING"
+    fi
+done
+echo ""
+
+echo "4. Checking greetd configuration..."
+if [ -f "/etc/greetd/config.toml" ]; then
+    echo "✓ greetd config exists"
+    echo "   Command line:"
+    grep "command" /etc/greetd/config.toml
+else
+    echo "✗ greetd config NOT found"
+fi
+echo ""
+
+echo "5. Checking UWSM..."
+if command -v uwsm &>/dev/null; then
+    echo "✓ UWSM found at: $(which uwsm)"
+    echo "   UWSM env file:"
+    if [ -f "$HOME/.config/uwsm/env" ]; then
+        echo "✓ $HOME/.config/uwsm/env exists"
+        cat "$HOME/.config/uwsm/env"
+    else
+        echo "✗ UWSM env file NOT found"
+    fi
+else
+    echo "✗ UWSM not found in PATH"
+fi
+echo ""
+
+echo "6. Checking XDG_CONFIG_HOME..."
+echo "   XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-not set (defaults to ~/.config)}"
+echo ""
+
+echo "7. Testing if Hyprland can be started manually..."
+echo "   Try running: uwsm start hyprland"
+echo "   Or: Hyprland"
+echo ""
+
+echo "8. Checking Hyprland logs..."
+if [ -d "$HOME/.local/share/hyprland" ]; then
+    echo "✓ Hyprland data dir exists"
+    ls -lt "$HOME/.local/share/hyprland/" 2>/dev/null | head -5
+fi
+if [ -f "/tmp/hypr/$USER/hyprland.log" ]; then
+    echo "✓ Hyprland log found"
+    echo "   Last 20 lines:"
+    tail -20 "/tmp/hypr/$USER/hyprland.log"
+else
+    echo "✗ No Hyprland log found at /tmp/hypr/$USER/hyprland.log"
+fi
+echo ""
+
+echo "9. Checking if running in Hyprland now..."
+if [ "$XDG_CURRENT_DESKTOP" = "Hyprland" ]; then
+    echo "✓ Currently running in Hyprland"
+    echo "   HYPRLAND_INSTANCE_SIGNATURE=$HYPRLAND_INSTANCE_SIGNATURE"
+else
+    echo "✗ NOT currently running in Hyprland"
+    echo "   XDG_CURRENT_DESKTOP=$XDG_CURRENT_DESKTOP"
+fi
+echo ""
+
+echo "=============================="
+echo "Diagnostic complete!"
+echo ""
+echo "If Hyprland config is not loading:"
+echo "1. Check if files are in ~/.config/hypr/"
+echo "2. Check Hyprland log for errors"
+echo "3. Try starting manually: Hyprland"
