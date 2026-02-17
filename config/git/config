@@ -12,8 +12,8 @@
     verbose = true
 
 [color "diff"]
-    oldMoved = magenta
-    newMoved = cyan
+    oldMoved = 201
+    newMoved = magenta
 
 [core]
     #excludesFile = ~/.config/git/ignore
@@ -27,6 +27,7 @@
 
 [fetch]
     prune = true
+    pruneTags = true
     tags = true
 
 [init]
