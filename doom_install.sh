@@ -105,21 +105,35 @@ if [[ -f "$CHECKPOINT_FILE" ]]; then
     echo "Next phase: $next_phase"
     echo ""
 
-    echo "Options:"
-    echo "  [r] Resume from last checkpoint"
-    echo "  [s] Start fresh (clear checkpoints)"
-    echo "  [q] Quit"
-    echo ""
-    read -p "Enter choice [r/s/q]: " -n 1 -r
-    echo ""
-    echo ""
+    # Loop until valid choice is made
+    while true; do
+        echo "Options:"
+        echo "  [r] Resume from last checkpoint"
+        echo "  [s] Start fresh (clear checkpoints)"
+        echo "  [q] Quit"
+        echo ""
+        read -p "Enter choice [r/s/q]: " -n 1 -r
+        echo ""
+        echo ""
 
-    case $REPLY in
-        [Rr]) echo "Resuming installation..." ;;
-        [Ss]) checkpoint_clear ;;
-        [Qq]) exit 0 ;;
-        *) echo "Invalid choice, resuming..."; echo "" ;;
-    esac
+        case $REPLY in
+            [Rr])
+                echo "Resuming installation..."
+                break
+                ;;
+            [Ss])
+                checkpoint_clear
+                break
+                ;;
+            [Qq])
+                exit 0
+                ;;
+            *)
+                echo "Invalid choice. Please enter 'r', 's', or 'q'."
+                echo ""
+                ;;
+        esac
+    done
 fi
 
 # Error catching
