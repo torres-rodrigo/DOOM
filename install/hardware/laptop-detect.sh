@@ -4,8 +4,8 @@ set -euo pipefail
 echo "Detecting laptop/battery configuration..."
 
 # Check if running on battery-powered device
-# Use compgen for safe glob matching
-BATTERY_COUNT=$(compgen -G "/sys/class/power_supply/BAT*" | wc -l)
+# Use compgen for safe glob matching (|| echo 0 handles no matches)
+BATTERY_COUNT=$(compgen -G "/sys/class/power_supply/BAT*" 2>/dev/null | wc -l || echo 0)
 
 if [[ "$BATTERY_COUNT" -gt 0 ]]; then
     echo "Laptop/battery detected ($BATTERY_COUNT battery/batteries) - configuring power management"
