@@ -8,7 +8,7 @@ NVIDIA="$(lspci | grep -i 'nvidia' || true)"
 
 if [[ -z "$NVIDIA" ]]; then
     echo "No NVIDIA GPU detected - skipping NVIDIA driver installation"
-    exit 0
+    return 0
 fi
 
 echo "NVIDIA GPU detected: $NVIDIA"
@@ -20,7 +20,7 @@ KERNEL_NAME="$(pacman -Qqs '^linux(-zen|-lts|-hardened)?$' | head -1 || true)"
 if [[ -z "$KERNEL_NAME" ]]; then
     echo "Error: Could not detect installed kernel"
     echo "Please install kernel headers manually"
-    exit 1
+    return 1
 fi
 
 KERNEL_HEADERS="${KERNEL_NAME}-headers"
@@ -38,7 +38,7 @@ elif echo "$NVIDIA" | grep -qE "GTX 9|GTX 10|Quadro P"; then
 else
     echo "GPU generation not recognized - please install drivers manually"
     echo "See: https://wiki.archlinux.org/title/NVIDIA"
-    exit 0
+    return 0
 fi
 
 # Install packages
@@ -63,7 +63,7 @@ sudo cp "$MKINITCPIO_CONF" "$BACKUP_FILE"
 
 if [[ ! -f "$BACKUP_FILE" ]]; then
     echo "Error: Backup creation failed"
-    exit 1
+    return 1
 fi
 
 echo "Created backup: $BACKUP_FILE"
@@ -82,13 +82,13 @@ sudo cat "$MKINITCPIO_CONF" | \
 if ! grep -q "^MODULES=(" "$TEMP_CONF"; then
     echo "Error: Modified config is invalid (missing MODULES line)"
     echo "Keeping original configuration"
-    exit 1
+    return 1
 fi
 
 # Validate that nvidia modules were added
 if ! grep -q "nvidia" "$TEMP_CONF"; then
     echo "Error: NVIDIA modules were not added correctly"
-    exit 1
+    return 1
 fi
 
 # Apply the changes
