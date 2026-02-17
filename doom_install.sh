@@ -50,6 +50,7 @@ get_next_phase() {
         "phase_1_system_update:1. SYSTEM UPDATE"
         "phase_2_packages:2. PACKAGES"
         "phase_3_config_setup:3. CONFIG SETUP"
+        "phase_3.1_shell_setup:3.1. SHELL SETUP"
         "phase_3.5_hardware_system_setup:3.5. HARDWARE & SYSTEM SETUP"
         "phase_4_login_display_manager:4. LOGIN & DISPLAY MANAGER SETUP"
     )
@@ -231,6 +232,20 @@ else
 fi
 #END CONFIG SETUP
 
+#SHELL SETUP
+if ! checkpoint_exists "phase_3.1_shell_setup"; then
+    echo "3.1. SHELL SETUP"
+    run_script "$DOOM_DIR/install/shell/change-shell-to-zsh.sh"
+    checkpoint_create "phase_3.1_shell_setup"
+    echo "$SPACER"
+    echo
+else
+    echo "3.1. SHELL SETUP (✓ skipped - already completed)"
+    echo "$SPACER"
+    echo
+fi
+#END SHELL SETUP
+
 #HARDWARE & SYSTEM SETUP
 if ! checkpoint_exists "phase_3.5_hardware_system_setup"; then
     echo "3.5. HARDWARE & SYSTEM SETUP"
@@ -295,6 +310,7 @@ echo "       DOOM INSTALLATION COMPLETE!          "
 echo "============================================="
 echo ""
 echo "Automatic Features Configured:"
+echo "✓ Default shell changed to zsh"
 echo "✓ Battery monitoring (laptops only)"
 echo "✓ NVIDIA drivers (if GPU detected)"
 echo "✓ Firewall enabled (UFW)"
