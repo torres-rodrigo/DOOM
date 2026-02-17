@@ -3,10 +3,7 @@ Symphony: https://github.com/vyrx-dev/dotfiles
 omarchy
 
 CHECK:
-  orphans
-  eza aliases
-  All aliases
-  re order zshrc
+
 
 Fonts:
   My custom caskadia
@@ -25,12 +22,13 @@ systemd startup delay
 /boot/loader/loader.conf
 
 TODO
-  rmpkg script
   Finish up fastfetch config
   wezterm copy command shortcut && delete entire line command
+  script to change the shell from bash to zsh on reboot
   make all necessary dir mkdir -p "$XDG_STATE_HOME/zsh" also the ones to for zshenv script for creating all dirs
   firewall
   put librewolf config on zen
+  ripgrep commands
   add aliases to common places
   add contrl functionality to terminal ctrl + e open file browser
   kill process function
