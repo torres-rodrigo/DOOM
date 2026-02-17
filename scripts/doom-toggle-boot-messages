@@ -1,0 +1,120 @@
+#!/bin/bash
+set -euo pipefail
+
+# Toggle between showing boot messages (verbose) and hiding them (quiet)
+
+echo "DOOM Boot Messages Toggle"
+echo "========================="
+echo ""
+
+# Detect bootloader
+BOOTLOADER="unknown"
+
+if [ -f /boot/grub/grub.cfg ] || [ -f /boot/grub2/grub.cfg ]; then
+    BOOTLOADER="grub"
+elif [ -d /boot/loader/entries ] || [ -f /boot/loader/loader.conf ]; then
+    BOOTLOADER="systemd-boot"
+elif [ -f /boot/limine.cfg ]; then
+    BOOTLOADER="limine"
+else
+    echo "Error: Could not detect bootloader"
+    exit 1
+fi
+
+echo "Detected bootloader: $BOOTLOADER"
+echo ""
+
+case $BOOTLOADER in
+    grub)
+        if grep -q "GRUB_CMDLINE_LINUX_DEFAULT.*quiet" /etc/default/grub; then
+            echo "Current: Boot messages HIDDEN (quiet mode)"
+            echo ""
+            read -k 1 "REPLY?Show boot messages? (y/n): "
+            echo ""
+
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                # Backup
+                sudo cp /etc/default/grub /etc/default/grub.backup-$(date +%Y%m%d-%H%M%S)
+
+                # Remove 'quiet' but keep 'splash'
+                sudo sed -i 's/ quiet / /g' /etc/default/grub
+                sudo sed -i 's/quiet //g' /etc/default/grub
+                sudo sed -i 's/ quiet//g' /etc/default/grub
+
+                # Regenerate GRUB config
+                sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+                echo ""
+                echo "✓ Boot messages will be SHOWN on next boot"
+                echo "  (You'll see scrolling text with [OK] messages, then Plymouth)"
+            fi
+        else
+            echo "Current: Boot messages SHOWN (verbose mode)"
+            echo ""
+            read -k 1 "REPLY?Hide boot messages? (y/n): "
+            echo ""
+
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                # Backup
+                sudo cp /etc/default/grub /etc/default/grub.backup-$(date +%Y%m%d-%H%M%S)
+
+                # Add 'quiet' before 'splash'
+                sudo sed -i 's/splash/quiet splash/' /etc/default/grub
+
+                # Regenerate GRUB config
+                sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+                echo ""
+                echo "✓ Boot messages will be HIDDEN on next boot"
+                echo "  (You'll only see Plymouth splash)"
+            fi
+        fi
+        ;;
+
+    systemd-boot)
+        # Check first entry
+        FIRST_ENTRY=$(ls /boot/loader/entries/*.conf | head -1)
+
+        if grep -q "quiet" "$FIRST_ENTRY"; then
+            echo "Current: Boot messages HIDDEN (quiet mode)"
+            echo ""
+            read -k 1 "REPLY?Show boot messages? (y/n): "
+            echo ""
+
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                for entry in /boot/loader/entries/*.conf; do
+                    sudo cp "$entry" "${entry}.backup-$(date +%Y%m%d-%H%M%S)"
+                    sudo sed -i 's/ quiet / /g' "$entry"
+                    sudo sed -i 's/quiet //g' "$entry"
+                    sudo sed -i 's/ quiet//g' "$entry"
+                done
+
+                echo ""
+                echo "✓ Boot messages will be SHOWN on next boot"
+            fi
+        else
+            echo "Current: Boot messages SHOWN (verbose mode)"
+            echo ""
+            read -k 1 "REPLY?Hide boot messages? (y/n): "
+            echo ""
+
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                for entry in /boot/loader/entries/*.conf; do
+                    sudo cp "$entry" "${entry}.backup-$(date +%Y%m%d-%H%M%S)"
+                    sudo sed -i '/^options/ s/splash/quiet splash/' "$entry"
+                done
+
+                echo ""
+                echo "✓ Boot messages will be HIDDEN on next boot"
+            fi
+        fi
+        ;;
+
+    *)
+        echo "Error: Unsupported bootloader for automatic toggle"
+        exit 1
+        ;;
+esac
+
+echo ""
+echo "Reboot to see changes"
