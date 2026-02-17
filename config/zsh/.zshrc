@@ -290,7 +290,7 @@ orphans() {
 }
 
 rmpkgs() {
-    pkgs=$(paru -Q 2>/dev/null || true)
+    pkgs=$(paru -Qq 2>/dev/null || true)
 
     if [[ -z "$pkgs" ]]; then
         echo "✓ No packages found!"
