@@ -254,7 +254,7 @@ orphans() {
     fi
 
     selected=$(echo "$orphans" | fzf --multi \
-        --prompt="Select packages to remove > " \
+        --prompt="Select 󰏖 packages to remove > " \
         --header="Enter: confirm | Esc: cancel | Ctrl-A: select all" \
         --preview='paru -Qi {} 2>/dev/null || echo "Package info not available"' \
         --preview-window=right:60%:wrap \
@@ -270,7 +270,6 @@ orphans() {
     fi
 
     selected_count=$(echo "$selected" | wc -l)
-    echo ""
     echo "Selected $selected_count package(s) for removal:"
     echo "─────────────────────────────────────────"
     echo "$selected"
@@ -298,7 +297,7 @@ rmpkgs() {
     fi
 
     selected=$(echo "$pkgs" | fzf --multi \
-        --prompt="Select packages to remove > " \
+        --prompt="Select 󰏖 packages to remove > " \
         --header="Enter: confirm | Esc: cancel | Ctrl-A: select all" \
         --preview='paru -Qi {} 2>/dev/null || echo "Package info not available"' \
         --preview-window=right:60%:wrap \
@@ -314,7 +313,6 @@ rmpkgs() {
     fi
 
     selected_count=$(echo "$selected" | wc -l)
-    echo ""
     echo "Selected $selected_count package(s) for removal:"
     echo "─────────────────────────────────────────"
     echo "$selected"
