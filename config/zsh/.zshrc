@@ -277,10 +277,9 @@ orphans() {
     echo "─────────────────────────────────────────"
     echo ""
 
-    read -k 1 "REPLY?Remove these packages? (y/n): "
-    echo ""
+    read "REPLY?Remove these packages? [Y/n]: "
 
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if [[ -z "$REPLY" || $REPLY =~ ^[Yy]$ ]]; then
         echo ""
         echo "Removing packages..."
         # Use xargs to pass packages to paru, -Rns removes with dependencies
@@ -322,10 +321,9 @@ rmpkgs() {
     echo "─────────────────────────────────────────"
     echo ""
 
-    read -k 1 "REPLY?Remove these packages? (y/n): "
-    echo ""
+    read "REPLY?Remove these packages? [Y/n]: "
 
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if [[ -z "$REPLY" || $REPLY =~ ^[Yy]$ ]]; then
         echo ""
         echo "Removing packages..."
         # Use xargs to pass packages to paru, -Rns removes with dependencies
