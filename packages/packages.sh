@@ -3,7 +3,7 @@ PACKAGES=(
     "base-devel"
     "gnome-keyring"
     "polkit-gnome"
-    "power-profiler-daemon"
+    # "power-profiler-daemon"
     "qt5-wayland"
     "qt6-wayland"
     "xdg-desktop-portal"
@@ -88,13 +88,13 @@ PACKAGES=(
     "wget" # Command-line downloader for HTTP, HTTPS, and FTP
 
     #Progrmas
-    "gimp" # Image editor
-    "inkscape" # Vector graphics editor
-    "libreoffice-fresh" # Office suite
-    "localsend" # Cross-platform local file sharing
-    "mpv" # Media player
-    "obsidian" # Kknowledge management and note-taking app
-    "thunar" # File manager
+    # "gimp" # Image editor
+    # "inkscape" # Vector graphics editor
+    # "libreoffice-fresh" # Office suite
+    # "localsend" # Cross-platform local file sharing
+    # "mpv" # Media player
+    # "obsidian" # Kknowledge management and note-taking app
+    # "thunar" # File manager
 )
 
 sudo pacman -S --noconfirm --needed "${PACKAGES[@]}"
