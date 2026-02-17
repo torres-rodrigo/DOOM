@@ -198,6 +198,7 @@ fi
 if ! checkpoint_exists "phase_3_config_setup"; then
     echo "3. CONFIG SETUP"
     if [[ -d "$DOOM_DIR/config" ]]; then
+        mkdir -p ~/.config
         cp -rf "$DOOM_DIR/config"/* ~/.config/ || {
             echo "Warning: Some config files failed to copy"
         }
