@@ -289,3 +289,48 @@ orphans() {
         echo "✓ Packages removed successfully"
     fi
 }
+
+rmpkgs() {
+    pkgs=$(paru -Q 2>/dev/null || true)
+
+    if [[ -z "$pkgs" ]]; then
+        echo "✓ No packages found!"
+        return
+    fi
+
+    selected=$(echo "$pkgs" | fzf --multi \
+        --prompt="Select packages to remove > " \
+        --header="Enter: confirm | Esc: cancel | Ctrl-A: select all" \
+        --preview='paru -Qi {} 2>/dev/null || echo "Package info not available"' \
+        --preview-window=right:60%:wrap \
+        --border \
+        --height=80% \
+        --bind='ctrl-a:select-all' \
+        --reverse) || {
+        return
+    }
+
+    if [[ -z "$selected" ]]; then
+      return
+    fi
+
+    selected_count=$(echo "$selected" | wc -l)
+    echo ""
+    echo "Selected $selected_count package(s) for removal:"
+    echo "─────────────────────────────────────────"
+    echo "$selected"
+    echo "─────────────────────────────────────────"
+    echo ""
+
+    read -p "Remove these packages? (y/n): " -n 1 -r
+    echo ""
+
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo ""
+        echo "Removing packages..."
+        # Use xargs to pass packages to paru, -Rns removes with dependencies
+        echo "$selected" | xargs paru -Rns --noconfirm
+        echo ""
+        echo "✓ Packages removed successfully"
+    fi
+}
