@@ -1,0 +1,8 @@
+# UWSM Hyprland-Specific Environment Configuration
+# Applied only when starting Hyprland sessions
+
+# Cursor size for Hyprland's internal rendering
+export HYPRCURSOR_SIZE=24
+
+# Screenshot directory (used by doom-screenshot)
+export HYPRSHOT_DIR=~/Pictures/Screenshots

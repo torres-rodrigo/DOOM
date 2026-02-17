@@ -1,0 +1,5 @@
+# UWSM General Environment Configuration
+
+# Cursor Theme
+export XCURSOR_THEME=Bibata-Modern-Ice
+export XCURSOR_SIZE=24
