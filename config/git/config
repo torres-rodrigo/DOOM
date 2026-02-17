@@ -18,6 +18,9 @@
     algorithm = histogram
     mnemonicPrefix = true
     renames = true
+    colorMoved = default
+    colorMovedWS = allow-indentation-change
+    wordRegex = .
 
 [fetch]
     prune = true
