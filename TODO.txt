@@ -25,6 +25,7 @@ systemd startup delay
 /boot/loader/loader.conf
 
 TODO
+  rmpkg script
   Finish up fastfetch config
   wezterm copy command shortcut && delete entire line command
   make all necessary dir mkdir -p "$XDG_STATE_HOME/zsh" also the ones to for zshenv script for creating all dirs
