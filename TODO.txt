@@ -32,11 +32,14 @@ TODO
   make all necessary dir mkdir -p "$XDG_STATE_HOME/zsh" also the ones to for zshenv script for creating all dirs
   firewall
   put librewolf config on zen
+  learn to use zen shortcuts
+  setup bookmarks and extensions
+  setup workspaces
+  zen plugin/extenssion alt f to highlight links and navigate to them, alt shift f open in new tab, ctrl alt f preview, ctrl alt shift f open on new browser alt hjkl scroll
   ripgrep commands
   add aliases to common places
   add contrl functionality to terminal ctrl + e open file browser
   kill process function
-  zen plugin/extenssion alt f to highlight links and navigate to them, alt shift f open in new tab, ctrl alt f preview, ctrl alt shift f open on new browser alt hjkl scroll
 
 wezterm
 { key = 'phys:Space', mods = 'SHIFT|CTRL', action = act.QuickSelect },

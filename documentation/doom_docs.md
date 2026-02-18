@@ -457,6 +457,11 @@ Categories=Network;WebBrowser;
 
 ```
 
+remove stupid border about:config zen.theme.content-element-separation
+
+youtube open videos on theater mode:
+  document.cookie = "wide=1; domain=.youtube.com; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+
 # Stow
 What is Stow?
 
