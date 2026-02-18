@@ -16,7 +16,7 @@
     newMoved = magenta
 
 [core]
-    #excludesFile = ~/.config/git/ignore
+    excludesFile = ~/.config/git/ignore
 
 [diff]
     algorithm = histogram
@@ -42,6 +42,9 @@
 
 [pull]
     rebase = true
+
+[rebase]
+    autoStash = true
 
 [status]
     branch = true
