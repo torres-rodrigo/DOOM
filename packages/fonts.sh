@@ -5,6 +5,7 @@ mkdir -p ~/.local/share/fonts
 FONTS=(
     "noto-fonts"
     "noto-fonts-emoji"
+    "ttf-cascadia-code-nerd" #Delete when i have my custom version of the font
 )
 
 sudo pacman -S --noconfirm --needed "${FONTS[@]}"
