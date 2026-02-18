@@ -1,0 +1,12 @@
+#!/bin/bash
+# Display current DOOM theme
+# DOOM currently uses a single default theme configuration
+
+THEME_NAME_PATH="$HOME/.config/doom/current/theme.name"
+
+if [[ -f "$THEME_NAME_PATH" ]]; then
+    # Read theme name and capitalize first letter of each word, replace hyphens with spaces
+    cat "$THEME_NAME_PATH" | sed -E 's/(^|-)([a-z])/\1\u\2/g; s/-/ /g'
+else
+    echo "DOOM Default"
+fi

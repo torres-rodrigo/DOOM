@@ -1,0 +1,10 @@
+#!/bin/bash
+# Display current git branch of DOOM repository
+
+DOOM_DIR="${DOOM_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+
+if [[ -d "$DOOM_DIR/.git" ]]; then
+    git -C "$DOOM_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown"
+else
+    echo "not a git repo"
+fi

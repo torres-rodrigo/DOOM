@@ -1,0 +1,5 @@
+#!/bin/bash
+# Display DOOM channel/source
+# DOOM uses vanilla Arch Linux repositories (no custom mirrors like omarchy)
+
+echo "Arch Linux"

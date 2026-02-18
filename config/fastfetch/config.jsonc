@@ -65,19 +65,19 @@
       "type": "command",
       "key": "  OS",
       "keyColor": "blue",
-      "text": "version=$(omarchy-version); echo \"DOOM $version\""
+      "text": "version=$(doom-version); echo \"DOOM $version\""
     },
     {
       "type": "command",
       "key": "│ ├ 󰘬 ",
       "keyColor": "blue",
-      "text": "branch=$(omarchy-version-branch); echo \"$branch\""
+      "text": "branch=$(doom-version-branch); echo \"$branch\""
     },
     {
       "type": "command",
       "key": "│ ├ 󰔫 ",
       "keyColor": "blue",
-      "text": "channel=$(omarchy-version-channel); echo \"$channel\""
+      "text": "channel=$(doom-version-channel); echo \"$channel\""
     },
     {
       "type": "kernel",
@@ -123,7 +123,7 @@
       "type": "command",
       "key": "│ └ 󰸌 ",
       "keyColor": "blue",
-      "text": "theme=$(omarchy-theme-current); echo -e \"$theme \\e[38m●\\e[37m●\\e[36m●\\e[35m●\\e[34m●\\e[33m●\\e[32m●\\e[31m●\""
+      "text": "theme=$(doom-theme-current); echo -e \"$theme \\e[38m●\\e[37m●\\e[36m●\\e[35m●\\e[34m●\\e[33m●\\e[32m●\\e[31m●\""
     },
     {
       "type": "custom",
@@ -149,7 +149,7 @@
       "type": "command",
       "key": "│ ├  Update",
       "keyColor": "magenta",
-      "text": "updated=$(omarchy-version-pkgs); echo \"$updated\""
+      "text": "updated=$(doom-version-pkgs); echo \"$updated\""
     },
     {
       "type": "custom",
