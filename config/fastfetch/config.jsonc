@@ -81,7 +81,7 @@
     },
     {
       "type": "kernel",
-      "key": "│ ├  ",
+      "key": "│ ├  ",
       "keyColor": "blue"
     },
     {
@@ -158,4 +158,3 @@
     "break"
   ]
 }
-
