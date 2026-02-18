@@ -8,7 +8,7 @@ OUTPUT=""
 # Note: Only accurate if database was recently synced with 'pacman -Sy'
 UPDATE_COUNT=$(pacman -Qu 2>/dev/null | wc -l)
 if [[ $UPDATE_COUNT -gt 0 ]]; then
-    OUTPUT="Updates available! $UPDATE_COUNT. "
+    OUTPUT="Updates: 󱧕 $UPDATE_COUNT. "
 fi
 
 # Get last update timestamp
@@ -18,9 +18,9 @@ if [[ -f "$PACMAN_LOG" ]]; then
 
     if [[ -n "$LAST_UPGRADE" ]]; then
         # Format the date in a human-readable format
-        LAST_UPDATE_FORMATTED=$(date -d "$LAST_UPGRADE" "+%A, %B %d %Y at %H:%M" 2>/dev/null)
+        LAST_UPDATE_FORMATTED=$(date -d "$LAST_UPGRADE" "+%a, %b %d %Y @ %H:%M" 2>/dev/null)
         if [[ -n "$LAST_UPDATE_FORMATTED" ]]; then
-            OUTPUT="${OUTPUT}${LAST_UPDATE_FORMATTED}"
+            OUTPUT="${OUTPUT}Updated: ${LAST_UPDATE_FORMATTED}"
         else
             OUTPUT="${OUTPUT}unknown"
         fi
