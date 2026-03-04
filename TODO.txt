@@ -21,6 +21,8 @@ Research packages:
           https://www.reddit.com/r/unixporn/comments/1ojwts6/mangowc_green_mango/, https://www.reddit.com/r/unixporn/comments/1og1szq/mangowc_i_was_kinda_drunk_when_i_made_this/
   Info repos and scripts searcher / executer
   git worktrees worktrunk, git butler cli
+  sioyek
+  sesh
 
 
 Way to get the working path
