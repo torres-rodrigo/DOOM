@@ -141,6 +141,11 @@ gitconfig-personal
 	email = 
 ```
 
+# Git ammend to pushed commit/pr
+git add <files>
+git commit --amend --no-edit (-S) // For signed
+git push --force-with-lease
+
 # Claude recomendations
 ```
 1. Display Manager & Auto-Login
@@ -817,4 +822,45 @@ What is Stow?
   - You only have 1-2 config files
   - You're happy with manual symlinks
 
-# New subject
+# Secrets Management
+
+# Devbox
+A command-line tool that creates isolated, reproducible dev environments using Nix under the hood. Written in Go.
+
+  How it works:
+  - Uses Nix package manager without requiring you to learn Nix language
+  - Creates a devbox.json defining your dependencies
+  - Packages are stored in /nix/store/ with content-addressed hashing
+  - Running devbox shell drops you into an isolated environment
+
+  Architecture:
+  project/
+  ├── devbox.json          # Your dependencies
+  ├── devbox.lock          # Locked versions
+  └── .devbox/
+      └── virtenv/         # Generated environment scripts
+
+  /nix/store/
+  ├── abc123-nodejs-18.17.0/
+  ├── def456-python-3.11.4/
+  └── ...                  # Content-addressed, immutable
+
+  Key insight: Nix store is deduplicated. If two projects use Node 18.17.0, there's only one copy on disk.
+
+# Direnv
+What it is: Environment variable manager per directory. Written in Go.
+
+  How it works:
+  - Reads .envrc files when you cd into directories
+  - Sets/unsets environment variables automatically
+  - Often combined with Nix or mise
+
+  Example .envrc:
+  export DATABASE_URL=postgres://localhost/myapp
+  use mise        # Integrates with mise
+  # or
+  use flake       # Integrates with Nix flakes
+
+  Essential companion to mise/devbox/nix.
+
+# New Subject

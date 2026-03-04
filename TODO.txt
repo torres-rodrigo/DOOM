@@ -19,6 +19,9 @@ Research packages:
   zellij tmux
   mangowc, https://github.com/DreamMaoMao/mangowc, https://www.tonybtw.com/tutorial/mangowc/, https://github.com/tonybanters/mangowc-btw,
           https://www.reddit.com/r/unixporn/comments/1ojwts6/mangowc_green_mango/, https://www.reddit.com/r/unixporn/comments/1og1szq/mangowc_i_was_kinda_drunk_when_i_made_this/
+  Info repos and scripts searcher / executer
+  git worktrees worktrunk, git butler cli
+
 
 Way to get the working path
 
