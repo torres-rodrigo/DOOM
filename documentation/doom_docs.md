@@ -858,9 +858,112 @@ What it is: Environment variable manager per directory. Written in Go.
   Example .envrc:
   export DATABASE_URL=postgres://localhost/myapp
   use mise        # Integrates with mise
-  # or
+  or
   use flake       # Integrates with Nix flakes
 
   Essential companion to mise/devbox/nix.
+
+# Gopass and GPG
+```
+gpg --full-generate-key
+```
+Choose:
+  ECC → ed25519 (signing)
+  Add encryption subkey (cv25519)
+  Set expiration (1–2 years)
+  Strong passphrase (20+ characters)
+
+Verify: `gpg --list-secret-keys --keyid-format LONG`
+
+Export secret key: `gpg --export-secret-keys YOUR_KEY_ID > master.key`
+
+Move master.key to:
+Encrypted USB
+Offline backup storage
+NOT cloud storage
+
+Then delete master key from daily system: `gpg --delete-secret-key YOUR_KEY_ID`
+
+Re-import only subkeys:
+```
+gpg --import master.key
+gpg --edit-key YOUR_KEY_ID
+> key 1
+> keytocard (optional if using hardware)
+> save
+```
+Then remove master secret again, keeping subkeys.
+
+Init gopass
+`gopass init YOUR_KEY_ID`
+
+This:
+Creates .gopass-store
+Encrypts everything using your GPG key
+Prepares Git integration
+
+Setup github
+```
+cd ~/.password-store
+git init
+git remote add origin git@github.com:USERNAME/repo.git
+git push -u origin main
+```
+mportant:
+
+✔ Only encrypted .gpg files are committed
+✔ Never commit .gnupg directory
+✔ Never commit private keys
+
+Add .gitignore:
+```
+.gnupg/
+*.key
+```
+
+Multi-Device Secure Workflow
+Install:
+gpg
+gopass
+git
+
+Import Your Subkey (NOT master) from your secure backup:
+`gpg --import subkey.key`
+Verify
+`gpg --list-secret-keys`
+
+`git clone git@github.com:USERNAME/repo.git ~/.password-store`
+
+`gopass init YOUR_KEY_ID`
+
+Daily Usage Workflow
+Add password
+gopass insert accounts/github
+
+Generate password
+gopass generate accounts/email 32
+
+Sync
+git push
+
+
+On another device:
+git pull
+
+Use a Hardware Token
+
+Use:
+
+YubiKey
+
+Move encryption subkey to smartcard:
+
+gpg --edit-key YOUR_KEY_ID
+> key 1
+> keytocard
+
+
+Now private key cannot be extracted from device.
+
 
 # New Subject
