@@ -23,6 +23,9 @@ Research packages:
   git worktrees worktrunk, git butler cli
   sioyek
   sesh
+  ncdu
+  perf ?
+  obsidian cli
 
 
 Way to get the working path
