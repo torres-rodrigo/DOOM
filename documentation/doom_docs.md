@@ -966,4 +966,19 @@ gpg --edit-key YOUR_KEY_ID
 Now private key cannot be extracted from device.
 
 
+# Potential System organazation
+Minimal, clean, organized
+~/Downloads
+~/Projects
+~/Documents
+~/Documents/vault
+~/Pictures
+~/Pictures/Screenshots
+~/Videos
+~/Videos/Screen-recordings
+
+# Bank statement converter
+Convert bank statements to a readable format for hledger, and other useful formats
+Personal use first, expand for later
+
 # New Subject
