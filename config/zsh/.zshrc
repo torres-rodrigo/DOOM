@@ -329,122 +329,119 @@ rmpkgs() {
     fi
 }
 
+# pkginfo2() {
+#     local pkg="$1"
+
+#     local YELLOW="\033[38;5;180m"
+#     local RESET="\033[0m"
+
+#     # Fetch package data from installed packages (-Q) using | as delimiter
+#     local data
+#     data=$(expac -Q '%n|%v|%d|%L|%s|%i|%r|%D|%o|%E|%b|%R|%I|%V|%C|%p|%a|%u|%g|%P' "$pkg" 2>/dev/null)
+#     [[ -z "$data" ]] && { echo "Package not found."; return; }
+
+#     # Read the fields into variables
+#     IFS='|' read -r \
+#         name version desc license size instdate reason \
+#         depends optdepends optfor builddate replaces installscript \
+#         validation conflicts packager arch url groups provides \
+#         <<< "$data"
+
+#     # Set defaults for missing fields
+#     : "${license:=None}"
+#     : "${size:=0}"
+#     : "${instdate:=0}"
+#     : "${reason:=None}"
+#     : "${depends:=None}"
+#     : "${optdepends:=None}"
+#     : "${optfor:=None}"
+#     : "${builddate:=0}"
+#     : "${replaces:=None}"
+#     : "${installscript:=No}"
+#     : "${validation:=None}"
+#     : "${conflicts:=None}"
+#     : "${packager:=Unknown}"
+#     : "${arch:=Unknown}"
+#     : "${url:=None}"
+#     : "${groups:=None}"
+#     : "${provides:=None}"
+
+#     # Convert unix timestamps to human-readable dates
+#     instdate_fmt="None"
+#     [[ "$instdate" -gt 0 ]] && instdate_fmt=$(date -d @"$instdate" +"%Y-%m-%d %H:%M:%S")
+
+#     builddate_fmt="None"
+#     [[ "$builddate" -gt 0 ]] && builddate_fmt=$(date -d @"$builddate" +"%Y-%m-%d %H:%M:%S")
+
+#     # Main package info
+#     echo -e "${YELLOW}Name           :${RESET} $name"
+#     echo -e "${YELLOW}Version        :${RESET} $version"
+#     echo -e "${YELLOW}Description    :${RESET} $desc"
+#     echo -e "${YELLOW}Licenses       :${RESET} $license"
+#     echo -e "${YELLOW}Install Size   :${RESET} $size"
+#     echo -e "${YELLOW}Install Date   :${RESET} $instdate_fmt"
+#     echo -e "${YELLOW}Install Reason :${RESET} $reason"
+#     echo ""
+
+#     # Dependencies
+#     echo -e "${YELLOW}Depends On: ${RESET}"
+#     if pactree -d 1 "$pkg" &>/dev/null; then
+#         pactree -d 1 "$pkg" | tail -n +2
+#     else
+#         echo "None"
+#     fi
+#     echo ""
+
+#     # Reverse dependencies
+#     echo -e "${YELLOW}Required By: ${RESET}"
+#     if pactree -r -d 1 "$pkg" &>/dev/null; then
+#         pactree -r -d 1 "$pkg" | tail -n +2
+#     else
+#         echo "None"
+#     fi
+#     echo ""
+
+#     # Optional dependencies
+#     echo -e "${YELLOW}Optional Dependencies: ${RESET}"
+#     if pactree -o -d 1 "$pkg" &>/dev/null; then
+#         pactree -o -d 1 "$pkg" | tail -n +2
+#     else
+#         echo "None"
+#     fi
+#     echo ""
+
+#     # Optional for
+#     echo -e "${YELLOW}Optional For: ${RESET}"
+#     if [[ -n "$optfor" && "$optfor" != "None" ]]; then
+#         echo "$optfor" | xargs -n1
+#     else
+#         echo "None"
+#     fi
+#     echo ""
+
+#     # Other metadata
+#     echo -e "${YELLOW}Build Date     :${RESET} $builddate_fmt"
+#     echo -e "${YELLOW}Replaces       :${RESET} $replaces"
+#     echo -e "${YELLOW}Install Script :${RESET} $installscript"
+#     echo -e "${YELLOW}Validated By   :${RESET} $validation"
+#     echo -e "${YELLOW}Conflicts With :${RESET} $conflicts"
+#     echo -e "${YELLOW}Packager       :${RESET} $packager"
+#     echo ""
+
+#     echo -e "${YELLOW}Architecture   :${RESET} $arch"
+#     echo -e "${YELLOW}URL            :${RESET} $url"
+#     echo -e "${YELLOW}Groups         :${RESET} $groups"
+#     echo -e "${YELLOW}Provides       :${RESET} $provides"
+# }
+
 pkginfo() {
     local pkg="$1"
 
     local YELLOW="\033[38;5;180m"
     local RESET="\033[0m"
 
-    # Fetch package data from installed packages (-Q) using | as delimiter
     local data
-    data=$(expac -Q '%n|%v|%d|%L|%s|%i|%r|%D|%o|%E|%b|%R|%I|%V|%C|%p|%a|%u|%g|%P' "$pkg" 2>/dev/null)
-    [[ -z "$data" ]] && { echo "Package not found."; return; }
-
-    # Read the fields into variables
-    IFS='|' read -r \
-        name version desc license size instdate reason \
-        depends optdepends optfor builddate replaces installscript \
-        validation conflicts packager arch url groups provides \
-        <<< "$data"
-
-    # Set defaults for missing fields
-    : "${license:=None}"
-    : "${size:=0}"
-    : "${instdate:=0}"
-    : "${reason:=None}"
-    : "${depends:=None}"
-    : "${optdepends:=None}"
-    : "${optfor:=None}"
-    : "${builddate:=0}"
-    : "${replaces:=None}"
-    : "${installscript:=No}"
-    : "${validation:=None}"
-    : "${conflicts:=None}"
-    : "${packager:=Unknown}"
-    : "${arch:=Unknown}"
-    : "${url:=None}"
-    : "${groups:=None}"
-    : "${provides:=None}"
-
-    # Convert unix timestamps to human-readable dates
-    instdate_fmt="None"
-    [[ "$instdate" -gt 0 ]] && instdate_fmt=$(date -d @"$instdate" +"%Y-%m-%d %H:%M:%S")
-
-    builddate_fmt="None"
-    [[ "$builddate" -gt 0 ]] && builddate_fmt=$(date -d @"$builddate" +"%Y-%m-%d %H:%M:%S")
-
-    # Main package info
-    echo -e "${YELLOW}Name           :${RESET} $name"
-    echo -e "${YELLOW}Version        :${RESET} $version"
-    echo -e "${YELLOW}Description    :${RESET} $desc"
-    echo -e "${YELLOW}Licenses       :${RESET} $license"
-    echo -e "${YELLOW}Install Size   :${RESET} $size"
-    echo -e "${YELLOW}Install Date   :${RESET} $instdate_fmt"
-    echo -e "${YELLOW}Install Reason :${RESET} $reason"
-    echo ""
-
-    # Dependencies
-    echo -e "${YELLOW}Depends On: ${RESET}"
-    if pactree -d 1 "$pkg" &>/dev/null; then
-        pactree -d 1 "$pkg" | tail -n +2
-    else
-        echo "None"
-    fi
-    echo ""
-
-    # Reverse dependencies
-    echo -e "${YELLOW}Required By: ${RESET}"
-    if pactree -r -d 1 "$pkg" &>/dev/null; then
-        pactree -r -d 1 "$pkg" | tail -n +2
-    else
-        echo "None"
-    fi
-    echo ""
-
-    # Optional dependencies
-    echo -e "${YELLOW}Optional Dependencies: ${RESET}"
-    if pactree -o -d 1 "$pkg" &>/dev/null; then
-        pactree -o -d 1 "$pkg" | tail -n +2
-    else
-        echo "None"
-    fi
-    echo ""
-
-    # Optional for
-    echo -e "${YELLOW}Optional For: ${RESET}"
-    if [[ -n "$optfor" && "$optfor" != "None" ]]; then
-        echo "$optfor" | xargs -n1
-    else
-        echo "None"
-    fi
-    echo ""
-
-    # Other metadata
-    echo -e "${YELLOW}Build Date     :${RESET} $builddate_fmt"
-    echo -e "${YELLOW}Replaces       :${RESET} $replaces"
-    echo -e "${YELLOW}Install Script :${RESET} $installscript"
-    echo -e "${YELLOW}Validated By   :${RESET} $validation"
-    echo -e "${YELLOW}Conflicts With :${RESET} $conflicts"
-    echo -e "${YELLOW}Packager       :${RESET} $packager"
-    echo ""
-
-    echo -e "${YELLOW}Architecture   :${RESET} $arch"
-    echo -e "${YELLOW}URL            :${RESET} $url"
-    echo -e "${YELLOW}Groups         :${RESET} $groups"
-    echo -e "${YELLOW}Provides       :${RESET} $provides"
-}
-
-
-
-
-pkginfo2() {
-    local pkg="$1"
-
-    local YELLOW="\033[38;5;180m"
-    local RESET="\033[0m"
-
-    local data
-    data=$(expac -Q '%n|%v|%d|%L|%s|%i|%r|%D|%o|%b|%R|%I|%V|%C|%p|%a|%u|%g|%P' "$pkg" 2>/dev/null)
+    data=$(expac -Q '%n|%v|%d|%L|%m|%i|%l|%D|%o|%b|%R|%w|%S|%c|%p|%a|%u|%g|%P' "$pkg" 2>/dev/null)
     [[ -z "$data" ]] && { echo "Package not found."; return; }
 
     IFS='|' read -r \
@@ -469,7 +466,7 @@ pkginfo2() {
     echo -e "${YELLOW}Version        :${RESET} $version"
     echo -e "${YELLOW}Description    :${RESET} $desc"
     echo -e "${YELLOW}Licenses       :${RESET} ${license:-None}"
-    echo -e "${YELLOW}Install Size   :${RESET} $size"
+    echo -e "${YELLOW}Install Size   :${RESET} $(numfmt --to=iec --suffix=B "$size" 2>/dev/null || echo "${size:-None}")"
     echo -e "${YELLOW}Install Date   :${RESET} $instdate_fmt"
     echo -e "${YELLOW}Install Reason :${RESET} $reason"
     echo ""
