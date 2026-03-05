@@ -157,7 +157,7 @@ alias grvc='git revert'                                # git revert and commit <
 # [Z]earch Functions
 zle_z() {
     local dir=$(fd --type d --hidden --exclude .git \
-              | fzf --prompt 'Directory  : ' --height=69% --preview 'eza --tree --color=always --icons=always {};') || return
+              | fzf --prompt 'Directory  : ' --height=95% --preview 'eza --tree --color=always --icons=always {};') || return
 
     if [ -n "$dir" ]; then
         cd "$dir"
@@ -172,7 +172,7 @@ bindkey '\e.' zle_z
 # Zearch & List
 zl() {
     local dir=$(fd --type d --hidden --exclude .git \
-        | fzf --prompt 'Directory  : ' --height=69% --preview 'eza --tree --color=always --icons=always {};' ) || return
+        | fzf --prompt 'Directory  : ' --height=95% --preview 'eza --tree --color=always --icons=always {};' ) || return
 
     if [ -n "$dir" ]; then
        cd "$dir"
@@ -223,7 +223,7 @@ zf() {
 # Vim Zearch
 vz() {
     if [[ -n "$1" && -f "$1" ]]; then
-        v "$1"
+        v "$@"
         return
     fi
 
@@ -238,7 +238,7 @@ vz() {
             --prompt 'Files  : ' \
             --multi \
             --preview 'bat --color=always {};' \
-            --height=60%
+            --height=95%
     )}")
 
     if [ -n "$files" ]; then  
@@ -257,11 +257,11 @@ orphans() {
 
     selected=$(echo "$orphans" | fzf --multi \
         --prompt="Select 󰏖 packages to remove > " \
-        --header="Enter: confirm | Esc: cancel | Ctrl-A: select all" \
+        --header="Enter: confirm | Esc: cancel | Ctrl-Space: select |  Ctrl-A: select all" \
         --preview='paru -Qi {} 2>/dev/null || echo "Package info not available"' \
         --preview-window=right:60%:wrap \
         --border \
-        --height=80% \
+        --height=95% \
         --bind='ctrl-a:select-all' \
         --reverse) || {
         return
@@ -272,6 +272,7 @@ orphans() {
     fi
 
     selected_count=$(echo "$selected" | wc -l)
+    echo ""
     echo "Selected $selected_count package(s) for removal:"
     echo "─────────────────────────────────────────"
     echo "$selected"
@@ -293,19 +294,13 @@ orphans() {
 rmpkgs() {
     pkgs=$(paru -Qq 2>/dev/null || true)
 
-    if [[ -z "$pkgs" ]]; then
-        echo "✓ No packages found!"
-        return
-    fi
-
     selected=$(echo "$pkgs" | fzf --multi \
         --prompt="Select 󰏖 packages to remove > " \
-        --header="Enter: confirm | Esc: cancel | Ctrl-A: select all" \
+        --header="Enter: confirm | Esc: cancel | Ctrl-Space: select" \
         --preview='paru -Qi {} 2>/dev/null || echo "Package info not available"' \
         --preview-window=right:60%:wrap \
         --border \
-        --height=80% \
-        --bind='ctrl-a:select-all' \
+        --height=95% \
         --reverse) || {
         return
     }
@@ -315,6 +310,7 @@ rmpkgs() {
     fi
 
     selected_count=$(echo "$selected" | wc -l)
+    echo ""
     echo "Selected $selected_count package(s) for removal:"
     echo "─────────────────────────────────────────"
     echo "$selected"
@@ -331,4 +327,197 @@ rmpkgs() {
         echo ""
         echo "✓ Packages removed successfully"
     fi
+}
+
+pkginfo() {
+    local pkg="$1"
+
+    local YELLOW="\033[38;5;180m"
+    local RESET="\033[0m"
+
+    # Fetch package data from installed packages (-Q) using | as delimiter
+    local data
+    data=$(expac -Q '%n|%v|%d|%L|%s|%i|%r|%D|%o|%E|%b|%R|%I|%V|%C|%p|%a|%u|%g|%P' "$pkg" 2>/dev/null)
+    [[ -z "$data" ]] && { echo "Package not found."; return; }
+
+    # Read the fields into variables
+    IFS='|' read -r \
+        name version desc license size instdate reason \
+        depends optdepends optfor builddate replaces installscript \
+        validation conflicts packager arch url groups provides \
+        <<< "$data"
+
+    # Set defaults for missing fields
+    : "${license:=None}"
+    : "${size:=0}"
+    : "${instdate:=0}"
+    : "${reason:=None}"
+    : "${depends:=None}"
+    : "${optdepends:=None}"
+    : "${optfor:=None}"
+    : "${builddate:=0}"
+    : "${replaces:=None}"
+    : "${installscript:=No}"
+    : "${validation:=None}"
+    : "${conflicts:=None}"
+    : "${packager:=Unknown}"
+    : "${arch:=Unknown}"
+    : "${url:=None}"
+    : "${groups:=None}"
+    : "${provides:=None}"
+
+    # Convert unix timestamps to human-readable dates
+    instdate_fmt="None"
+    [[ "$instdate" -gt 0 ]] && instdate_fmt=$(date -d @"$instdate" +"%Y-%m-%d %H:%M:%S")
+
+    builddate_fmt="None"
+    [[ "$builddate" -gt 0 ]] && builddate_fmt=$(date -d @"$builddate" +"%Y-%m-%d %H:%M:%S")
+
+    # Main package info
+    echo -e "${YELLOW}Name           :${RESET} $name"
+    echo -e "${YELLOW}Version        :${RESET} $version"
+    echo -e "${YELLOW}Description    :${RESET} $desc"
+    echo -e "${YELLOW}Licenses       :${RESET} $license"
+    echo -e "${YELLOW}Install Size   :${RESET} $size"
+    echo -e "${YELLOW}Install Date   :${RESET} $instdate_fmt"
+    echo -e "${YELLOW}Install Reason :${RESET} $reason"
+    echo ""
+
+    # Dependencies
+    echo -e "${YELLOW}Depends On: ${RESET}"
+    if pactree -d 1 "$pkg" &>/dev/null; then
+        pactree -d 1 "$pkg" | tail -n +2
+    else
+        echo "None"
+    fi
+    echo ""
+
+    # Reverse dependencies
+    echo -e "${YELLOW}Required By: ${RESET}"
+    if pactree -r -d 1 "$pkg" &>/dev/null; then
+        pactree -r -d 1 "$pkg" | tail -n +2
+    else
+        echo "None"
+    fi
+    echo ""
+
+    # Optional dependencies
+    echo -e "${YELLOW}Optional Dependencies: ${RESET}"
+    if pactree -o -d 1 "$pkg" &>/dev/null; then
+        pactree -o -d 1 "$pkg" | tail -n +2
+    else
+        echo "None"
+    fi
+    echo ""
+
+    # Optional for
+    echo -e "${YELLOW}Optional For: ${RESET}"
+    if [[ -n "$optfor" && "$optfor" != "None" ]]; then
+        echo "$optfor" | xargs -n1
+    else
+        echo "None"
+    fi
+    echo ""
+
+    # Other metadata
+    echo -e "${YELLOW}Build Date     :${RESET} $builddate_fmt"
+    echo -e "${YELLOW}Replaces       :${RESET} $replaces"
+    echo -e "${YELLOW}Install Script :${RESET} $installscript"
+    echo -e "${YELLOW}Validated By   :${RESET} $validation"
+    echo -e "${YELLOW}Conflicts With :${RESET} $conflicts"
+    echo -e "${YELLOW}Packager       :${RESET} $packager"
+    echo ""
+
+    echo -e "${YELLOW}Architecture   :${RESET} $arch"
+    echo -e "${YELLOW}URL            :${RESET} $url"
+    echo -e "${YELLOW}Groups         :${RESET} $groups"
+    echo -e "${YELLOW}Provides       :${RESET} $provides"
+}
+
+
+
+
+pkginfo2() {
+    local pkg="$1"
+
+    local YELLOW="\033[38;5;180m"
+    local RESET="\033[0m"
+
+    local data
+    data=$(expac -Q '%n|%v|%d|%L|%s|%i|%r|%D|%o|%b|%R|%I|%V|%C|%p|%a|%u|%g|%P' "$pkg" 2>/dev/null)
+    [[ -z "$data" ]] && { echo "Package not found."; return; }
+
+    IFS='|' read -r \
+        name version desc license size instdate reason \
+        depends optdepends builddate replaces installscript \
+        validation conflicts packager arch url groups provides \
+        <<< "$data"
+
+    # Convert unix timestamps to readable date or None
+    if [[ -n "$instdate" && "$instdate" != "0" ]]; then
+        instdate_fmt=$(date -d @"$instdate" +"%Y-%m-%d %H:%M:%S")
+    else
+        instdate_fmt="None"
+    fi
+    if [[ -n "$builddate" && "$builddate" != "0" ]]; then
+        builddate_fmt=$(date -d @"$builddate" +"%Y-%m-%d %H:%M:%S")
+    else
+        builddate_fmt="None"
+    fi
+
+    echo -e "${YELLOW}Name           :${RESET} $name"
+    echo -e "${YELLOW}Version        :${RESET} $version"
+    echo -e "${YELLOW}Description    :${RESET} $desc"
+    echo -e "${YELLOW}Licenses       :${RESET} ${license:-None}"
+    echo -e "${YELLOW}Install Size   :${RESET} $size"
+    echo -e "${YELLOW}Install Date   :${RESET} $instdate_fmt"
+    echo -e "${YELLOW}Install Reason :${RESET} $reason"
+    echo ""
+
+    echo -e "${YELLOW}Depends On: ${RESET}"
+    if pactree -d 1 "$pkg" &>/dev/null; then
+        pactree -d 1 "$pkg" | tail -n +2
+    else
+        echo "None"
+    fi
+    echo ""
+
+    echo -e "${YELLOW}Required By: ${RESET}"
+    if pactree -r -d 1 "$pkg" &>/dev/null; then
+        pactree -r -d 1 "$pkg" | tail -n +2
+    else
+        echo "None"
+    fi
+    echo ""
+
+    echo -e "${YELLOW}Optional Dependencies: ${RESET}"
+    if pactree -o -d 1 "$pkg" &>/dev/null; then
+        pactree -o -d 1 "$pkg" | tail -n +2
+    else
+        echo "None"
+    fi
+    echo ""
+
+    echo -e "${YELLOW}Optional For: ${RESET}"
+    local optfor
+    optfor=$(expac -Q '%E' "$pkg" 2>/dev/null)
+    if [[ -n "$optfor" ]]; then
+        echo "$optfor" | xargs -n1
+    else
+        echo "None"
+    fi
+    echo ""
+
+    echo -e "${YELLOW}Build Date     :${RESET} $builddate_fmt"
+    echo -e "${YELLOW}Replaces       :${RESET} ${replaces:-None}"
+    echo -e "${YELLOW}Install Script :${RESET} ${installscript:-No}"
+    echo -e "${YELLOW}Validated By   :${RESET} ${validation:-None}"
+    echo -e "${YELLOW}Conflicts With :${RESET} ${conflicts:-None}"
+    echo -e "${YELLOW}Packager       :${RESET} ${packager:-Unknown}"
+
+    echo ""
+    echo -e "${YELLOW}Architecture   :${RESET} $arch"
+    echo -e "${YELLOW}URL            :${RESET} ${url:-None}"
+    echo -e "${YELLOW}Groups         :${RESET} ${groups:-None}"
+    echo -e "${YELLOW}Provides       :${RESET} ${provides:-None}"
 }

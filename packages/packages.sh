@@ -79,6 +79,7 @@ PACKAGES=(
     "luarocks" # Package manager for Lua modules
     "man" # Manual pages
     "neovim" # Vim-based text editor
+    "pacman-contrib" # Pacman scripts and tools
     "ripgrep" # Fast text searching tool (like grep, but better)
     "starship" # Minimal, fast, and customizable shell prompt
     "tealdeer" # Fast tldr client for simplified command help pages
