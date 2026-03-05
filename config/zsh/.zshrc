@@ -335,23 +335,43 @@ pkginfo() {
     local YELLOW="\033[38;5;180m"
     local RESET="\033[0m"
 
-    local data
-    data=$(expac -Q '%n|%v|%d|%L|%m|%i|%l|%D|%o|%b|%R|%w|%S|%c|%p|%a|%u|%g|%P' "$pkg" 2>/dev/null)
-    [[ -z "$data" ]] && { echo "Package not found."; return; }
+    local raw
+    raw=$(pacman -Qi "$pkg" 2>/dev/null)
+    [[ -z "$raw" ]] && { echo "Package not found."; return; }
 
-    IFS='|' read -r \
-        name version desc license size instdate reason \
-        depends optdepends builddate replaces installscript \
-        validation conflicts packager arch url groups provides \
-        <<< "$data"
+    # Extract a field by its label from pacman -Qi output
+    _pf() { grep -m1 "^$1[[:space:]]*:" <<< "$raw" | sed 's/^[^:]*: //'; }
+
+    local name version desc arch url license groups provides
+    local instsize instdate reason installscript validation
+    local conflicts replaces packager builddate optfor
+
+    name=$(_pf "Name")
+    version=$(_pf "Version")
+    desc=$(_pf "Description")
+    license=$(_pf "Licenses")
+    instsize=$(_pf "Installed Size")
+    instdate=$(_pf "Install Date")
+    reason=$(_pf "Install Reason")
+    builddate=$(_pf "Build Date")
+    replaces=$(_pf "Replaces")
+    installscript=$(_pf "Install Script")
+    validation=$(_pf "Validated By")
+    conflicts=$(_pf "Conflicts With")
+    packager=$(_pf "Packager")
+    arch=$(_pf "Architecture")
+    url=$(_pf "URL")
+    groups=$(_pf "Groups")
+    provides=$(_pf "Provides")
+    optfor=$(_pf "Optional For")
 
     echo -e "${YELLOW}Name           :${RESET} $name"
     echo -e "${YELLOW}Version        :${RESET} $version"
     echo -e "${YELLOW}Description    :${RESET} $desc"
     echo -e "${YELLOW}Licenses       :${RESET} ${license:-None}"
-    echo -e "${YELLOW}Install Size   :${RESET} $(numfmt --to=iec --suffix=B "$size" 2>/dev/null || echo "${size:-None}")"
-    echo -e "${YELLOW}Install Date   :${RESET} $instdate"
-    echo -e "${YELLOW}Install Reason :${RESET} $reason"
+    echo -e "${YELLOW}Install Size   :${RESET} ${instsize:-None}"
+    echo -e "${YELLOW}Install Date   :${RESET} ${instdate:-None}"
+    echo -e "${YELLOW}Install Reason :${RESET} ${reason:-None}"
     echo ""
 
     echo -e "${YELLOW}Depends On: ${RESET}"
@@ -379,16 +399,14 @@ pkginfo() {
     echo ""
 
     echo -e "${YELLOW}Optional For: ${RESET}"
-    local optfor
-    optfor=$(expac -Q '%E' "$pkg" 2>/dev/null)
-    if [[ -n "$optfor" ]]; then
-        echo "$optfor" | xargs -n1
+    if [[ -n "$optfor" && "$optfor" != "None" ]]; then
+        echo "$optfor"
     else
         echo "None"
     fi
     echo ""
 
-    echo -e "${YELLOW}Build Date     :${RESET} $builddate"
+    echo -e "${YELLOW}Build Date     :${RESET} ${builddate:-None}"
     echo -e "${YELLOW}Replaces       :${RESET} ${replaces:-None}"
     echo -e "${YELLOW}Install Script :${RESET} ${installscript:-No}"
     echo -e "${YELLOW}Validated By   :${RESET} ${validation:-None}"
@@ -396,7 +414,7 @@ pkginfo() {
     echo -e "${YELLOW}Packager       :${RESET} ${packager:-Unknown}"
 
     echo ""
-    echo -e "${YELLOW}Architecture   :${RESET} $arch"
+    echo -e "${YELLOW}Architecture   :${RESET} ${arch:-Unknown}"
     echo -e "${YELLOW}URL            :${RESET} ${url:-None}"
     echo -e "${YELLOW}Groups         :${RESET} ${groups:-None}"
     echo -e "${YELLOW}Provides       :${RESET} ${provides:-None}"
