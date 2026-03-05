@@ -67,6 +67,8 @@ config.keys = {
     { key = '8', mods = 'CTRL', action = act.ActivateTab(8) },
     { key = '9', mods = 'CTRL', action = act.ActivateTab(9) },
     { key = 't', mods = 'LEADER', action = act.EmitEvent("toggle-tabbar") },
+    { key = 'y', mods = 'LEADER', action = act.EmitEvent("copy-prompt-input") },
+    { key = 'b', mods = 'LEADER', action = act.SendString('\x05\x15') },
     { key = 'q', mods = 'ALT', action = act.CloseCurrentPane{confirm=false} },
     { key = '\\', mods = 'ALT', action = act.SplitHorizontal{ domain = 'CurrentPaneDomain' } },
     { key = '-', mods = 'ALT', action = act.SplitVertical{ domain = 'CurrentPaneDomain' } },
@@ -169,6 +171,21 @@ config.key_tables = {
       { key = 'DownArrow', mods = 'NONE', action = act.CopyMode 'NextMatch' },
     },
 }
+
+wezterm.on('copy-prompt-input', function(window, pane)
+    window:perform_action(
+        act.Multiple {
+            act.ActivateCopyMode,
+            act.CopyMode 'MoveToScrollbackBottom',
+            act.CopyMode { SetSelectionMode = 'SemanticZone' },
+            act.Multiple {
+                { CopyTo = 'ClipboardAndPrimarySelection' },
+                { CopyMode = 'Close' },
+            },
+        },
+        pane
+    )
+end)
 
 wezterm.on('toggle-tabbar', function(window, pane)
   local overrides = window:get_config_overrides() or {}
