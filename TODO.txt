@@ -27,6 +27,7 @@ Research packages:
   perf ?
   obsidian cli
   recent projects script, fzf , templates?
+  skim, rust fzf replacement
 
 
 Way to get the working path

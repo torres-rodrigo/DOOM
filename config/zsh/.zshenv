@@ -26,7 +26,7 @@ export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 
 # FZF
 export FZF_DEFAULT_COMMAND='fd --hidden --follow --exclude .git --no-ignore'
-export FZF_DEFAULT_OPTS='--layout=reverse --prompt="> " --border --ansi --bind "tab:accept,ctrl-space:toggle+down,ctrl-g:accept"'
+export FZF_DEFAULT_OPTS='--layout=reverse --prompt="> " --border --ansi --bind "shift-tab:toggle+up,tab:toggle+down,ctrl-g:accept"'
 
 # LESS
 export LESSHISTFILE="-"

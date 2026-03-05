@@ -29,7 +29,9 @@ zinit light zsh-users/zsh-syntax-highlighting
 # ============================================
 # FZF-tab settings
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
-zstyle ':fzf-tab:*' fzf-flags --bind=tab:accept
+zstyle ':fzf-tab:*' fzf-flags --bind=tab:accept --border --ansi --height=69% --preview-window=right:50%
+zstyle ':fzf-tab:*' fzf-preview '[[ -d "$realpath" ]] && eza --tree --color=always --icons=always "$realpath" || bat --color=always "$realpath"'
+
 
 # FZF
 source <(fzf --zsh)
@@ -156,29 +158,12 @@ alias grvc='git revert'                                # git revert and commit <
 
 # [Z]earch Functions
 zle_z() {
-    local dir=$(fd --type d --hidden --exclude .git \
-              | fzf --prompt 'Directory  : ' --height=95% --preview 'eza --tree --color=always --icons=always {};') || return
-
-    if [ -n "$dir" ]; then
-        cd "$dir"
-    fi
-
+    zd
     zle reset-prompt
 }
 zle -N zle_z
 bindkey '\e.' zle_z
 # Alt + .: Directory switching with preview
-
-# Zearch & List
-zl() {
-    local dir=$(fd --type d --hidden --exclude .git \
-        | fzf --prompt 'Directory  : ' --height=95% --preview 'eza --tree --color=always --icons=always {};' ) || return
-
-    if [ -n "$dir" ]; then
-       cd "$dir"
-       eza -lha --icons --group-directories-first
-    fi
-}
 
 # Zearch Dir
 zd() {
@@ -220,6 +205,31 @@ zf() {
     fi
 }
 
+# Zearch All
+za() {
+    local parameter=(.)
+
+    if [ -n "$1" ] && [ -d "$1" ]; then
+        parameter+=("$1")
+    fi
+
+    local sel
+    sel=$(fd --follow --hidden --exclude .git --no-ignore "${parameter[@]}" \
+        | fzf \
+            --prompt 'Search  &  :' \
+            --preview '[[ -d {} ]] && eza --tree --color=always --icons=always {} || bat --color=always {}' \
+            --height=95%
+    )
+
+      if [ -n "$sel" ]; then
+        if [ -d "$sel" ]; then
+            cd "$sel" || return
+        else
+            cd "$(dirname "$sel")" || return
+        fi
+    fi
+}
+
 # Vim Zearch
 vz() {
     if [[ -n "$1" && -f "$1" ]]; then
@@ -246,6 +256,111 @@ vz() {
     fi
 }
 
+pkginfo() {
+    local pkg
+    if [[ -n "$1" ]]; then
+         pkg="$1"
+    else
+        pkgs=$(paru -Qq 2>/dev/null || true)
+        pkg=$(echo "$pkgs" | fzf \
+            --prompt="Select 󰏖 package > " \
+            --header="Enter: confirm | Esc: cancel"\
+            --border \
+            --height=95% \
+            --reverse) || {
+            return
+        }
+    fi
+
+    if [ -n "$pkg" ]; then
+        local YELLOW="\033[38;5;180m"
+        local RESET="\033[0m"
+
+        local raw
+        raw=$(pacman -Qi "$pkg" 2>/dev/null)
+        [[ -z "$raw" ]] && { echo "Package not found."; return; }
+
+        _pf() { grep -m1 "^$1[[:space:]]*:" <<< "$raw" | sed 's/^[^:]*: //'; }
+
+        local name version desc arch url license groups provides
+        local instsize instdate reason installscript validation
+        local conflicts replaces packager builddate optfor
+
+        name=$(_pf "Name")
+        version=$(_pf "Version")
+        desc=$(_pf "Description")
+        license=$(_pf "Licenses")
+        instsize=$(_pf "Installed Size")
+        instdate=$(_pf "Install Date")
+        reason=$(_pf "Install Reason")
+        builddate=$(_pf "Build Date")
+        replaces=$(_pf "Replaces")
+        installscript=$(_pf "Install Script")
+        validation=$(_pf "Validated By")
+        conflicts=$(_pf "Conflicts With")
+        packager=$(_pf "Packager")
+        arch=$(_pf "Architecture")
+        url=$(_pf "URL")
+        groups=$(_pf "Groups")
+        provides=$(_pf "Provides")
+        optfor=$(_pf "Optional For")
+
+        echo -e "${YELLOW}Name           :${RESET} $name"
+        echo -e "${YELLOW}Version        :${RESET} $version"
+        echo -e "${YELLOW}Description    :${RESET} $desc"
+        echo -e "${YELLOW}Licenses       :${RESET} ${license:-None}"
+        echo -e "${YELLOW}Install Size   :${RESET} ${instsize:-None}"
+        echo -e "${YELLOW}Install Date   :${RESET} ${instdate:-None}"
+        echo -e "${YELLOW}Install Reason :${RESET} ${reason:-None}"
+        echo ""
+
+        echo -e "${YELLOW}Depends On: ${RESET}"
+        if pactree -d 1 "$pkg" &>/dev/null; then
+            pactree -d 1 "$pkg" | tail -n +2
+        else
+            echo "None"
+        fi
+        echo ""
+
+        echo -e "${YELLOW}Required By: ${RESET}"
+        if pactree -r -d 1 "$pkg" &>/dev/null; then
+            pactree -r -d 1 "$pkg" | tail -n +2
+        else
+            echo "None"
+        fi
+        echo ""
+
+        echo -e "${YELLOW}Optional Dependencies: ${RESET}"
+        if pactree -o -d 1 "$pkg" &>/dev/null; then
+            pactree -o -d 1 "$pkg" | tail -n +2
+        else
+            echo "None"
+        fi
+        echo ""
+
+        echo -e "${YELLOW}Optional For: ${RESET}"
+        if [[ -n "$optfor" && "$optfor" != "None" ]]; then
+            echo "$optfor"
+        else
+            echo "None"
+        fi
+        echo ""
+
+        echo -e "${YELLOW}Build Date     :${RESET} ${builddate:-None}"
+        echo -e "${YELLOW}Replaces       :${RESET} ${replaces:-None}"
+        echo -e "${YELLOW}Install Script :${RESET} ${installscript:-No}"
+        echo -e "${YELLOW}Validated By   :${RESET} ${validation:-None}"
+        echo -e "${YELLOW}Conflicts With :${RESET} ${conflicts:-None}"
+        echo -e "${YELLOW}Packager       :${RESET} ${packager:-Unknown}"
+
+        echo ""
+        echo -e "${YELLOW}Architecture   :${RESET} ${arch:-Unknown}"
+        echo -e "${YELLOW}URL            :${RESET} ${url:-None}"
+        echo -e "${YELLOW}Groups         :${RESET} ${groups:-None}"
+        echo -e "${YELLOW}Provides       :${RESET} ${provides:-None}"
+    fi
+}
+
 # Remove Orphans
 orphans() {
     orphans=$(paru -Qdtq 2>/dev/null || true)
@@ -259,7 +374,7 @@ orphans() {
         --prompt="Select 󰏖 packages to remove > " \
         --header="Enter: confirm | Esc: cancel | Ctrl-Space: select |  Ctrl-A: select all" \
         --preview='paru -Qi {} 2>/dev/null || echo "Package info not available"' \
-        --preview-window=right:60%:wrap \
+        --preview-window=right:60% \
         --border \
         --height=95% \
         --bind='ctrl-a:select-all' \
@@ -298,7 +413,7 @@ rmpkgs() {
         --prompt="Select 󰏖 packages to remove > " \
         --header="Enter: confirm | Esc: cancel | Ctrl-Space: select" \
         --preview='paru -Qi {} 2>/dev/null || echo "Package info not available"' \
-        --preview-window=right:60%:wrap \
+        --preview-window=right:60% \
         --border \
         --height=95% \
         --reverse) || {
@@ -327,95 +442,4 @@ rmpkgs() {
         echo ""
         echo "✓ Packages removed successfully"
     fi
-}
-
-pkginfo() {
-    local pkg="$1"
-
-    local YELLOW="\033[38;5;180m"
-    local RESET="\033[0m"
-
-    local raw
-    raw=$(pacman -Qi "$pkg" 2>/dev/null)
-    [[ -z "$raw" ]] && { echo "Package not found."; return; }
-
-    # Extract a field by its label from pacman -Qi output
-    _pf() { grep -m1 "^$1[[:space:]]*:" <<< "$raw" | sed 's/^[^:]*: //'; }
-
-    local name version desc arch url license groups provides
-    local instsize instdate reason installscript validation
-    local conflicts replaces packager builddate optfor
-
-    name=$(_pf "Name")
-    version=$(_pf "Version")
-    desc=$(_pf "Description")
-    license=$(_pf "Licenses")
-    instsize=$(_pf "Installed Size")
-    instdate=$(_pf "Install Date")
-    reason=$(_pf "Install Reason")
-    builddate=$(_pf "Build Date")
-    replaces=$(_pf "Replaces")
-    installscript=$(_pf "Install Script")
-    validation=$(_pf "Validated By")
-    conflicts=$(_pf "Conflicts With")
-    packager=$(_pf "Packager")
-    arch=$(_pf "Architecture")
-    url=$(_pf "URL")
-    groups=$(_pf "Groups")
-    provides=$(_pf "Provides")
-    optfor=$(_pf "Optional For")
-
-    echo -e "${YELLOW}Name           :${RESET} $name"
-    echo -e "${YELLOW}Version        :${RESET} $version"
-    echo -e "${YELLOW}Description    :${RESET} $desc"
-    echo -e "${YELLOW}Licenses       :${RESET} ${license:-None}"
-    echo -e "${YELLOW}Install Size   :${RESET} ${instsize:-None}"
-    echo -e "${YELLOW}Install Date   :${RESET} ${instdate:-None}"
-    echo -e "${YELLOW}Install Reason :${RESET} ${reason:-None}"
-    echo ""
-
-    echo -e "${YELLOW}Depends On: ${RESET}"
-    if pactree -d 1 "$pkg" &>/dev/null; then
-        pactree -d 1 "$pkg" | tail -n +2
-    else
-        echo "None"
-    fi
-    echo ""
-
-    echo -e "${YELLOW}Required By: ${RESET}"
-    if pactree -r -d 1 "$pkg" &>/dev/null; then
-        pactree -r -d 1 "$pkg" | tail -n +2
-    else
-        echo "None"
-    fi
-    echo ""
-
-    echo -e "${YELLOW}Optional Dependencies: ${RESET}"
-    if pactree -o -d 1 "$pkg" &>/dev/null; then
-        pactree -o -d 1 "$pkg" | tail -n +2
-    else
-        echo "None"
-    fi
-    echo ""
-
-    echo -e "${YELLOW}Optional For: ${RESET}"
-    if [[ -n "$optfor" && "$optfor" != "None" ]]; then
-        echo "$optfor"
-    else
-        echo "None"
-    fi
-    echo ""
-
-    echo -e "${YELLOW}Build Date     :${RESET} ${builddate:-None}"
-    echo -e "${YELLOW}Replaces       :${RESET} ${replaces:-None}"
-    echo -e "${YELLOW}Install Script :${RESET} ${installscript:-No}"
-    echo -e "${YELLOW}Validated By   :${RESET} ${validation:-None}"
-    echo -e "${YELLOW}Conflicts With :${RESET} ${conflicts:-None}"
-    echo -e "${YELLOW}Packager       :${RESET} ${packager:-Unknown}"
-
-    echo ""
-    echo -e "${YELLOW}Architecture   :${RESET} ${arch:-Unknown}"
-    echo -e "${YELLOW}URL            :${RESET} ${url:-None}"
-    echo -e "${YELLOW}Groups         :${RESET} ${groups:-None}"
-    echo -e "${YELLOW}Provides       :${RESET} ${provides:-None}"
 }
