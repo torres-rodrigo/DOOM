@@ -78,6 +78,7 @@ PACKAGES=(
     "less" # File pager for viewing text files and command output
     "luarocks" # Package manager for Lua modules
     "man" # Manual pages
+    "ncdu" # Disk usage visualizer
     "neovim" # Vim-based text editor
     "pacman-contrib" # Pacman scripts and tools
     "ripgrep" # Fast text searching tool (like grep, but better)
