@@ -372,7 +372,7 @@ orphans() {
 
     selected=$(echo "$orphans" | fzf --multi \
         --prompt="Select 󰏖 packages to remove > " \
-        --header="Enter: confirm | Esc: cancel | Ctrl-Space: select |  Ctrl-A: select all" \
+        --header="Enter: confirm | Esc: cancel | Ctrl-A: select all" \
         --preview='paru -Qi {} 2>/dev/null || echo "Package info not available"' \
         --preview-window=right:60% \
         --border \
@@ -399,7 +399,6 @@ orphans() {
     if [[ -z "$REPLY" || $REPLY =~ ^[Yy]$ ]]; then
         echo ""
         echo "Removing packages..."
-        # Use xargs to pass packages to paru, -Rns removes with dependencies
         echo "$selected" | xargs paru -Rns --noconfirm
         echo ""
         echo "✓ Packages removed successfully"
@@ -411,7 +410,7 @@ rmpkgs() {
 
     selected=$(echo "$pkgs" | fzf --multi \
         --prompt="Select 󰏖 packages to remove > " \
-        --header="Enter: confirm | Esc: cancel | Ctrl-Space: select" \
+        --header="Enter: confirm | Esc: cancel "\
         --preview='paru -Qi {} 2>/dev/null || echo "Package info not available"' \
         --preview-window=right:60% \
         --border \
@@ -437,7 +436,6 @@ rmpkgs() {
     if [[ -z "$REPLY" || $REPLY =~ ^[Yy]$ ]]; then
         echo ""
         echo "Removing packages..."
-        # Use xargs to pass packages to paru, -Rns removes with dependencies
         echo "$selected" | xargs paru -Rns --noconfirm
         echo ""
         echo "✓ Packages removed successfully"
