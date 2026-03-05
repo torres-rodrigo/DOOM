@@ -23,7 +23,6 @@ Research packages:
   git worktrees worktrunk, git butler cli
   sioyek
   sesh
-  ncdu
   perf ?
   obsidian cli
   recent projects script, fzf , templates?
@@ -92,7 +91,6 @@ alias -g J='| jq'
 # Copy output to clipboard (macOS)
 alias -g C='| pbcopy'
 
-
 web apps 90%
 tuis 90%
 
@@ -115,8 +113,6 @@ bindkey '^Xc' copy-buffer-to-clipboard
 #   echo -n "$BUFFER" | wl-copy
 #   zle -M "Copied to clipboard"
 # }
-
-
 
 
 Ah! Got it — you want a true interactive “compare & edit” workflow, where:
