@@ -981,4 +981,356 @@ Minimal, clean, organized
 Convert bank statements to a readable format for hledger, and other useful formats
 Personal use first, expand for later
 
+# wezterm multiplexing
+How it works
+
+  WezTerm has a built-in mux server (wezterm-mux-server) that runs as a headless daemon. The GUI is just a client that connects to it.
+   When you close the GUI, the server keeps running in the background — when you reopen WezTerm, it reconnects and everything is as
+  you left it.
+
+  ---
+  Session persistence (what you want)
+
+  The minimal config to enable this is two lines:
+
+  config.unix_domains = { { name = 'unix' } }
+  config.default_gui_startup_args = { 'connect', 'unix' }
+
+  unix_domains registers a local Unix socket domain. default_gui_startup_args tells WezTerm to auto-connect to it on every launch
+  instead of starting fresh.
+
+  What gets restored: all tabs, panes, split layouts, and working directories.
+
+# wezterm layouts
+The two startup events
+
+┌─────────────┬─────────────────────────────────────────────────────────────┬──────────────────────────────────────────────┐
+│    Event    │                        When it fires                        │                  Use it for                  │
+├─────────────┼─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────┤
+│ gui-startup │ Every time the GUI launches                                 │ Creating your initial window/tab/pane layout │
+├─────────────┼─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────┤
+│ mux-startup │ Once when the mux server starts (only if using unix domain) │ Server-level setup, background processes     │
+└─────────────┴─────────────────────────────────────────────────────────────┴──────────────────────────────────────────────┘
+
+For layouts you'll almost always use gui-startup. If you add the unix domain for session persistence, gui-startup still fires on
+every GUI attach, while mux-startup fires only once at the start of the server — meaning your layout is built once and then
+persists.
+
+---
+The core API
+
+Everything flows from mux.spawn_window() → pane:split() → pane:send_text():
+
+local wezterm = require 'wezterm'
+local mux = wezterm.mux
+
+wezterm.on('gui-startup', function()
+    local tab, pane, window = mux.spawn_window({
+        workspace = 'code',
+        cwd = wezterm.home_dir .. '/projects/myapp',
+    })
+
+    -- Split right 30% — git status pane
+    local git_pane = pane:split({
+        direction = 'Right',
+        size = 0.3,
+        cwd = wezterm.home_dir .. '/projects/myapp',
+    })
+    git_pane:send_text('git status\n')
+
+    -- Split bottom of the left pane 35% — run server
+    local server_pane = pane:split({
+        direction = 'Bottom',
+        size = 0.35,
+    })
+    server_pane:send_text('npm run dev\n')
+
+    pane:activate()  -- focus the main pane
+end)
+
+This gives you:
+┌────────────────────┬──────────┐
+│                    │          │
+│   main pane        │  git     │
+│   (nvim, editor)   │  status  │
+│                    │          │
+├────────────────────│          │
+│   server / build   │          │
+└────────────────────┴──────────┘
+
+---
+Workspaces
+
+Workspaces are named groups of windows — think tmux sessions. You give them a name when you spawn a window, then switch between them
+  with actions:
+
+-- Switch to a named workspace (creates it if it doesn't exist)
+act.SwitchToWorkspace { name = 'monitoring' }
+
+-- Cycle through workspaces
+act.SwitchWorkspaceRelative(1)
+
+-- Fuzzy picker to choose workspace
+act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' }
+
+You can show the current workspace name in your status bar — I noticed you already have update-status set up, so this would fit
+naturally there alongside the leader indicator.
+
+---
+pane:split() direction model
+
+Splits always subdivide the calling pane, not the window:
+
+-- direction = 'Right'  → new pane appears to the RIGHT of the calling pane
+-- direction = 'Bottom' → new pane appears BELOW the calling pane
+-- size < 1.0           → fraction of the calling pane's size
+-- size >= 1            → exact number of cells
+
+So if you call pane:split({ direction = 'Bottom', size = 0.4 }) on a pane that's already been split, you're splitting just that
+pane, not the full window height. This is important when building multi-pane layouts — the order and which pane you call split on
+matters.
+
+---
+Practical note for your setup
+
+Given you're already using this in doom_install.sh with zsh and the project is Hyprland/Arch focused, a practical layout might look
+like:
+
+- Workspace doom — project editing + git pane
+- Workspace sys — btop + journalctl or a general shell
+- Workspace default — clean shell, spawned fresh
+
+1. Fuzzy menu to pick and trigger a layout
+
+  ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } only lists already-open workspaces. For picking and creating a layout, you need
+  InputSelector — WezTerm's built-in fuzzy picker that you populate with whatever choices you want.
+
+  -- Define your layouts
+  local layouts = {
+      { id = 'doom',  label = 'DOOM — editor + git + shell' },
+      { id = 'sys',   label = 'System — btop + logs' },
+      { id = 'clean', label = 'Clean shell' },
+  }
+
+  -- Layout builder functions
+  local function build_layout(id, window, pane)
+      local mux = wezterm.mux
+      if id == 'doom' then
+          local _, main, _ = mux.spawn_window({ workspace = 'doom', cwd = wezterm.home_dir .. '/projects/DOOM' })
+          local git_pane = main:split({ direction = 'Right', size = 0.3 })
+          local shell_pane = main:split({ direction = 'Bottom', size = 0.35 })
+          git_pane:send_text('git status\n')
+          main:activate()
+
+      elseif id == 'sys' then
+          local _, main, _ = mux.spawn_window({ workspace = 'sys' })
+          local logs_pane = main:split({ direction = 'Right', size = 0.5 })
+          main:send_text('btop\n')
+          logs_pane:send_text('journalctl -f\n')
+
+      elseif id == 'clean' then
+          mux.spawn_window({ workspace = 'clean' })
+      end
+  end
+
+  -- Key binding: LEADER + l opens the layout picker
+  { key = 'l', mods = 'LEADER', action = act.InputSelector {
+      title   = 'Open Layout',
+      fuzzy   = true,
+      choices = layouts,
+      action  = wezterm.action_callback(function(window, pane, id, label)
+          if id then build_layout(id, window, pane) end
+      end),
+  }},
+
+  InputSelector fields that matter:
+
+  ┌──────────────┬─────────────────────────────────────────────────────────────────────────────────────────┐
+  │    Field     │                                      What it does                                       │
+  ├──────────────┼─────────────────────────────────────────────────────────────────────────────────────────┤
+  │ choices      │ Array of { id, label } — id is what your callback receives, label is what the user sees │
+  ├──────────────┼─────────────────────────────────────────────────────────────────────────────────────────┤
+  │ fuzzy = true │ Enables typing to filter the list                                                       │
+  ├──────────────┼─────────────────────────────────────────────────────────────────────────────────────────┤
+  │ title        │ Header text of the picker                                                               │
+  ├──────────────┼─────────────────────────────────────────────────────────────────────────────────────────┤
+  │ action       │ Callback called with (window, pane, id, label) on selection; both are nil if cancelled  │
+  └──────────────┴─────────────────────────────────────────────────────────────────────────────────────────┘
+
+  ---
+  2. Auto-triggering a layout by directory
+
+  There are two practical approaches:
+
+  A — Fuzzy directory picker that creates a workspace (recommended)
+
+  Uses zoxide query -l to get your recently visited directories, shows them in InputSelector, then creates a workspace + layout for
+  whichever you pick. No plugin needed:
+
+  local function zoxide_dirs()
+      local choices = {}
+      local handle = io.popen('zoxide query -l 2>/dev/null')
+      if handle then
+          for line in handle:lines() do
+              local name = line:match('^.*/(.+)$') or line
+              table.insert(choices, { id = line, label = name .. '  ' .. line })
+          end
+          handle:close()
+      end
+      return choices
+  end
+
+  local function open_dir_workspace(window, pane, dir, _)
+      if not dir then return end
+      local name = dir:match('^.*/(.+)$') or dir
+      local mux = wezterm.mux
+
+      -- Only build the layout if the workspace doesn't already exist
+      for _, ws in ipairs(mux.get_workspace_names()) do
+          if ws == name then
+              window:perform_action(act.SwitchToWorkspace { name = name }, pane)
+              return
+          end
+      end
+
+      local _, main, _ = mux.spawn_window({ workspace = name, cwd = dir })
+      local git_pane = main:split({ direction = 'Right', size = 0.3, cwd = dir })
+      git_pane:send_text('git status\n')
+      main:activate()
+  end
+
+  { key = 'p', mods = 'LEADER', action = act.InputSelector {
+      title   = 'Open Project',
+      fuzzy   = true,
+      choices = wezterm.action_callback(function() return zoxide_dirs() end),
+      action  = wezterm.action_callback(open_dir_workspace),
+  }},
+
+  The key detail: before creating a new layout it checks mux.get_workspace_names() — so if you've already opened that project, it just
+   switches to the existing workspace instead of rebuilding the layout on top of it.
+
+  B — Shell function with wezterm cli
+
+  Add this to your .zshrc. Whenever you run proj ~/projects/DOOM, it creates a workspace and layout from the shell side:
+
+  proj() {
+      local dir="${1:-.}"
+      local name="${dir##*/}"
+
+      # Create workspace with a layout using wezterm's CLI
+      local pane_id
+      pane_id=$(wezterm cli spawn --new-window --workspace "$name" --cwd "$dir")
+
+      wezterm cli split-pane --pane-id "$pane_id" --right --percent 30 --cwd "$dir"
+      wezterm cli activate-workspace "$name"
+  }
+
+  wezterm cli commands used here:
+
+  ┌───────────────────────────────────────────────────────────┬─────────────────────────────────────────────────────────┐
+  │                          Command                          │                      What it does                       │
+  ├───────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤
+  │ wezterm cli spawn --new-window --workspace NAME --cwd DIR │ Create a new window in a named workspace at a directory │
+  ├───────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤
+  │ wezterm cli split-pane --pane-id ID --right --percent 30  │ Split a specific pane                                   │
+  ├───────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤
+  │ wezterm cli send-text --pane-id ID "text"                 │ Send a command to a pane                                │
+  ├───────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤
+  │ wezterm cli activate-workspace NAME                       │ Switch the GUI to a named workspace                     │
+  └───────────────────────────────────────────────────────────┴─────────────────────────────────────────────────────────┘
+
+  ---
+  Which to use
+
+  ┌────────────────────────────────────────────────────┬─────────────────────────────────────────────────────────────────┐
+  │                     Situation                      │                          Best approach                          │
+  ├────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+  │ You have 2–5 predefined layouts you rotate between │ InputSelector with a hardcoded layout table                     │
+  ├────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+  │ You work across many project directories           │ Zoxide-based directory picker                                   │
+  ├────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+  │ You want to trigger it from the shell / scripts    │ wezterm cli shell function                                      │
+  ├────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+  │ You want both (pick layout and pick directory)     │ InputSelector for layouts → each layout builder prompts for dir │
+  └────────────────────────────────────────────────────┴─────────────────────────────────────────────────────────────────┘
+
+  The most powerful combo is the zoxide picker: you cd around normally and zoxide learns your directories — then in WezTerm you hit a
+  keybind, fuzzy-search the dir, and your layout appears automatically. Want me to write that up for your config?
+
+# Hardening zen
+https://github.com/arkenfox/user.js/wiki
+https://github.com/Codextor/better-zen
+
+Yes, this is exactly what Firefox's profile system is designed for. Since Zen is a Firefox fork it inherits it completely.
+
+  ---
+  How profiles work
+
+  Each profile is a fully isolated directory under ~/.zen/ with its own:
+  - user.js / prefs.js (settings)
+  - Extensions
+  - Cookies and logins
+  - History and cache
+  - Certificates
+
+  The two instances don't share anything. You apply arkenfox only to the regular profile and leave the platforms profile untouched.
+
+  ---
+  Creating the two profiles
+
+  Open Zen and go to about:profiles. Create two named profiles:
+
+  - regular — your hardened daily driver
+  - platforms — streaming only, permissive cookies and logins
+
+  Or from the terminal:
+  zen --ProfileManager
+
+  ---
+  Running both at the same time
+
+  By default Firefox-based browsers refuse to open a second instance if one is already running. The --no-remote flag bypasses that:
+
+  Regular (hardened)
+  zen --no-remote -P regular
+
+  Platforms (permissive)
+  zen --no-remote -P platforms
+
+  You can put these in shell aliases in your .zshrc:
+
+  alias zen-regular='zen --no-remote -P regular'
+  alias zen-platforms='zen --no-remote -P platforms'
+
+  Or as separate launcher scripts in ~/.local/bin/ using the same naming convention as your other doom-* scripts:
+
+  ~/.local/bin/doom-browser
+  zen --no-remote -P regular
+
+  ~/.local/bin/doom-browser-platforms
+  zen --no-remote -P platforms
+
+# Firewall ufw
+sudo ufw default deny incoming
+  sudo ufw default allow outgoing
+  This is the correct baseline for a desktop. All unsolicited inbound connections are blocked. Outgoing is unrestricted, which is
+  standard for desktop use.
+
+sudo systemctl enable ufw
+  Correct. The firewall comes back up automatically on reboot.
+
+The rule uses from 172.16.0.0/12 which covers the entire Docker private network range (172.16–172.31). The dynamic bridge IP
+  detection is well done — instead of hardcoding 172.17.0.1, it actually queries Docker to find the real gateway. The fallback is
+  sensible.
+
+ This is the most important thing in the whole script and it's handled correctly. Docker has a well-known security flaw: it directly
+  manipulates iptables and bypasses UFW entirely, meaning container-exposed ports are reachable from the internet even though UFW
+  should block them. ufw-docker install patches this. It's also correctly placed after ufw --force enable.
+
+  The conditional install in aur.sh (only if Docker is present) is also correct.
+
+Close mail server port
+
+Logging added
+  
 # New Subject
