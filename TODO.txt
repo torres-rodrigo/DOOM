@@ -40,6 +40,9 @@ perf
 typst
 emacs
 linux image viewer
+delta
+
+make tab completion on zsh work like **<Tab> fzf
 
 Way to get the working path
 
