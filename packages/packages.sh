@@ -70,7 +70,9 @@ PACKAGES=(
     "fzf" # Command-line fuzzy finder
     "ghostty" # Terminal emulator
     "github-cli" # Github cli
+    "gopass" # Password manager CLI
     "gum" # Tool to build rich shell scripts with styled text and prompts
+    "hledger" # Plain text accounting tool
     "jq" # JSON parser and processor
     "jujutsu" # Version control system
     "kitty" # Terminal emulator
@@ -78,10 +80,12 @@ PACKAGES=(
     "less" # File pager for viewing text files and command output
     "luarocks" # Package manager for Lua modules
     "man" # Manual pages
+    "mise" # Polygot package manager
     "ncdu" # Disk usage visualizer
     "neovim" # Vim-based text editor
     "pacman-contrib" # Pacman scripts and tools
     "ripgrep" # Fast text searching tool (like grep, but better)
+    "skim" # Fuzzy finder written in Rust
     "starship" # Minimal, fast, and customizable shell prompt
     "tealdeer" # Fast tldr client for simplified command help pages
     "tree-sitter-cli" # CLI for building syntax parsers using Tree-sitter

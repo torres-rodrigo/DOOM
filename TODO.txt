@@ -31,6 +31,16 @@ Research packages:
   emacs
 
 
+packages still missing/not fully confirmed
+worktrunk
+git butler cli
+sioyek pdf viewer
+sesh
+perf
+typst
+emacs
+
+
 Way to get the working path
 
 systemd startup delay
