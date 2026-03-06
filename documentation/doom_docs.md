@@ -1703,6 +1703,7 @@ Make function for the advance git command where it prompts you to enter the line
 [core]
   editor = nvim
 ```
+
 # Neovim features
 Leader o same as o but then go back to normal mode
 leader shift o same as O but then go back to normal mode

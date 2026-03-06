@@ -243,16 +243,16 @@ vz() {
         parameter+=("$1")
     fi
 
-    local -a files=("${(@f)$(fd --type file --follow --hidden --exclude .git --no-ignore "${parameter[@]}" \
+    local -a sel=("${(@f)$(fd --follow --hidden --exclude .git --no-ignore "${parameter[@]}" \
         | fzf \
-            --prompt 'Files  : ' \
+            --prompt 'Search  &  : ' \
             --multi \
-            --preview 'bat --color=always {};' \
+            --preview '[[ -d {} ]] && eza --tree --color=always --icons=always {} || bat --color=always {}' \
             --height=95%
     )}")
 
-    if [ -n "$files" ]; then  
-        v "${files[@]}"
+    if [ -n "$sel" ]; then
+        v "${sel[@]}"
     fi
 }
 
