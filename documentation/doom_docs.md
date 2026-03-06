@@ -1671,4 +1671,49 @@ Key Things to Know Before Writing Code
   }
 ```
 
+# Git diff with pager
+Maintain regular git diff and use an alias for delta diff
+```
+[alias]
+  delta = -c core.pager=delta diff
+  deltas = -c core.pager=delta -c delta.side-by-side=true diff
+
+[merge] # check if needed I need to try it out with an actual merge conflict
+	conflictStyle = zdiff3
+
+[delta]
+	navigate = true
+	dark = true
+	line-numbers = true
+	file-style = "cyan bold"
+	file-decoration-style = "white ul"
+	hunk-header-style = "cyan bold"
+	hunk-header-decoration-style = "white box"
+	line-numbers-left-style = white
+	line-numbers-right-style = white
+	wrap-max-lines = 0
+	keep-plus-minus-markers = true
+  hyperlinks = true
+  #hyperlinks-file-link = search for zed and nvim format
+  #hyperlinks-file-link = "code://file/{path}:{line}"
+```
+good note to add to gl aka git log, -p: shows diff changes added in commit
+Make function for the advance git command where it prompts you to enter the line numbers, maybe have a toggable preview as well
+```
+[core]
+  editor = nvim
+```
+# Neovim features
+Leader o same as o but then go back to normal mode
+leader shift o same as O but then go back to normal mode
+Add auto update file on changes from the outside
+
+# Lazygit config
+lazygit -h
+-c --config             Print the default config
+-cd --print-config-dir   Print the config directory
+```
+nerdFontsVersion = "3"
+```
 # New Subject
+

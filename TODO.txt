@@ -19,7 +19,7 @@ Research packages:
   zellij tmux
   mangowc, https://github.com/DreamMaoMao/mangowc, https://www.tonybtw.com/tutorial/mangowc/, https://github.com/tonybanters/mangowc-btw,
           https://www.reddit.com/r/unixporn/comments/1ojwts6/mangowc_green_mango/, https://www.reddit.com/r/unixporn/comments/1og1szq/mangowc_i_was_kinda_drunk_when_i_made_this/
-  Info repos and scripts searcher / executer
+  Info repos and scripts searcher / executer / navi prim video "I made the greatest tool ever! ..." cht.sh
   git worktrees worktrunk, git butler cli
   sioyek
   sesh
@@ -39,7 +39,7 @@ sesh
 perf
 typst
 emacs
-
+linux image viewer
 
 Way to get the working path
 
@@ -47,6 +47,7 @@ systemd startup delay
 /boot/loader/loader.conf
 
 TODO
+  vz function should write to the terminal the selected items
   Finish up fastfetch config Image
   wezterm copy command shortcut && delete entire line command, integrate multiplexer, and cool commands that i am missing for searches
   make all necessary dir mkdir -p "$XDG_STATE_HOME/zsh" also the ones to for zshenv script for creating all dirs
