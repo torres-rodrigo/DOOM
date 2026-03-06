@@ -1333,4 +1333,342 @@ Close mail server port
 
 Logging added
   
+# \[Z\]earch extension
+Mode State Machine
+
+This is the backbone of the entire extension. Everything routes through it.
+
+NORMAL
+  ├── z             → HINT_CLICK
+  ├── Shift+Z       → HINT_NEW_TAB
+  ├── Alt+Z         → HINT_PREVIEW
+  ├── Ctrl+Shift+Z  → HINT_MULTI_NEW_TAB
+  ├── Alt+Shift+Z   → HINT_INCOGNITO
+  ├── y             → NORMAL_Y (prefix state, not a full mode)
+  ├── m             → MARK_CREATE
+  ├── `             → MARK_JUMP
+  └── Alt+h/j/k/l  → scroll (stateless, stays in NORMAL)
+
+NORMAL_Y  (y was pressed, waiting for second key)
+  ├── z             → HINT_YANK
+  └── anything else → NORMAL  (discard, pass key through)
+
+HINT_*  (all hint modes share the same overlay, differ only in action)
+  ├── letter        → filter visible hints
+  ├── valid match   → execute action → NORMAL
+  └── Escape        → dismiss overlay → NORMAL
+
+ HINT_MULTI_NEW_TAB / HINT_INCOGNITO
+   ├── letter        → append to input, filter visible hints by current input
+   ├── exact match   → open tab/window immediately
+   │                   remove that label from overlay
+   │                   clear input buffer
+   │                   remaining labels stay — no re-labelling
+   └── Escape        → dismiss overlay → NORMAL
+
+MARK_CREATE
+  ├── a–z           → save local mark (url + scroll pos) → NORMAL
+  ├── A–Z / 0–9    → save global mark → NORMAL
+  └── Escape        → NORMAL
+
+MARK_JUMP
+  ├── a–z           → restore local mark (scroll) → NORMAL
+  ├── A–Z / 0–9    → navigate to global mark url + scroll → NORMAL
+  └── Escape        → NORMAL
+
+NORMAL_Y is not a true mode — it's just a one-frame prefix flag inside NORMAL. Same pattern could apply to any future two-key
+sequences.
+
+```
+Project Structure
+
+  zen-vim/
+  ├── manifest.json
+  │
+  ├── background/
+  │   └── background.js        # anything requiring elevated context:
+  │                            #   - open incognito tabs
+  │                            #   - navigate tabs (global mark jumps)
+  │                            #   - store/retrieve global marks
+  │
+  ├── content/
+  │   ├── index.js             # entry point — wires all modules, injects CSS,
+  │   │                        #   creates shadow container
+  │   │
+  │   ├── state.js             # the FSM — single source of truth for current mode,
+  │   │                        #   exports getMode(), transition(event)
+  │   │
+  │   ├── keyboard.js          # keydown listener (capture phase), decides
+  │   │                        #   whether to consume or pass through, routes
+  │   │                        #   to state.js
+  │   │
+  │   ├── scroll.js            # alt+hjkl, smooth scrollBy, respects
+  │   │                        #   active scrollable container
+  │   │
+  │   ├── hints/
+  │   │   ├── index.js         # hint mode orchestrator, coordinates the rest
+  │   │   ├── finder.js        # DOM walker — finds all hintable elements,
+  │   │   │                    #   filters off-screen, hidden, zero-size
+  │   │   ├── labels.js        # generates shortest unique char combos
+  │   │   │                    #   from a charset (e.g. "asdfjkl;")
+  │   │   └── overlay.js       # shadow DOM container, positions label nodes,
+  │   │                        #   handles keystroke filtering, multi-select state
+  │   │
+  │   └── marks/
+  │       ├── index.js         # orchestrates create/jump, dispatches to
+  │       │                    #   local or global based on char case
+  │       ├── local.js         # storage.local keyed by hostname+path+char
+  │       └── global.js        # messages background to store/retrieve,
+  │                            #   handles cross-page navigation + scroll timing
+  │
+  ├── shared/
+  │   └── messages.js          # message type constants shared by
+  │                            #   content ↔ background
+  │
+  └── icons/
+      └── icon-48.png
+
+  ---
+  manifest.json
+
+  {
+    "manifest_version": 3,
+    "name": "zen-vim",
+    "version": "0.1.0",
+    "description": "Keyboard-driven navigation for Zen Browser",
+
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "zen-vim@yourdomain.com",
+        "strict_min_version": "109.0"
+      }
+    },
+
+    "permissions": [
+      "activeTab",
+      "storage",
+      "tabs",
+      "clipboardWrite"
+    ],
+
+    "host_permissions": ["<all_urls>"],
+
+    "background": {
+      "service_worker": "background/background.js"
+    },
+
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content/index.js"],
+        "run_at": "document_idle",
+        "all_frames": false
+      }
+    ]
+  }
+
+  all_frames: false keeps it simple for now — iframe support can be added later without changing the architecture.
+```
+  
+```
+Key Things to Know Before Writing Code
+
+  1. Key event interception
+
+  Register in capture phase so you get the event before the page does:
+
+  window.addEventListener('keydown', handler, true)  // true = capture
+
+  Inside the handler, when the extension consumes the key:
+  event.preventDefault()
+  event.stopPropagation()
+
+  When NOT to intercept — check before doing anything:
+  function isTypingContext(el) {
+    const tag = el.tagName
+    return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT'
+        || el.isContentEditable
+  }
+
+  Exception: Escape should always work regardless of focus, so it can always dismiss hint mode.
+
+  2. Shadow DOM for the hint overlay
+
+  This is non-negotiable — without it, the page's CSS will break your hint labels:
+
+  const host = document.createElement('div')
+  host.id = 'zen-vim-root'
+  // host has no visual presence
+  document.documentElement.appendChild(host)
+
+  const shadow = host.attachShadow({ mode: 'closed' })
+  // all hint labels go inside shadow, completely isolated from page styles
+
+  The hint container inside shadow should be:
+  #overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;   /* don't block page clicks when not in hint mode */
+    z-index: 2147483647;    /* max z-index */
+  }
+
+  3. What counts as hintable
+
+  finder.js needs to be thoughtful here — too narrow misses elements, too broad creates hundreds of useless hints:
+
+  const HINTABLE_SELECTORS = [
+    'a[href]',
+    'button:not([disabled])',
+    'input:not([disabled]):not([type="hidden"])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    '[role="button"]',
+    '[role="link"]',
+    '[role="menuitem"]',
+    '[role="tab"]',
+    '[onclick]',
+    '[tabindex]:not([tabindex="-1"])',
+  ].join(',')
+
+  After finding them, filter out elements that are not actually visible:
+  function isVisible(el) {
+    const rect = el.getBoundingClientRect()
+    if (rect.width === 0 || rect.height === 0) return false
+    if (rect.bottom < 0 || rect.top > window.innerHeight) return false
+    const style = window.getComputedStyle(el)
+    return style.visibility !== 'hidden' && style.display !== 'none'
+           && style.opacity !== '0'
+  }
+
+  4. Label generation
+
+  Generate the shortest combinations possible from a charset:
+
+  function generateLabels(count, charset = 'asdfjkl;') {
+    const labels = []
+    const n = charset.length
+    // single chars first, then two-char combos, etc.
+    for (const ch of charset) labels.push(ch)
+    if (labels.length >= count) return labels.slice(0, count)
+    for (const a of charset)
+      for (const b of charset) labels.push(a + b)
+    if (labels.length >= count) return labels.slice(0, count)
+    // extend to 3 if needed (rare, means 64+ links on page)
+    // ...
+    return labels.slice(0, count)
+  }
+
+  5. Alt+z preview — simulating Alt+click
+
+  Zen handles the preview window natively on Alt+click. The extension just needs to fire a real mouse event with altKey: true:
+
+  function previewElement(el) {
+    el.dispatchEvent(new MouseEvent('click', {
+      altKey: true,
+      bubbles: true,
+      cancelable: true,
+      view: window
+    }))
+  }
+
+  If Zen intercepts Alt+click at the browser level before the DOM, this won't work — in that case the fallback is
+  browser.tabs.create({ url: href }) with some Zen-specific API if one exists. Test this first.
+
+  6. Global marks and cross-page scroll timing
+
+  When jumping to a global mark on a different page, you navigate then need to scroll — but you can't scroll before the page loads.
+  The pattern:
+
+  - Content script messages background: JUMP_GLOBAL_MARK with { url, scrollX, scrollY }
+  - Background calls tabs.update({ url }) and stores the pending scroll in a map keyed by tab ID
+  - Content script on each page load messages background: PAGE_READY
+  - Background checks if there's a pending scroll for that tab, sends EXECUTE_SCROLL back
+  - Content script scrolls to position
+
+  7. Mode status indicator
+
+  Worth adding from day one — a small fixed badge showing current mode, again inside the shadow DOM so it doesn't conflict with page
+  layout:
+
+  [ HINT ]  [ MARK CREATE ]  [ MARK JUMP ]
+
+  Appears bottom-right, only visible when not in NORMAL mode. Tiny but makes the extension feel grounded and debuggable while
+  developing.
+
+  ---
+  Background ↔ Content Message Types (shared/messages.js)
+
+  export const MSG = {
+    // content → background
+    OPEN_INCOGNITO:    'OPEN_INCOGNITO',     // { url }
+    SET_GLOBAL_MARK:   'SET_GLOBAL_MARK',    // { char, url, scrollX, scrollY }
+    GET_GLOBAL_MARK:   'GET_GLOBAL_MARK',    // { char }
+    JUMP_GLOBAL_MARK:  'JUMP_GLOBAL_MARK',   // { char } (background does full nav+scroll)
+    PAGE_READY:        'PAGE_READY',
+
+    // background → content
+    EXECUTE_SCROLL:    'EXECUTE_SCROLL',     // { scrollX, scrollY }
+    MARK_DATA:         'MARK_DATA',          // { char, url, scrollX, scrollY } (response)
+  }
+
+  ---
+  Build Order Recommendation
+
+  Build in this order — each step is independently testable:
+
+  1. keyboard.js + state.js — get the FSM working, log mode transitions to console, verify keys are intercepted correctly and typing
+  in inputs still works
+  2. scroll.js — straightforward, adds Alt+hjkl, verify it doesn't fire in inputs
+  3. hints/labels.js — pure function, easiest to unit test in isolation
+  4. hints/finder.js — test on different page types, tune the selector list
+  5. hints/overlay.js — the visual layer, get labels appearing in the right positions
+  6. hints/index.js — wire click action first (z), then add the other modes one by one
+  7. marks/local.js — storage read/write, test create then jump on the same page
+  8. background.js — incognito tabs, then global mark navigation
+  9. marks/global.js — cross-page jumps, the scroll timing logic
+
+
+  What this means for overlay.js
+
+  The overlay needs to track two separate things:
+
+  hints[]          — full list of { element, label, node } — built once on mode enter
+  inputBuffer      — string being typed right now — resets to '' after each match
+
+  On each keystroke:
+  1. Append key to inputBuffer
+  2. Check if inputBuffer exactly matches any remaining hint label → if yes, fire and clear
+  3. If not an exact match yet, dim/hide hints that no longer start with inputBuffer (so user gets visual feedback they're on track)
+  4. If inputBuffer matches nothing at all (impossible prefix) → clear buffer, restore all remaining labels to full visibility
+
+  On a successful match:
+  function onMatch(hint) {
+    openTab(hint.element)          // or openPrivate()
+    hint.node.remove()             // remove that label from the shadow DOM
+    hints.splice(hints.indexOf(hint), 1)  // remove from tracking list
+    inputBuffer = ''               // reset — all remaining labels fully visible again
+  }
+
+  The hint.node.remove() is the key detail — you surgically remove just that one label node from the shadow DOM without touching
+  anything else. The rest stay exactly where they are.
+
+  ---
+  One edge case worth handling
+
+  If the user types a character that is a valid prefix for some hints but the buffer could never complete to a full match (e.g.
+  charset is asdfjkl; and they type q), reset the buffer silently and restore full visibility. Otherwise the user is stuck with a
+  blank screen and no way out except Escape.
+
+  function hasAnyMatch(buffer, hints) {
+    return hints.some(h => h.label.startsWith(buffer))
+  }
+
+  // in keydown handler for multi modes:
+  inputBuffer += key
+  if (!hasAnyMatch(inputBuffer, remainingHints)) {
+    inputBuffer = ''
+    restoreAllVisible()
+  }
+```
+
 # New Subject
