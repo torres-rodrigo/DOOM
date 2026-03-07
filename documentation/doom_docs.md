@@ -467,6 +467,14 @@ remove stupid border about:config zen.theme.content-element-separation
 youtube open videos on theater mode:
   document.cookie = "wide=1; domain=.youtube.com; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT";
 
+bookmarks
+y youtube
+gh github
+cf custom forge
+
+p paramount
+
+
 # Stow
 What is Stow?
 
@@ -1758,5 +1766,62 @@ lazygit -h
 nerdFontsVersion = "3"
 ```
 
-# New Subject
+# Implement an encryption system for github
+  Approach 1: File-level encryption (git-crypt)
 
+  How it works:
+  - Git has clean and smudge filter hooks — clean runs before staging, smudge runs after checkout
+  - git-crypt hooks into these filters to transparently encrypt/decrypt specific files
+  - You mark which files to encrypt via .gitattributes
+  - GitHub stores the encrypted blobs; locally they appear as plaintext
+
+  Workflow:
+  local plaintext → [clean filter encrypts] → staged ciphertext → push to GitHub
+  GitHub ciphertext → pull → [smudge filter decrypts] → local plaintext
+
+  Pros: File names and commit history still visible on GitHub, partial browsing possible
+  Cons: Metadata is exposed (file names, tree structure, commit messages)
+
+  ---
+  Approach 2: Full repository encryption (git-remote-gcrypt)
+
+  How it works:
+  - Encrypts the entire pack before it reaches the remote
+  - GitHub literally stores encrypted binary blobs — no file names, no history, nothing readable
+  - Uses GPG keys for access control
+
+  Pros: Nothing is readable on GitHub
+  Cons: Completely opaque — no browsing, no PRs, no diffs on GitHub. Also slower.
+
+  ---
+  Key distribution (the hard problem)
+
+  Both approaches reduce to: how do authorized people get the key?
+
+  - Symmetric key: one shared secret, simpler but you can't revoke individual access
+  - GPG keys: each collaborator has their own keypair, the repo key is encrypted to each person's public key — you can revoke
+  individual access by removing their key and rotating
+
+  ┌──────────────────┬──────────────────┬───────────────────┐
+  │                  │    git-crypt     │ git-remote-gcrypt │
+  ├──────────────────┼──────────────────┼───────────────────┤
+  │ Granularity      │ Per-file         │ Whole repo        │
+  ├──────────────────┼──────────────────┼───────────────────┤
+  │ GitHub browsable │ Partially        │ No                │
+  ├──────────────────┼──────────────────┼───────────────────┤
+  │ Access control   │ GPG or symmetric │ GPG               │
+  ├──────────────────┼──────────────────┼───────────────────┤
+  │ Complexity       │ Low              │ Medium            │
+  └──────────────────┴──────────────────┴───────────────────┘
+
+  I would have a "mirrored" set up.
+  A working copy in a folder inside the repo that gets ignored.
+  And the encrypted copy that gets sent to github.
+  I would also have a "mapping file" like you suggested, and I would create a script that takes the contents of the files i
+  modified in the working copy and applies them to the respective "encrypted name one".
+  I would then use the git-crypt approach.
+  I would also have a commit file, where commit messages get stored there and for the actual git commit I take the last message
+  from there and encrypt it. that will be handled by the script.
+  Do not respect project structure in encrypted copy, everything goes to the same directory
+
+# New Subject
