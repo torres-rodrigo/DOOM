@@ -39,7 +39,7 @@ sesh
 perf
 typst
 emacs
-linux image viewer
+linux image viewer nsxiv, nomacs
 delta
 
 make tab completion on zsh work like **<Tab> fzf

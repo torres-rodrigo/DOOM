@@ -4,6 +4,9 @@
     xstatus = status -b
     xdiff = diff --patch-with-stat
     xbranch = branch -v
+    xdelta = -c core.pager=delta diff --diff-algorithm=patience
+    xdeltas = -c core.pager=delta -c delta.side-by-side=true diff --diff-algorithm=patience
+    xdblame = -c core.pager=delta blame -w -C -C -C
 
 [branch]
     sort = -committerdate
@@ -17,6 +20,13 @@
 
 [core]
     excludesFile = ~/.config/git/ignore
+
+[delta]
+    line-numbers = true
+    navigate = true
+    keep-plus-minus-markers = true
+    file-style = "yellow bold"
+    file-decoration-style = "white ul"
 
 [diff]
     algorithm = histogram

@@ -1708,6 +1708,8 @@ Make function for the advance git command where it prompts you to enter the line
 Leader o same as o but then go back to normal mode
 leader shift o same as O but then go back to normal mode
 Add auto update file on changes from the outside
+toggle background
+:highlight Normal ctermbg=none guibg=none
 
 # Lazygit config
 lazygit -h
@@ -1716,5 +1718,6 @@ lazygit -h
 ```
 nerdFontsVersion = "3"
 ```
+
 # New Subject
 

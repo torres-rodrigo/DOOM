@@ -69,6 +69,7 @@ PACKAGES=(
     "ffmpegthumbnailer" # Utility to create video thumbnails using FFmpeg
     "fzf" # Command-line fuzzy finder
     "ghostty" # Terminal emulator
+    "git-delta" # Diff tool
     "github-cli" # Github cli
     "gopass" # Password manager CLI
     "gum" # Tool to build rich shell scripts with styled text and prompts

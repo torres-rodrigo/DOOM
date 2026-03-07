@@ -126,11 +126,23 @@ alias ....l='cd ../../.. && eza -lha --icons --group-directories-first'
 # Git aliases
 alias gf='git fetch'                                             # git fetch
 alias gp='git pull'                                              # git pull
-alias ga='git add $(git status --porcelain | cut -c4- | fzf -m)' # git add interactive
+ga() {                                                           # git add interactive
+    local files
+    files=($(git status --porcelain | rg "^.[^ }]"| cut -c4- \
+        | fzf -m \
+              --prompt 'Files  : ' \
+              --preview 'bat --color=always {};' \
+              --bind='ctrl-a:select-all' \
+              --height=95%))
+
+    if [ -n "$files" ]; then
+        git add "${files[@]}"
+    fi
+}
 alias gaa='git add .'                                            # git add all
 alias gau='git add -u'                                           # git add updated
 alias gap='git add --patch'                                      # git add patch
-gc() { git commit -m "${*:-WIP}" }                               # git commit
+gc() { [[ $# -eq 0 ]] && git commit || git commit -m "$*"; }     # git commit
 alias gca='git commit --amend'                                   # git commit amend
 alias guc='git reset HEAD~1 --soft'                              # git undo commit but keep changes'
 alias guch='git reset HEAD~1 --hard'                             # git undo commit and discard changes
@@ -144,6 +156,8 @@ alias gsb='git switch'                                           # git switch br
 alias gcb='git switch -c'                                        # git create branch
 alias gd='git xdiff'                                             # git diff
 alias gdp='git xdiff --diff-algorithm=patience'                  # git diff patience
+alias gdd='git xdelta'                                           # git delta diff patience
+alias gdds='git xdeltas'                                         # git delta diff side by side patience
 alias gsl='git stash list'                                       # git stash list
 gsa() { git stash push -u -m ${*:-WIP $(dat)}; }                 # git stash all message ''
 gss() { git stash push --staged -m ${*:-WIP $(dat)}; }           # git stash staged message ''
@@ -152,7 +166,7 @@ gsd() { git stash drop "stash@{${1:-0}}" }                       # git stash dro
 alias gr='git restore'                                           # git restore
 alias grr='git reset --hard @{u}'                                # git reset to remote
 alias grl='git reset --hard HEAD'                                # git reset local
-alias gbl='git xblame'                                           # git blame
+alias gbl='git xdblame'                                          # git blame
 alias grv='git revert -n'                                        # git revert and stage <commit hashes>
 alias grvc='git revert'                                          # git revert and commit <commit hashes>
 
