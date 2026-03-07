@@ -27,6 +27,8 @@
     keep-plus-minus-markers = true
     file-style = "yellow bold"
     file-decoration-style = "white ul"
+    hyperlinks = true
+    hyperlinks-file-link-format = "zed://file{path}:{line}"
 
 [diff]
     algorithm = histogram

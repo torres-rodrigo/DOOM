@@ -1710,6 +1710,45 @@ leader shift o same as O but then go back to normal mode
 Add auto update file on changes from the outside
 toggle background
 :highlight Normal ctermbg=none guibg=none
+```
+On Linux, custom URI handlers use .desktop files registered via xdg-mime.
+
+  1. Create the handler script at ~/.local/bin/nvim-handler.sh:
+  #!/bin/bash
+  URI="$1"
+  QUERY="${URI#nvim://open?}"
+
+  # Parse path and line from query string
+  read -r FILE_PATH LINE_NUM < <(python3 -c "
+  import urllib.parse, sys
+  params = dict(urllib.parse.parse_qsl(sys.argv[1]))
+  print(params.get('path', ''), params.get('line', ''))
+  " "$QUERY")
+
+  ARGS=("$FILE_PATH")
+  [ -n "$LINE_NUM" ] && ARGS=("+$LINE_NUM" "$FILE_PATH")
+
+  # Adjust to your terminal emulator (kitty, alacritty, foot, etc.)
+  exec kitty nvim "${ARGS[@]}"
+
+  chmod +x ~/.local/bin/nvim-handler.sh
+
+  2. Create ~/.local/share/applications/nvim-handler.desktop:
+  [Desktop Entry]
+  Type=Application
+  Name=Neovim URI Handler
+  Exec=/home/rodrigo/.local/bin/nvim-handler.sh %u
+  MimeType=x-scheme-handler/nvim;
+  NoDisplay=true
+  Terminal=false
+
+  3. Register and update the database:
+  xdg-mime default nvim-handler.desktop x-scheme-handler/nvim
+  update-desktop-database ~/.local/share/applications/
+
+  4. Test it:
+  xdg-open "nvim://open?path=/etc/hosts&line=1"
+```
 
 # Lazygit config
 lazygit -h
