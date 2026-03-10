@@ -1845,4 +1845,7 @@ nerdFontsVersion = "3"
                     \   _-'                                                                `-_   /
                     `''                                                                      ``'
 
+# ArchInstall config
+https://github.com/archlinux/archinstall/blob/master/examples/config-sample.json
+
 # New Subject
