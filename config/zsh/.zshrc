@@ -131,7 +131,7 @@ ga() {                                                           # git add inter
     files=($(git status --porcelain | rg "^.[^ }]"| cut -c4- \
         | fzf -m \
               --prompt 'Files  : ' \
-              --preview 'bat --color=always {};' \
+              --preview 'git diff --color=always {};' \
               --bind='ctrl-a:select-all' \
               --height=95%))
 
