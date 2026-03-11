@@ -68,7 +68,7 @@ config.keys = {
     { key = '9', mods = 'CTRL', action = act.ActivateTab(9) },
     { key = 't', mods = 'LEADER', action = act.EmitEvent("toggle-tabbar") },
     { key = 'y', mods = 'LEADER', action = act.EmitEvent("copy-prompt-input") },
-    { key = 'b', mods = 'LEADER', action = act.SendString('\x05\x15') },
+    { key = 'd', mods = 'LEADER', action = act.SendString('\x05\x15') },
     { key = 'q', mods = 'ALT', action = act.CloseCurrentPane{confirm=false} },
     { key = '\\', mods = 'ALT', action = act.SplitHorizontal{ domain = 'CurrentPaneDomain' } },
     { key = '-', mods = 'ALT', action = act.SplitVertical{ domain = 'CurrentPaneDomain' } },
