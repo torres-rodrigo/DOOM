@@ -29,6 +29,7 @@ Research packages:
   skim, rust fzf replacement
   typst
   emacs
+  docker
 
 
 packages still missing/not fully confirmed
