@@ -146,6 +146,12 @@ git add <files>
 git commit --amend --no-edit (-S) // For signed
 git push --force-with-lease
 
+# Git Fix if asked to change to a new branch or lots of breaking changes
+1. Clone branch
+2. git reset --hard origin/\<TARGET_BRANCH\>
+3. git cherry-pick \<MY_CHANGES_COMMIT_HASH\>
+4. git push --force-with-lease
+
 # Claude recomendations
 ```
 1. Display Manager & Auto-Login
