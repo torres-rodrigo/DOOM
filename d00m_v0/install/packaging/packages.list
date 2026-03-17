@@ -4,6 +4,9 @@
 
 # ── Shell ─────────────────────────────────────────────────────────────────────
 zsh
+zsh-autosuggestions       # Fish-style inline command suggestions
+zsh-completions           # Additional completion definitions
+zsh-syntax-highlighting   # Fish-style syntax highlighting for the command line
 
 # ── Filesystem ────────────────────────────────────────────────────────────────
 btrfs-progs           # Btrfs filesystem utilities

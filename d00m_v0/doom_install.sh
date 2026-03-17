@@ -50,6 +50,8 @@ mkdir -p \
   "$XDG_DATA_HOME" \
   "$XDG_STATE_HOME" \
   "$ZDOTDIR" \
+  "$XDG_CACHE_HOME/zsh" \
+  "$XDG_STATE_HOME/zsh" \
   "$CARGO_HOME" \
   "$RUSTUP_HOME" \
   "$GOPATH" \
