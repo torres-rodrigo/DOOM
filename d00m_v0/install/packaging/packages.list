@@ -99,7 +99,8 @@ wl-clipboard          # Wayland clipboard CLI (wl-copy / wl-paste)
 
 # ── Theming ───────────────────────────────────────────────────────────────────
 gnome-themes-extra    # Additional GTK themes (includes Adwaita dark)
-kvantum               # Qt theme engine with SVG themes
+qt5ct                 # Qt5 theme configuration tool
+qt6ct                 # Qt6 theme configuration tool
 matugen               # Generates color schemes from wallpaper
 
 # ── Wallpaper ─────────────────────────────────────────────────────────────────
