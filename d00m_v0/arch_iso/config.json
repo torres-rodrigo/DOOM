@@ -1,0 +1,117 @@
+{
+    "app_config": {
+        "audio_config": {
+            "audio": "pipewire"
+        },
+        "bluetooth_config": {
+            "enabled": true
+        }
+    },
+    "archinstall-language": "English",
+    "auth_config": {},
+    "bootloader_config": {
+        "bootloader": "Systemd-boot",
+        "removable": false,
+        "uki": false
+    },
+    "custom_commands": [],
+    "disk_config": {
+        "btrfs_options": {
+            "snapshot_config": null
+        },
+        "config_type": "default_layout",
+        "device_modifications": [
+            {
+                "device": "__DEVICE__",
+                "partitions": [
+                    {
+                        "btrfs": [],
+                        "dev_path": null,
+                        "flags": ["boot"],
+                        "fs_type": "fat32",
+                        "mount_options": [],
+                        "mountpoint": "/boot",
+                        "obj_id": "doom-part-boot-0001",
+                        "size": {
+                            "sector_size": {"unit": "B", "value": 512},
+                            "unit": "GiB",
+                            "value": 1
+                        },
+                        "start": {
+                            "sector_size": {"unit": "B", "value": 512},
+                            "unit": "MiB",
+                            "value": 1
+                        },
+                        "status": "create",
+                        "type": "primary"
+                    },
+                    {
+                        "btrfs": [
+                            {"mountpoint": "/",                     "name": "@"},
+                            {"mountpoint": "/home",                 "name": "@home"},
+                            {"mountpoint": "/var/log",              "name": "@log"},
+                            {"mountpoint": "/var/cache/pacman/pkg", "name": "@pkg"}
+                        ],
+                        "dev_path": null,
+                        "flags": [],
+                        "fs_type": "btrfs",
+                        "mount_options": ["compress=zstd", "noatime"],
+                        "mountpoint": null,
+                        "obj_id": "doom-part-root-0002",
+                        "size": {
+                            "sector_size": {"unit": "B", "value": 512},
+                            "unit": "Percent",
+                            "value": 100
+                        },
+                        "start": {
+                            "sector_size": {"unit": "B", "value": 512},
+                            "unit": "GiB",
+                            "value": 1
+                        },
+                        "status": "create",
+                        "type": "primary"
+                    }
+                ],
+                "wipe": true
+            }
+        ],
+        "disk_encryption": {
+            "encryption_type": "luks",
+            "lvm_volumes": [],
+            "partitions": ["doom-part-root-0002"]
+        }
+    },
+    "hostname": "__HOSTNAME__",
+    "kernels": ["linux"],
+    "locale_config": {
+        "kb_layout": "us",
+        "sys_enc": "UTF-8",
+        "sys_lang": "en_US.UTF-8"
+    },
+    "mirror_config": {
+        "custom_repositories": [],
+        "custom_servers": [],
+        "mirror_regions": {},
+        "optional_repositories": []
+    },
+    "network_config": {
+        "type": "nm"
+    },
+    "ntp": true,
+    "packages": [
+        "base",
+        "base-devel",
+        "neovim",
+        "git",
+        "lazygit"
+    ],
+    "parallel_downloads": 5,
+    "script": null,
+    "services": [],
+    "swap": {
+        "algorithm": "zstd",
+        "enabled": true
+    },
+    "timezone": "__TIMEZONE__",
+    "version": "3.0.15"
+}
