@@ -4,6 +4,9 @@ run_logged $DOOM_INSTALL/config/dotfiles.sh
 print_step "Installing utility scripts"
 run_logged $DOOM_INSTALL/config/scripts.sh
 
+print_step "Enabling user services"
+run_logged $DOOM_INSTALL/config/services.sh
+
 print_step "Setting default shell to Zsh"
 run_logged $DOOM_INSTALL/config/shell/change-shell-to-zsh.sh
 

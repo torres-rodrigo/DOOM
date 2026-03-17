@@ -1,0 +1,20 @@
+#!/bin/bash
+set -euo pipefail
+
+# Returns battery percentage as integer
+
+# Find battery device
+BATTERY_PATH=$(upower -e | grep 'BAT' | head -1 || echo "")
+
+if [[ -z "$BATTERY_PATH" ]]; then
+    # No battery found - silent exit for desktop systems
+    exit 0
+fi
+
+# Get percentage as integer
+upower -i "$BATTERY_PATH" | awk -F: '/percentage/ {
+    gsub(/[%[:space:]]/, "", $2);
+    val=$2;
+    printf("%d\n", (val+0.5))
+    exit
+  }'

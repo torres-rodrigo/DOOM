@@ -16,8 +16,10 @@ if is_laptop; then
     sudo tlp start
     echo "TLP started for current session."
   fi
+  systemctl --user enable doom-battery-monitor.timer
+  echo "Battery monitor: enabled."
 else
-  echo "Desktop detected — TLP not applicable."
+  echo "Desktop detected — TLP and battery monitor not applicable."
 fi
 
 echo "Power management: OK"

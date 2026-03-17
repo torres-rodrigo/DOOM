@@ -1,0 +1,8 @@
+[Unit]
+Description=DOOM Battery Monitor Check
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/doom-battery-monitor
+LogLevelMax=warning

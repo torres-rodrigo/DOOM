@@ -1,0 +1,11 @@
+[Unit]
+Description=DOOM Clipboard History
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/wl-paste --watch cliphist store
+Restart=on-failure
+
+[Install]
+WantedBy=graphical-session.target

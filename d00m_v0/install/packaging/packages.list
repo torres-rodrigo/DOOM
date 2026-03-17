@@ -27,6 +27,8 @@ ufw                   # Uncomplicated Firewall
 
 # ── System Tools ──────────────────────────────────────────────────────────────
 bolt                  # Thunderbolt device authorization manager
+libnotify             # notify-send desktop notification tool
+upower                # Battery and power device information
 zram-generator        # Compressed swap in RAM
 
 # ── Session Management ────────────────────────────────────────────────────────
