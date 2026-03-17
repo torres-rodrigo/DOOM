@@ -45,6 +45,7 @@ export PATH="$HOME/.local/bin:$CARGO_HOME/bin:$GOPATH/bin:$PATH"
 
 # ── Ensure all directories exist ──────────────────────────────────────────────
 mkdir -p \
+  "$HOME/.local/bin" \
   "$XDG_CONFIG_HOME" \
   "$XDG_CACHE_HOME" \
   "$XDG_DATA_HOME" \

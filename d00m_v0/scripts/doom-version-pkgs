@@ -1,0 +1,32 @@
+#!/bin/bash
+# Display available updates and last package update date from pacman log
+
+PACMAN_LOG="/var/log/pacman.log"
+OUTPUT=""
+
+# Check for available updates (fast - uses local database)
+# Note: Only accurate if database was recently synced with 'pacman -Sy'
+UPDATE_COUNT=$(pacman -Qu 2>/dev/null | wc -l)
+if [[ $UPDATE_COUNT -gt 0 ]]; then
+    OUTPUT="Updates: 󱧕 $UPDATE_COUNT. "
+fi
+
+# Get last update timestamp
+if [[ -f "$PACMAN_LOG" ]]; then
+    LAST_UPGRADE=$(grep "upgraded" "$PACMAN_LOG" | tail -1 | sed -E 's/\[([^]]+)\].*/\1/')
+
+    if [[ -n "$LAST_UPGRADE" ]]; then
+        LAST_UPDATE_FORMATTED=$(date -d "$LAST_UPGRADE" "+%a, %b %d %Y @ %H:%M" 2>/dev/null)
+        if [[ -n "$LAST_UPDATE_FORMATTED" ]]; then
+            OUTPUT="${OUTPUT}Updated: ${LAST_UPDATE_FORMATTED}"
+        else
+            OUTPUT="${OUTPUT}unknown"
+        fi
+    else
+        OUTPUT="${OUTPUT}no upgrades found"
+    fi
+else
+    OUTPUT="${OUTPUT}pacman log not found"
+fi
+
+echo "$OUTPUT"
