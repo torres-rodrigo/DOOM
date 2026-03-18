@@ -1854,4 +1854,480 @@ nerdFontsVersion = "3"
 # ArchInstall config
 https://github.com/archlinux/archinstall/blob/master/examples/config-sample.json
 
-# New Subject
+# Custom Cursor Theme Guide
+
+A complete reference for building a mixed cursor theme from multiple source themes,
+mapping every cursor state to a file, and applying it system-wide on Wayland.
+
+---
+
+## Wayland Compatibility
+
+**Yes — XCursor works fully on Wayland.** There is no separate Wayland cursor
+format. Wayland compositors (including mango WM) load cursor themes through
+`libxcursor`, the same library used on X11, driven by the same environment
+variables (`XCURSOR_THEME`, `XCURSOR_SIZE`). The XCursor binary format is the
+universal standard on Linux regardless of display server.
+
+Hyprland introduced an optional `hyprcursor` format (SVG-based, resolution-
+independent), but it falls back to XCursor. For mango WM, plain XCursor is the
+correct format.
+
+---
+
+## XDG-Compliant Install Path
+
+`~/.icons/` is a **legacy** path from the old X11 icon spec. The XDG Base
+Directory standard places icon themes (including cursor themes) at:
+
+```
+$XDG_DATA_HOME/icons/   →   ~/.local/share/icons/
+```
+
+Both paths are searched by `libxcursor`, but `~/.local/share/icons/` is the
+correct modern location. All examples in this guide use it.
+
+**One caveat:** some GNOME apps on Wayland only find themes in `~/.local/share/icons`
+if `XCURSOR_PATH` explicitly includes it (see Section 5).
+
+---
+
+## 1. How XCursor Themes Work
+
+Every cursor theme is a directory with this structure:
+
+```
+~/.local/share/icons/MyTheme/
+├── index.theme        ← metadata: name, optional fallback chain
+├── cursor.theme       ← optional: shorthand pointing to index.theme name
+└── cursors/           ← one binary XCursor file per cursor name
+    ├── default
+    ├── text
+    ├── pointer
+    ├── xterm          ← usually a symlink → text
+    └── ...
+```
+
+**XCursor binary files** are not images. Each file can embed multiple sizes (24px,
+32px, 48px, 64px, 96px) and multiple animation frames inside a single binary.
+Applications pick the size closest to `XCURSOR_SIZE`.
+
+**Symlinks are aliases.** Applications request cursors by many different names
+(e.g. `hand2`, `pointer`, `pointing_hand` all mean "clickable"). Instead of
+duplicating the binary, you create symlinks so all aliases resolve to one file.
+
+**The fallback chain** (`Inherits=` in `index.theme`) lets you declare a parent
+theme. Any cursor name not found in your theme is looked up in the parent, then
+in the default theme. This means you only need to provide the cursors you actually
+want to customise.
+
+---
+
+## 2. Your Available Source Themes
+
+Stored in `~/Downloads/Cursors/Linux/`:
+
+| Theme | Cursors dir | Count | Style |
+|---|---|---|---|
+| `Bibata-Modern-Ice` | `cursors/` | 145 | White, rounded, high-contrast |
+| `WinSur-white-cursors` | `winsur-cursors/` | ~100 | Windows 11, white |
+| `macOS` | `macOS/cursors/` | 145 | macOS Big Sur style |
+| `macOS-White` | `macOS-White/cursors/` | 145 | macOS, all-white variant |
+| `Posy_Cursor` | `cursors/` | 122 | Minimal, clean Windows-style |
+| `Posy_Cursor_Black` | `cursors/` | 122 | Same, dark variant |
+| `Posy_Cursor_Mono` | `cursors/` | 122 | Monochrome variant |
+
+---
+
+## 3. Cursor States → File Names
+
+This is the definitive map. The **primary name** is the canonical file in your
+`cursors/` directory. Every entry in the **aliases** column becomes a symlink
+pointing at that primary file.
+
+### Core states
+
+| Visual state | Primary file | Aliases (symlinks → primary) |
+|---|---|---|
+| Normal arrow | `default` | `left_ptr`, `arrow`, `top_left_arrow`, `X_cursor`, `x-cursor` |
+| Text / I-beam | `text` | `xterm`, `ibeam` |
+| Pointer / clickable | `pointer` | `hand2`, `pointing_hand`, `hand1` |
+| Busy spinner | `wait` | `watch` |
+| Background busy (arrow + spinner) | `progress` | `left_ptr_watch`, `half-busy` |
+| Precision / crosshair | `crosshair` | `cross`, `tcross`, `diamond_cross` |
+
+### Resize states
+
+| Visual state | Primary file | Aliases (symlinks → primary) |
+|---|---|---|
+| Resize horizontal ↔ | `ew-resize` | `col-resize`, `h_double_arrow`, `sb_h_double_arrow`, `size-hor`, `size_hor`, `size-hor` |
+| Resize vertical ↕ | `ns-resize` | `row-resize`, `v_double_arrow`, `sb_v_double_arrow`, `size-ver`, `size_ver` |
+| Resize diagonal ↘ | `nwse-resize` | `nw-resize`, `se-resize`, `bd_double_arrow`, `size_fdiag`, `size_NwSe` |
+| Resize diagonal ↙ | `nesw-resize` | `ne-resize`, `sw-resize`, `fd_double_arrow`, `size_bdiag`, `size_NeSw` |
+| Resize all directions | `size_all` | `move`, `fleur`, `all-scroll` |
+| Resize top edge | `n-resize` | `top_side` |
+| Resize bottom edge | `s-resize` | `bottom_side` |
+| Resize left edge | `w-resize` | `left_side` |
+| Resize right edge | `e-resize` | `right_side` |
+
+### Interaction states
+
+| Visual state | Primary file | Aliases (symlinks → primary) |
+|---|---|---|
+| Open hand / pan | `openhand` | `grab` |
+| Closed hand / dragging | `closedhand` | `grabbing` |
+| Not allowed | `not-allowed` | `forbidden`, `crossed_circle`, `no-drop`, `circle` |
+| Help / question | `help` | `question_arrow`, `whats_this`, `left_ptr_help` |
+| Context menu | `context-menu` | *(none)* |
+| Copy (DnD) | `copy` | `dnd-copy` |
+| Move (DnD) | `dnd-move` | *(none)* |
+| Link / alias (DnD) | `alias` | `link`, `dnd-link` |
+| No drop (DnD) | `dnd-none` | `dnd-no-drop`, `dnd_no_drop` |
+
+### Specialty states
+
+| Visual state | Primary file | Aliases (symlinks → primary) |
+|---|---|---|
+| Split horizontal | `split_h` | *(none)* |
+| Split vertical | `split_v` | *(none)* |
+| Zoom in | `zoom-in` | *(none)* |
+| Zoom out | `zoom-out` | *(none)* |
+| Draw / pencil | `pencil` | `pen` |
+| Cell / spreadsheet | `cell` | `plus` |
+| Color picker | `color-picker` | *(none)* |
+| Up arrow | `up-arrow` | *(none)* |
+| Vertical text | `vertical-text` | *(none)* |
+| Center pointer | `center_ptr` | *(none)* |
+
+### Hex-named files (legacy X11 hash IDs)
+
+These are old X11 cursor shape IDs. Applications that predate named cursors
+request them by hash. Create symlinks from the hash to your primary file.
+The most important ones:
+
+| Hash | Equivalent visual state |
+|---|---|
+| `00000000000000020006000e7e9ffc3f` | `wait` |
+| `00008160000006810000408080010102` | `openhand` |
+| `03b6e0fcb3499374a867c041f52298f0` | `context-menu` |
+| `08e8e1c95fe2fc01f976f1e063a24ccd` | `help` |
+| `1081e37283d90000800003c07f3ef6bf` | `ns-resize` |
+| `2870a09082c103050810ffdffffe0204` | `move` |
+| `3085a0e285430894940527032f8b26df` | `progress` |
+| `3ecb610c1bf2410f44200f48c40d3599` | `not-allowed` |
+| `4498f0e0c1937ffe01fd06f973665830` | `alias` |
+| `5c6cd98b3f3ebcb1f9c7f1c204630408` | `copy` |
+| `6407b0e94181790501fd1e167b474872` | `nwse-resize` |
+| `640fb0e74195791501fd1ed57b41487f` | `nesw-resize` |
+| `9081237383d90e509aa00f00170e968f` | `ns-resize` |
+| `9d800788f1b08800ae810202380a0822` | `pointer` |
+| `a2a266d0498c3104214a47bd64ab0fc8` | `alias` |
+| `d9ce0ab605698f320427677b458ad60b` | `move` |
+| `e29285e634086352946a0e7090d73106` | `move` |
+| `fcf1c3c7cd4491d801f1e1c78f100000` | `ns-resize` |
+| `fcf21c00b30f7e3f83fe0dfd12e71cff` | `nwse-resize` |
+
+The safest approach: copy the hash-named files directly from whichever source
+theme you are using for that visual state. Do not manually manage these symlinks
+— let the source theme's existing hashes carry over.
+
+---
+
+## 4. Building the Custom Theme
+
+### Step 1 — Create the directory
+
+```bash
+THEME_NAME="DoomCursor"
+mkdir -p ~/.local/share/icons/$THEME_NAME/cursors
+```
+
+### Step 2 — Define your choices per state
+
+Decide which source theme you want for each visual group. Example:
+
+| Group | Source theme |
+|---|---|
+| Default arrow, progress, crosshair | Bibata-Modern-Ice |
+| Pointer, open/closed hand | macOS |
+| Resize cursors | Bibata-Modern-Ice |
+| Wait / busy | Posy_Cursor |
+| Not-allowed, help, DnD | Bibata-Modern-Ice |
+
+### Step 3 — Copy the primary files
+
+For each primary name, copy the file from your chosen source:
+
+```bash
+SRC_BIBATA=~/Downloads/Cursors/Linux/Bibata-Modern-Ice/cursors
+SRC_MACOS=~/Downloads/Cursors/Linux/macOS/macOS/cursors
+SRC_POSY=~/Downloads/Cursors/Linux/posy-s-cursor-sets/Posy_Cursor/cursors
+DEST=~/.local/share/icons/DoomCursor/cursors
+
+# Arrow group — from Bibata
+cp $SRC_BIBATA/default        $DEST/default
+cp $SRC_BIBATA/progress       $DEST/progress
+cp $SRC_BIBATA/crosshair      $DEST/crosshair
+
+# Text
+cp $SRC_BIBATA/text           $DEST/text
+
+# Pointer — from macOS
+cp $SRC_MACOS/pointer         $DEST/pointer
+
+# Open / closed hand — from macOS
+cp $SRC_MACOS/openhand        $DEST/openhand
+cp $SRC_MACOS/closedhand      $DEST/closedhand
+
+# Wait — from Posy
+cp $SRC_POSY/wait             $DEST/wait
+
+# Resize
+cp $SRC_BIBATA/ew-resize      $DEST/ew-resize
+cp $SRC_BIBATA/ns-resize      $DEST/ns-resize
+cp $SRC_BIBATA/nwse-resize    $DEST/nwse-resize
+cp $SRC_BIBATA/nesw-resize    $DEST/nesw-resize
+cp $SRC_BIBATA/size_all       $DEST/size_all
+
+# Not-allowed / help / DnD
+cp $SRC_BIBATA/not-allowed    $DEST/not-allowed
+cp $SRC_BIBATA/help           $DEST/help
+cp $SRC_BIBATA/copy           $DEST/copy
+cp $SRC_BIBATA/alias          $DEST/alias
+cp $SRC_BIBATA/dnd-move       $DEST/dnd-move
+cp $SRC_BIBATA/dnd-none       $DEST/dnd-none
+
+# Specialty
+cp $SRC_BIBATA/zoom-in        $DEST/zoom-in
+cp $SRC_BIBATA/zoom-out       $DEST/zoom-out
+cp $SRC_BIBATA/context-menu   $DEST/context-menu
+cp $SRC_BIBATA/split_h        $DEST/split_h
+cp $SRC_BIBATA/split_v        $DEST/split_v
+cp $SRC_BIBATA/cell           $DEST/cell
+cp $SRC_BIBATA/color-picker   $DEST/color-picker
+cp $SRC_BIBATA/pencil         $DEST/pencil
+cp $SRC_BIBATA/vertical-text  $DEST/vertical-text
+cp $SRC_BIBATA/up-arrow       $DEST/up-arrow
+```
+
+Also copy all the hex-named files from your primary source to preserve legacy
+X11 compatibility:
+
+```bash
+# Copy everything from Bibata first (gets all hashes), then overwrite selectively
+cp $SRC_BIBATA/* $DEST/
+```
+
+### Step 4 — Create alias symlinks
+
+For every primary file, create symlinks for all its aliases:
+
+```bash
+cd $DEST
+
+# default
+ln -sf default left_ptr
+ln -sf default arrow
+ln -sf default top_left_arrow
+ln -sf default X_cursor
+ln -sf default x-cursor
+
+# text
+ln -sf text xterm
+ln -sf text ibeam
+
+# pointer
+ln -sf pointer hand2
+ln -sf pointer pointing_hand
+ln -sf pointer hand1
+
+# wait
+ln -sf wait watch
+
+# progress
+ln -sf progress left_ptr_watch
+ln -sf progress half-busy
+
+# crosshair
+ln -sf crosshair cross
+ln -sf crosshair tcross
+ln -sf crosshair diamond_cross
+
+# ew-resize
+ln -sf ew-resize col-resize
+ln -sf ew-resize h_double_arrow
+ln -sf ew-resize sb_h_double_arrow
+ln -sf ew-resize size-hor
+ln -sf ew-resize size_hor
+
+# ns-resize
+ln -sf ns-resize row-resize
+ln -sf ns-resize v_double_arrow
+ln -sf ns-resize sb_v_double_arrow
+ln -sf ns-resize size-ver
+ln -sf ns-resize size_ver
+
+# nwse-resize
+ln -sf nwse-resize nw-resize
+ln -sf nwse-resize se-resize
+ln -sf nwse-resize bd_double_arrow
+ln -sf nwse-resize size_fdiag
+ln -sf nwse-resize size_NwSe
+
+# nesw-resize
+ln -sf nesw-resize ne-resize
+ln -sf nesw-resize sw-resize
+ln -sf nesw-resize fd_double_arrow
+ln -sf nesw-resize size_bdiag
+ln -sf nesw-resize size_NeSw
+
+# size_all (move/pan)
+ln -sf size_all move
+ln -sf size_all fleur
+ln -sf size_all all-scroll
+
+# not-allowed
+ln -sf not-allowed forbidden
+ln -sf not-allowed crossed_circle
+ln -sf not-allowed no-drop
+ln -sf not-allowed circle
+
+# help
+ln -sf help question_arrow
+ln -sf help whats_this
+ln -sf help left_ptr_help
+
+# openhand
+ln -sf openhand grab
+
+# closedhand
+ln -sf closedhand grabbing
+
+# copy / link / dnd
+ln -sf copy dnd-copy
+ln -sf alias link
+ln -sf alias dnd-link
+ln -sf dnd-none dnd-no-drop
+ln -sf dnd-none dnd_no_drop
+
+# specialty
+ln -sf pencil pen
+ln -sf cell plus
+```
+
+### Step 5 — Create index.theme
+
+```ini
+[Icon Theme]
+Name=DoomCursor
+Comment=DOOM custom cursor — mixed theme
+Inherits="Bibata-Modern-Ice"
+```
+
+The `Inherits` line is a safety net. Any cursor name your theme does not define
+is looked up in Bibata first, then in the system default.
+
+### Step 6 — Preview without applying system-wide
+
+```bash
+# Check the theme is readable
+xcur2png ~/.local/share/icons/DoomCursor/cursors/default -d /tmp/cursor_preview
+
+# Or launch any GTK app with the theme overridden
+XCURSOR_THEME=DoomCursor XCURSOR_SIZE=24 gtk3-demo
+```
+
+---
+
+## 5. Applying the Theme System-Wide
+
+Three layers need to be updated:
+
+**Layer 1 — Environment variables** (affects all Wayland-native apps)
+
+Set in `~/.config/uwsm/env`:
+```sh
+export XCURSOR_THEME=DoomCursor
+export XCURSOR_SIZE=24
+# XCURSOR_PATH tells libxcursor where to search.
+# ~/.local/share/icons is XDG-compliant but some GNOME apps on Wayland
+# require it to be listed explicitly alongside the system path.
+export XCURSOR_PATH="$HOME/.local/share/icons:/usr/share/icons"
+```
+
+**Layer 2 — GSetting** (affects GTK3/GTK4 apps and portals)
+
+```bash
+gsettings set org.gnome.desktop.interface cursor-theme 'DoomCursor'
+gsettings set org.gnome.desktop.interface cursor-size 24
+```
+
+**Layer 3 — Compositor** (affects the desktop cursor itself, not app windows)
+
+For mango WM, check its configuration for a cursor section similar to:
+```
+cursor_theme = DoomCursor
+cursor_size  = 24
+```
+This is compositor-specific. Without this layer only application windows show
+the custom cursor; the bare desktop/root cursor stays default.
+
+---
+
+## 6. Inspecting Source Theme Cursors
+
+To see what a specific cursor file looks like before copying it:
+
+```bash
+# List all sizes embedded in a cursor binary
+file ~/.icons/DoomCursor/cursors/default
+
+# Convert to PNG to visually compare (requires xcur2png from AUR)
+xcur2png ~/Downloads/Cursors/Linux/Bibata-Modern-Ice/cursors/default -d /tmp/preview
+xcur2png ~/Downloads/Cursors/Linux/macOS/macOS/cursors/pointer -d /tmp/preview
+
+# Or use the cursor inspector in any GTK app — hover a widget
+```
+
+---
+
+## 7. Creating New Cursor Images from PNG (optional)
+
+If you want to draw your own cursor for a specific state:
+
+1. Create a PNG at 32×32 or 48×48 px with a transparent background
+2. Create a `.cursor` config file:
+
+```
+# format: size hotspot_x hotspot_y image.png [delay_ms]
+32 3 3 arrow.png
+```
+
+3. Generate the XCursor binary:
+
+```bash
+xcursorgen arrow.cursor arrow_out
+cp arrow_out ~/.local/share/icons/DoomCursor/cursors/default
+```
+
+For animated cursors (e.g. the spinning wait cursor), add multiple lines to the
+`.cursor` file, each with a `delay_ms` value at the end (typically 30–50ms per
+frame). `xcursorgen` stacks them into one animated binary automatically.
+
+---
+
+## 8. The doom-cursor Script
+
+The `doom-cursor` script (in `scripts/`) handles everything in one command:
+
+```bash
+doom-cursor DoomCursor 24       # apply theme at size 24
+doom-cursor DoomCursor          # apply theme at default size (24)
+doom-cursor --list              # show installed themes in ~/.local/share/icons
+```
+
+It updates gsettings, writes the env vars to `~/.config/uwsm/env`, and
+notifies you. The compositor cursor requires a session restart to pick up the
+change (or mango WM's reload command once its API is confirmed).
+
+See `scripts/doom-cursor` for the implementation.
