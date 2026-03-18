@@ -4,6 +4,9 @@ run_logged $DOOM_INSTALL/config/dotfiles.sh
 print_step "Installing utility scripts"
 run_logged $DOOM_INSTALL/config/scripts.sh
 
+print_step "Applying default theme"
+run_logged $DOOM_INSTALL/config/matugen.sh
+
 print_step "Enabling user services"
 run_logged $DOOM_INSTALL/config/services.sh
 
