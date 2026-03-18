@@ -1,0 +1,13 @@
+[Unit]
+Description=WezTerm Mux Server
+Documentation=https://wezfurlong.org/wezterm/multiplexing.html
+PartOf=graphical-session.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/wezterm-mux-server --daemonize
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=graphical-session.target

@@ -5,5 +5,6 @@
 echo "Enabling user services..."
 
 systemctl --user enable doom-cliphist.service
+systemctl --user enable doom-wezterm-mux.service
 
 echo "User services: OK"
