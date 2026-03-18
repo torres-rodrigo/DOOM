@@ -2331,3 +2331,97 @@ notifies you. The compositor cursor requires a session restart to pick up the
 change (or mango WM's reload command once its API is confirmed).
 
 See `scripts/doom-cursor` for the implementation.
+
+---
+
+# d00m_v0 Gap Analysis
+
+Comparison of d00m_v0 against DOOM, omarchy, dusky, and hybrid reference projects.
+Items to address at a later time.
+
+---
+
+## Critical — Nothing exists for these
+
+| Gap | What reference projects do | Mango WM alternative |
+|---|---|---|
+| App launcher | omarchy: Walker; dusky/hybrid: rofi-wayland | fuzzel or rofi-wayland |
+| Screen locker | All use hyprlock | swaylock or gtklock |
+| Idle daemon | All use hypridle | swayidle |
+| Logout / power menu | dusky: wlogout; omarchy: fzf-based menu | wlogout or fzf/fuzzel menu |
+| Screenshot script | DOOM: `doom-screenshot` (grim + slurp + satty) | Packages present, just no script wiring them |
+| Screen recorder script | DOOM: `doom-screenrecord` (gpu-screen-recorder) | Packages present, no script |
+| Clipboard UI | DOOM: `doom-clipboard` (cliphist + fzf + wl-copy) | Cliphist service exists but no way to browse history |
+
+---
+
+## High — Significant missing features
+
+| Gap | Notes |
+|---|---|
+| Migration / update system | omarchy and hybrid both have `*-update` (snapshot + git pull + pacman + AUR + firmware + migrations) and `*-migrate` (timestamped scripts). d00m_v0 has no way to evolve after initial install |
+| Btrfs snapshots | btrfs-progs installed but no snapper, no snapshot-before-update, no rollback |
+| Nightlight | hyprsunset is Hyprland-specific; **wlsunset** is the mango-compatible alternative |
+| Wallpaper management | `doom-theme --wallpaper` runs matugen but doesn't set the wallpaper via swaybg. No rotation, no picker, no "current wallpaper" tracking |
+| AMD/Intel GPU detection | Installer only handles NVIDIA. AMD or Intel machines get no driver setup |
+| Brightness control | `brightnessctl` not in packages.list. swayosd can show OSD but nothing triggers it |
+
+---
+
+## Medium — Polish and completeness
+
+| Gap | Notes |
+|---|---|
+| fontconfig/fonts.conf | No font rendering config (hinting, antialiasing, default monospace). dusky and omarchy both deploy one |
+| GTK settings.ini | Matugen writes CSS colors but no `settings.ini` — GTK apps don't know icon theme, cursor theme, or font |
+| xdg-terminals.list | No preferred terminal set for `xdg-terminal-exec` |
+| MIME type defaults | No `xdg-mime default` for images, video, PDF, text files |
+| UWSM default apps | omarchy deploys `~/.config/uwsm/default` for default-terminal, default-browser |
+| PAM fingerprint / FIDO2 scripts | Packages installed (libfido2, pam-u2f) but no setup scripts. DOOM parent has `doom-setup-fido2` and `doom-setup-fingerprint` |
+| Audio output switching | No script to cycle PipeWire sinks (omarchy has one) |
+| sysctl tweaks | No inotify watchers increase, no vm.swappiness, no network buffer tuning |
+| gnome-keyring PAM init | Package installed but no PAM config — first app using libsecret prompts to create a keyring |
+| Disable mkinitcpio during install | omarchy moves pacman hooks aside during install to avoid rebuilding initramfs per kernel package. Easy speed win |
+| Hibernation setup | No hibernate-to-disk support (high value for laptops) |
+| LUKS password change script | omarchy has one, d00m_v0 doesn't despite using LUKS |
+
+---
+
+## Low — Nice-to-haves
+
+| Gap | Notes |
+|---|---|
+| Fast systemd shutdown config | Default 90s timeout; omarchy cuts it down |
+| Faillock / sudo tries config | Defaults can lock you out annoyingly |
+| GPG keyserver config | gopass installed but no keyserver setup |
+| Reflector (mirror optimization) | Using whatever archinstall left |
+| Journal size limits | Journals can grow unbounded |
+| Lid close / power button (logind.conf) | TLP handles some, but explicit logind config is cleaner |
+| Font cache rebuild in installer | `fc-cache -fv` after font packages install |
+| kernel-modules-hook | Preserves modules after kernel upgrade (matters for NVIDIA dkms) |
+| Firmware updates (fwupd) | Not in packages.list |
+| Orphan package cleanup | Only cache clean, no orphan removal |
+| File manager (yazi) | Commented out in packages, no config |
+| Version tracking (doom-version) | No version file in the project |
+| Boot messages toggle | No script to toggle `quiet` in kernel cmdline |
+| Printing (CUPS) | No cups, no printing support at all |
+| waypaper / swww | No wallpaper picker or transition animations |
+
+---
+
+## Does not apply to mango WM
+
+Hyprland-specific features in reference projects that cannot be ported:
+- hyprlock, hypridle, hyprsunset, hyprpicker, hyprpaper
+- Hyprland animation presets and shader system (`hyprctl`)
+- Walker's Hyprland IPC integration
+- Window dispatch scripts using `hyprctl`
+- Waybar (mango WM may have its own built-in bar)
+
+---
+
+## Architecture notes
+
+- The biggest architectural gap is the **migration/update system** — without it, every config change after install requires manual intervention or a full reinstall.
+- The biggest user-facing gaps are the **four critical missing pieces**: app launcher, screen locker, idle daemon, and power menu. Without those, the desktop is functional but not usable day-to-day.
+- The migration pattern is simple: a `migrations/` directory with numbered shell scripts, a state directory tracking what has run, and a `doom-migrate` script. Combined with `doom-update` (snapshot + git pull + pacman + paru + doom-migrate), this brings d00m_v0 to parity with omarchy and hybrid.
