@@ -1,6 +1,9 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
+config.unix_domains = { { name = 'unix' } }
+config.default_gui_startup_args = { 'connect', 'unix' }
+
 local is_wayland = os.getenv('WAYLAND_DISPLAY') ~= nil or
                    os.getenv('XDG_SESSION_TYPE') == 'wayland'
 config.enable_wayland = is_wayland
