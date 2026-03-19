@@ -2425,3 +2425,224 @@ Hyprland-specific features in reference projects that cannot be ported:
 - The biggest architectural gap is the **migration/update system** — without it, every config change after install requires manual intervention or a full reinstall.
 - The biggest user-facing gaps are the **four critical missing pieces**: app launcher, screen locker, idle daemon, and power menu. Without those, the desktop is functional but not usable day-to-day.
 - The migration pattern is simple: a `migrations/` directory with numbered shell scripts, a state directory tracking what has run, and a `doom-migrate` script. Combined with `doom-update` (snapshot + git pull + pacman + paru + doom-migrate), this brings d00m_v0 to parity with omarchy and hybrid.
+
+ Core
+
+  ┌───────────┬────────────────────────────────────────────────────────────────┐
+  │ File name │                        When it appears                         │
+  ├───────────┼────────────────────────────────────────────────────────────────┤
+  │ default   │ Normal arrow — hovering over the desktop, buttons, most UI     │
+  ├───────────┼────────────────────────────────────────────────────────────────┤
+  │ text      │ Over editable text (input fields, text editors)                │
+  ├───────────┼────────────────────────────────────────────────────────────────┤
+  │ pointer   │ Over clickable elements (links, buttons with hand cursor)      │
+  ├───────────┼────────────────────────────────────────────────────────────────┤
+  │ wait      │ System is busy, cannot interact (spinning/hourglass)           │
+  ├───────────┼────────────────────────────────────────────────────────────────┤
+  │ progress  │ System is busy but you can still interact (arrow + spinner)    │
+  ├───────────┼────────────────────────────────────────────────────────────────┤
+  │ crosshair │ Precision selection (drawing apps, color pickers, sniper mode) │
+  └───────────┴────────────────────────────────────────────────────────────────┘
+
+  Resize
+
+  ┌─────────────┬───────────────────────────────────────────────────────────────────────┐
+  │  File name  │                            When it appears                            │
+  ├─────────────┼───────────────────────────────────────────────────────────────────────┤
+  │ n-resize    │ Dragging a top edge down/up                                           │
+  ├─────────────┼───────────────────────────────────────────────────────────────────────┤
+  │ s-resize    │ Dragging a bottom edge down/up                                        │
+  ├─────────────┼───────────────────────────────────────────────────────────────────────┤
+  │ e-resize    │ Dragging a right edge left/right                                      │
+  ├─────────────┼───────────────────────────────────────────────────────────────────────┤
+  │ w-resize    │ Dragging a left edge left/right                                       │
+  ├─────────────┼───────────────────────────────────────────────────────────────────────┤
+  │ ns-resize   │ Vertical resize handle (top/bottom borders)                           │
+  ├─────────────┼───────────────────────────────────────────────────────────────────────┤
+  │ ew-resize   │ Horizontal resize handle (left/right borders)                         │
+  ├─────────────┼───────────────────────────────────────────────────────────────────────┤
+  │ nwse-resize │ Diagonal resize — top-left or bottom-right corner                     │
+  ├─────────────┼───────────────────────────────────────────────────────────────────────┤
+  │ nesw-resize │ Diagonal resize — top-right or bottom-left corner                     │
+  ├─────────────┼───────────────────────────────────────────────────────────────────────┤
+  │ col-resize  │ Dragging a column divider left/right (tables, split panes)            │
+  ├─────────────┼───────────────────────────────────────────────────────────────────────┤
+  │ row-resize  │ Dragging a row divider up/down (tables, split panes)                  │
+  ├─────────────┼───────────────────────────────────────────────────────────────────────┤
+  │ size_all    │ Move/resize in any direction (over a window title bar or drag handle) │
+  └─────────────┴───────────────────────────────────────────────────────────────────────┘
+
+  Interaction
+
+  ┌──────────────┬──────────────────────────────────────────────────────────────────────┐
+  │  File name   │                           When it appears                            │
+  ├──────────────┼──────────────────────────────────────────────────────────────────────┤
+  │ openhand     │ "You can grab this" — pannable canvas, draggable map                 │
+  ├──────────────┼──────────────────────────────────────────────────────────────────────┤
+  │ closedhand   │ "You are grabbing" — actively panning/dragging                       │
+  ├──────────────┼──────────────────────────────────────────────────────────────────────┤
+  │ not-allowed  │ Action is forbidden (dropping on an invalid target, disabled button) │
+  ├──────────────┼──────────────────────────────────────────────────────────────────────┤
+  │ help         │ Help mode — hovering with "what's this?" active                      │
+  ├──────────────┼──────────────────────────────────────────────────────────────────────┤
+  │ context-menu │ Right-click menu is available                                        │
+  └──────────────┴──────────────────────────────────────────────────────────────────────┘
+
+  Drag and drop
+
+  ┌───────────┬───────────────────────────────────────────────────┐
+  │ File name │                  When it appears                  │
+  ├───────────┼───────────────────────────────────────────────────┤
+  │ copy      │ Dragging with copy action (Ctrl+drag)             │
+  ├───────────┼───────────────────────────────────────────────────┤
+  │ alias     │ Dragging to create a link/shortcut                │
+  ├───────────┼───────────────────────────────────────────────────┤
+  │ dnd-move  │ Dragging to move an item                          │
+  ├───────────┼───────────────────────────────────────────────────┤
+  │ dnd-none  │ Dragging over a target that won't accept the drop │
+  └───────────┴───────────────────────────────────────────────────┘
+
+  Specialty
+
+  ┌───────────────┬─────────────────────────────────────────────────────────────────────┐
+  │   File name   │                           When it appears                           │
+  ├───────────────┼─────────────────────────────────────────────────────────────────────┤
+  │ zoom-in       │ Clicking will zoom in (magnifier with +)                            │
+  ├───────────────┼─────────────────────────────────────────────────────────────────────┤
+  │ zoom-out      │ Clicking will zoom out (magnifier with -)                           │
+  ├───────────────┼─────────────────────────────────────────────────────────────────────┤
+  │ cell          │ Over a spreadsheet/table cell for selection                         │
+  ├───────────────┼─────────────────────────────────────────────────────────────────────┤
+  │ vertical-text │ Over vertically-oriented text                                       │
+  ├───────────────┼─────────────────────────────────────────────────────────────────────┤
+  │ color-picker  │ Picking a color from the screen (eyedropper)                        │
+  ├───────────────┼─────────────────────────────────────────────────────────────────────┤
+  │ pencil        │ Drawing/annotation mode                                             │
+  ├───────────────┼─────────────────────────────────────────────────────────────────────┤
+  │ split_h       │ Hovering over a horizontal split handle                             │
+  ├───────────────┼─────────────────────────────────────────────────────────────────────┤
+  │ split_v       │ Hovering over a vertical split handle                               │
+  ├───────────────┼─────────────────────────────────────────────────────────────────────┤
+  │ up-arrow      │ Selection cursor pointing up                                        │
+  ├───────────────┼─────────────────────────────────────────────────────────────────────┤
+  │ center_ptr    │ Arrow pointing up-center (some window managers use for root window) │
+  ├───────────────┼─────────────────────────────────────────────────────────────────────┤
+  │ X_cursor      │ Fallback/error cursor (large X shape)                               │
+  └───────────────┴─────────────────────────────────────────────────────────────────────┘
+
+  Edge cursors (less common, used by some WMs)
+
+  ┌─────────────────────┬──────────────────────────────────────────────┐
+  │      File name      │               When it appears                │
+  ├─────────────────────┼──────────────────────────────────────────────┤
+  │ top_side            │ Hovering exactly on the top edge of a window │
+  ├─────────────────────┼──────────────────────────────────────────────┤
+  │ bottom_side         │ Hovering exactly on the bottom edge          │
+  ├─────────────────────┼──────────────────────────────────────────────┤
+  │ left_side           │ Hovering exactly on the left edge            │
+  ├─────────────────────┼──────────────────────────────────────────────┤
+  │ right_side          │ Hovering exactly on the right edge           │
+  ├─────────────────────┼──────────────────────────────────────────────┤
+  │ top_left_corner     │ Hovering on the top-left corner              │
+  ├─────────────────────┼──────────────────────────────────────────────┤
+  │ top_right_corner    │ Hovering on the top-right corner             │
+  ├─────────────────────┼──────────────────────────────────────────────┤
+  │ bottom_left_corner  │ Hovering on the bottom-left corner           │
+  ├─────────────────────┼──────────────────────────────────────────────┤
+  │ bottom_right_corner │ Hovering on the bottom-right corner          │
+  └─────────────────────┴──────────────────────────────────────────────┘
+# default
+  ln -sf default left_ptr
+  ln -sf default arrow
+  ln -sf default top_left_arrow
+  ln -sf default X_cursor
+
+  # text
+  ln -sf text xterm
+  ln -sf text ibeam
+
+  # pointer
+  ln -sf pointer hand2
+  ln -sf pointer hand1
+  ln -sf pointer pointing_hand
+
+  # wait
+  ln -sf wait watch
+
+  # progress
+  ln -sf progress left_ptr_watch
+  ln -sf progress half-busy
+
+  # crosshair
+  ln -sf crosshair cross
+  ln -sf crosshair tcross
+
+  # ew-resize
+  ln -sf ew-resize h_double_arrow
+  ln -sf ew-resize sb_h_double_arrow
+  ln -sf ew-resize size-hor
+  ln -sf ew-resize size_hor
+
+  # ns-resize
+  ln -sf ns-resize v_double_arrow
+  ln -sf ns-resize sb_v_double_arrow
+  ln -sf ns-resize size-ver
+  ln -sf ns-resize size_ver
+
+  # nwse-resize
+  ln -sf nwse-resize bd_double_arrow
+  ln -sf nwse-resize size_fdiag
+  ln -sf nwse-resize nw-resize
+  ln -sf nwse-resize se-resize
+
+  # nesw-resize
+  ln -sf nesw-resize fd_double_arrow
+  ln -sf nesw-resize size_bdiag
+  ln -sf nesw-resize ne-resize
+  ln -sf nesw-resize sw-resize
+
+  # col-resize / row-resize alias to ew/ns if you don't have separate files
+  ln -sf ew-resize col-resize
+  ln -sf ns-resize row-resize
+
+  # size_all
+  ln -sf size_all move
+  ln -sf size_all fleur
+  ln -sf size_all all-scroll
+
+  # not-allowed
+  ln -sf not-allowed forbidden
+  ln -sf not-allowed crossed_circle
+  ln -sf not-allowed no-drop
+  ln -sf not-allowed circle
+
+  # help
+  ln -sf help question_arrow
+  ln -sf help whats_this
+  ln -sf help left_ptr_help
+
+  # openhand / closedhand
+  ln -sf openhand grab
+  ln -sf closedhand grabbing
+
+  # copy / alias / dnd
+  ln -sf copy dnd-copy
+  ln -sf alias link
+  ln -sf alias dnd-link
+  ln -sf dnd-none dnd-no-drop
+
+  # pencil
+  ln -sf pencil pen
+
+  # cell
+  ln -sf cell plus
+
+  # edge cursors
+  ln -sf n-resize top_side
+  ln -sf s-resize bottom_side
+  ln -sf e-resize right_side
+  ln -sf w-resize left_side
+  ln -sf nwse-resize top_left_corner
+  ln -sf nwse-resize bottom_right_corner
+  ln -sf nesw-resize top_right_corner
+  ln -sf nesw-resize bottom_left_corner
