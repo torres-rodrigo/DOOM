@@ -24,7 +24,9 @@ export GDK_BACKEND="wayland,x11"
 export SDL_VIDEODRIVER="wayland,x11"
 
 # ── Cursor ────────────────────────────────────────────────────────────────────
-export XCURSOR_SIZE=24
+export XCURSOR_THEME=DoomCursor
+export XCURSOR_SIZE=32
+export XCURSOR_SIZE=$HOME/.local/share/icons
 
 # ── Applications ──────────────────────────────────────────────────────────────
 export EDITOR=nvim
