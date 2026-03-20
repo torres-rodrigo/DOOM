@@ -73,8 +73,8 @@ ncdu                  # Interactive disk usage navigator
 neovim                # Lua-extensible modal text editor
 pacman-contrib        # Pacman helper scripts (paccache, etc.)
 ripgrep               # grep replacement (rg) — blazing fast
-skim                  # Fuzzy finder written in Rust (REDUNDANT: same purpose as fzf)
 starship              # Fast cross-shell prompt
+stow                  # Symlink-based package manager for managing dotfiles
 tree-sitter-cli       # CLI for building Tree-sitter parsers
 unzip                 # ZIP archive extraction
 wget                  # File downloader
