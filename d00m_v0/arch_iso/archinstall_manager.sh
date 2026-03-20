@@ -141,7 +141,12 @@ ask_password password
 # Read the live ISO's current timezone as the default.
 # The Arch ISO boots as UTC — type your own if needed (e.g. America/Montevideo).
 detected_tz=$(timedatectl show -p Timezone --value 2>/dev/null || echo "UTC")
-ask "Timezone" timezone "$detected_tz"
+while true; do
+  echo -e "  ${YELLOW}Hint: type --list to browse all available timezones${RESET}"
+  ask "Timezone" timezone "$detected_tz"
+  [[ "$timezone" != "--list" ]] && break
+  timedatectl list-timezones | more
+done
 
 # ── Step 3 — Disk selection ───────────────────────────────────────────────────
 echo ""
@@ -176,6 +181,11 @@ fi
 
 # Verify the path is an actual block device before continuing
 [[ -b "$disk" ]] || { echo -e "  ${RED}Error: '$disk' is not a valid block device.${RESET}"; exit 1; }
+
+# Calculate root partition size: total disk GiB minus 1 GiB for the boot partition.
+# archinstall 3.x dropped the "Percent" unit — sizes must be absolute.
+disk_size_bytes=$(lsblk -b -d -o SIZE --noheadings "$disk" | tr -d '[:space:]')
+root_size_gib=$(( disk_size_bytes / 1024 / 1024 / 1024 - 1 ))
 
 # ── Confirmation ──────────────────────────────────────────────────────────────
 echo ""
@@ -227,9 +237,10 @@ EOF
 # per-machine are injected here via sed placeholders.
 cp "$ARCHINSTALL_CONFIG_TEMPLATE" "$ARCHINSTALL_CONFIG"
 
-sed -i "s|__DEVICE__|${disk}|g"      "$ARCHINSTALL_CONFIG"
-sed -i "s|__HOSTNAME__|${hostname}|g" "$ARCHINSTALL_CONFIG"
-sed -i "s|__TIMEZONE__|${timezone}|g" "$ARCHINSTALL_CONFIG"
+sed -i "s|__DEVICE__|${disk}|g"           "$ARCHINSTALL_CONFIG"
+sed -i "s|__HOSTNAME__|${hostname}|g"      "$ARCHINSTALL_CONFIG"
+sed -i "s|__TIMEZONE__|${timezone}|g"      "$ARCHINSTALL_CONFIG"
+sed -i "s|__ROOT_SIZE__|${root_size_gib}|g" "$ARCHINSTALL_CONFIG"
 
 echo -e "  ${GREEN}Config files ready.${RESET}"
 echo ""

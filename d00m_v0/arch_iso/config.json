@@ -19,7 +19,7 @@
         "btrfs_options": {
             "snapshot_config": null
         },
-        "config_type": "default_layout",
+        "config_type": "manual_partitioning",
         "device_modifications": [
             {
                 "device": "__DEVICE__",
@@ -60,8 +60,8 @@
                         "obj_id": "doom-part-root-0002",
                         "size": {
                             "sector_size": {"unit": "B", "value": 512},
-                            "unit": "Percent",
-                            "value": 100
+                            "unit": "GiB",
+                            "value": __ROOT_SIZE__
                         },
                         "start": {
                             "sector_size": {"unit": "B", "value": 512},
