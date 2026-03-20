@@ -272,8 +272,11 @@ orphans() {
 }
 
 rmpkgs() {
+    local list_flag="-Qq"
+    [[ $1 == -e ]] && list_flag="-Qeq"
+
     local selected
-    selected=$(paru -Qq 2>/dev/null | fzf --multi \
+    selected=$(paru $list_flag 2>/dev/null | fzf --multi \
         --prompt="Select 󰏖 packages to remove > " \
         --header="Enter: confirm | Esc: cancel" \
         --preview='paru -Qi {} 2>/dev/null || echo "Package info not available"' \
