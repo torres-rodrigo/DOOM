@@ -182,10 +182,11 @@ fi
 # Verify the path is an actual block device before continuing
 [[ -b "$disk" ]] || { echo -e "  ${RED}Error: '$disk' is not a valid block device.${RESET}"; exit 1; }
 
-# Calculate root partition size: total disk GiB minus 1 GiB for the boot partition.
+# Calculate root partition size in GiB.
+# Boot occupies [1 MiB, 1025 MiB], so root starts at 1025 MiB.
 # archinstall 3.x dropped the "Percent" unit — sizes must be absolute.
 disk_size_bytes=$(lsblk -b -d -o SIZE --noheadings "$disk" | tr -d '[:space:]')
-root_size_gib=$(( disk_size_bytes / 1024 / 1024 / 1024 - 1 ))
+root_size_gib=$(( (disk_size_bytes - 1025 * 1024 * 1024) / 1024 / 1024 / 1024 ))
 
 # ── Confirmation ──────────────────────────────────────────────────────────────
 echo ""
