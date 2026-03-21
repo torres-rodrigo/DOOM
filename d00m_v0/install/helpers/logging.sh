@@ -1,52 +1,11 @@
-# Real-time install log monitoring.
-# A background process tails the log file and reprints the last N lines
-# below the logo so the user can see live progress without scrolling.
+# Log output helpers — reserved for future gum-based spinner integration.
+# The background ANSI monitor was removed: cursor save/restore races with
+# foreground print_step() writes and produces garbled output.
+# User feedback is provided by print_step() calls in the phase entry points.
+# All subprocess output is still captured in $DOOM_INSTALL_LOG_FILE.
 
-start_log_output() {
-  local ANSI_SAVE_CURSOR="\033[s"
-  local ANSI_RESTORE_CURSOR="\033[u"
-  local ANSI_CLEAR_LINE="\033[2K"
-  local ANSI_HIDE_CURSOR="\033[?25l"
-  local ANSI_RESET="\033[0m"
-  local ANSI_GRAY="\033[90m"
-
-  printf $ANSI_SAVE_CURSOR
-  printf $ANSI_HIDE_CURSOR
-
-  (
-    local log_lines=18
-    local max_line_width=$((LOGO_WIDTH - 4))
-
-    while true; do
-      mapfile -t current_lines < <(tail -n $log_lines "$DOOM_INSTALL_LOG_FILE" 2>/dev/null)
-
-      output=""
-      for ((i = 0; i < log_lines; i++)); do
-        line="${current_lines[i]:-}"
-        if (( ${#line} > max_line_width )); then
-          line="${line:0:$max_line_width}..."
-        fi
-        if [[ -n $line ]]; then
-          output+="${ANSI_CLEAR_LINE}${ANSI_GRAY}${PADDING_LEFT_SPACES}  → ${line}${ANSI_RESET}\n"
-        else
-          output+="${ANSI_CLEAR_LINE}${PADDING_LEFT_SPACES}\n"
-        fi
-      done
-
-      printf "${ANSI_RESTORE_CURSOR}%b" "$output"
-      sleep 0.1
-    done
-  ) &
-  monitor_pid=$!
-}
-
-stop_log_output() {
-  if [[ -n ${monitor_pid:-} ]]; then
-    kill $monitor_pid 2>/dev/null || true
-    wait $monitor_pid 2>/dev/null || true
-    unset monitor_pid
-  fi
-}
+start_log_output() { :; }
+stop_log_output()  { :; }
 
 start_install_log() {
   touch "$DOOM_INSTALL_LOG_FILE"
