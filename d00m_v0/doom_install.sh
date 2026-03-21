@@ -3,17 +3,17 @@
 # doom_v0 Install Script
 # =============================================================================
 # Run this after rebooting into the freshly installed Arch base system.
-# The repo should already be at ~/.local/share/doom_v0 (cloned by
+# The repo should already be at ~/doom_v0 (copied by
 # archinstall_manager.sh before reboot).
 #
 # Usage:
-#   bash ~/.local/share/doom_v0/doom_install.sh
+#   bash ~/doom_v0/doom_install.sh
 # =============================================================================
 
 set -eEo pipefail
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-export DOOM_PATH="$HOME/.local/share/doom_v0"
+export DOOM_PATH="$HOME/doom_v0"
 export DOOM_INSTALL="$DOOM_PATH/install"
 export DOOM_INSTALL_LOG_FILE="/var/log/doom-install.log"
 

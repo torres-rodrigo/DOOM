@@ -9,7 +9,7 @@
 #   2. Detects available disks and asks which one to install on
 #   3. Generates archinstall config files from those inputs
 #   4. Runs archinstall (fully automated)
-#   5. Clones the doom_v0 repo into the new system, ready for reboot
+#   5. Copies the doom_v0 directory to ~/doom_v0 in the new system, ready for reboot
 #
 # Usage:
 #   curl -O https://raw.githubusercontent.com/your/doom_v0/main/arch_iso/archinstall_manager.sh
@@ -257,32 +257,31 @@ archinstall \
   --config "$ARCHINSTALL_CONFIG" \
   --creds  "$ARCHINSTALL_CREDS"
 
-# ── Post-archinstall: clone repo and prepare for reboot ──────────────────────
+# ── Post-archinstall: copy repo and prepare for reboot ───────────────────────
 # archinstall leaves the new system mounted at /mnt.
-# We clone doom_v0 into the new user's home so it is ready after reboot.
-# The user runs the installer manually after logging into the new system.
+# The repo is already on disk (we ran from it), so copy it directly
+# rather than re-cloning. No network or credentials needed.
 echo ""
 echo -e "  ${CYAN}${BOLD}archinstall complete. Preparing for reboot...${RESET}"
 echo ""
 
-DOOM_CHROOT_PATH="/mnt/home/${username}/.local/share/doom_v0"
+DOOM_CHROOT_PATH="/mnt/home/${username}/doom_v0"
 
-mkdir -p "$DOOM_CHROOT_PATH"
-git clone "$DOOM_REPO" "$DOOM_CHROOT_PATH"
+cp -r "$(realpath "$SCRIPT_DIR/..")" "$DOOM_CHROOT_PATH"
 
-# Fix ownership — the clone was written by root (live ISO user)
+# Fix ownership — the copy was written by root (live ISO user)
 # but must belong to the new user inside the installed system.
-arch-chroot /mnt chown -R "${username}:${username}" "/home/${username}/.local"
+arch-chroot /mnt chown -R "${username}:${username}" "/home/${username}/doom_v0"
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
 echo -e "  ${GREEN}${BOLD}Base system installed.${RESET}"
 echo ""
-echo -e "  doom_v0 is ready at: ${BOLD}~/.local/share/doom_v0${RESET}"
+echo -e "  doom_v0 is ready at: ${BOLD}~/doom_v0${RESET}"
 echo ""
 echo -e "  Next steps:"
 echo -e "    1. Remove the installation media"
 echo -e "    2. ${BOLD}reboot${RESET}"
 echo -e "    3. Log in as ${BOLD}${username}${RESET}"
-echo -e "    4. Run: ${BOLD}bash ~/.local/share/doom_v0/doom_install.sh${RESET}"
+echo -e "    4. Run: ${BOLD}bash ~/doom_v0/doom_install.sh${RESET}"
 echo ""
