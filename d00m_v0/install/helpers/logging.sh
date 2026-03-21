@@ -29,6 +29,10 @@ start_log_output() {
   export _LOG_SEP_ROW="$sep_row"
   export _LOG_START_ROW="$log_start"
 
+  # Save cursor position (right after the logo) before doing any absolute
+  # positioning — restored at the end so print_step appears below the logo.
+  printf "\033[s"
+
   # Set scroll region — only lines 1..$scroll_end scroll
   printf "\033[1;%dr" "$scroll_end"
 
@@ -43,8 +47,8 @@ start_log_output() {
     printf "\033[%d;1H\033[2K" $(( log_start + i ))
   done
 
-  # Return cursor to bottom of scroll region so new output appears there
-  printf "\033[%d;1H" "$scroll_end"
+  # Restore cursor to just below the logo so output flows from there
+  printf "\033[u"
 
   hide_cursor
 
