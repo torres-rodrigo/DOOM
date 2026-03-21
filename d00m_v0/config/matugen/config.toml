@@ -1,5 +1,5 @@
 # Matugen config — d00m_v0
-# Templates are rendered on every `matugen file <preset>` or `matugen image <wallpaper>` run.
+# Templates are rendered on every `matugen color hex <accent>` or `matugen image <wallpaper>` run.
 # Post-hooks reload live apps; dead-process errors are suppressed with `|| :`.
 
 [config]
