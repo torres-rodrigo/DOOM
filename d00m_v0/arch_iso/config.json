@@ -103,7 +103,8 @@
         "base-devel",
         "neovim",
         "git",
-        "lazygit"
+        "lazygit",
+        "gum"
     ],
     "parallel_downloads": 5,
     "script": null,

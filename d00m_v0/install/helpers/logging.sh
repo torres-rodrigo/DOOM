@@ -1,8 +1,7 @@
-# Log output helpers — reserved for future gum-based spinner integration.
-# The background ANSI monitor was removed: cursor save/restore races with
-# foreground print_step() writes and produces garbled output.
-# User feedback is provided by print_step() calls in the phase entry points.
-# All subprocess output is still captured in $DOOM_INSTALL_LOG_FILE.
+# Install log helpers.
+# run_logged() shows a gum spinner while each subscript runs and captures all
+# output to $DOOM_INSTALL_LOG_FILE. start/stop_log_output are no-ops kept for
+# call-site compatibility.
 
 start_log_output() { :; }
 stop_log_output()  { :; }
@@ -35,14 +34,22 @@ stop_install_log() {
 
 # Run a subscript in a logged subshell.
 # All stdout and stderr from the subscript go to the log file.
-# On failure the ERR trap in errors.sh fires automatically.
+# Shows a gum spinner while running; falls back to silent logging if gum is
+# not yet available (e.g. before pacman.sh installs it).
 run_logged() {
   local script="$1"
+  local title
+  title="$(basename "$script" .sh)"
   export CURRENT_SCRIPT="$script"
 
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting: $script" >> "$DOOM_INSTALL_LOG_FILE"
 
-  bash -c "source '$script'" </dev/null >> "$DOOM_INSTALL_LOG_FILE" 2>&1
+  if command -v gum &>/dev/null; then
+    gum spin --spinner dot --title "    $title" -- \
+      bash -c "source \"$script\" >> \"$DOOM_INSTALL_LOG_FILE\" 2>&1"
+  else
+    bash -c "source \"$script\"" >> "$DOOM_INSTALL_LOG_FILE" 2>&1
+  fi
 
   local exit_code=$?
 
