@@ -265,23 +265,23 @@ echo ""
 echo -e "  ${CYAN}${BOLD}archinstall complete. Preparing for reboot...${RESET}"
 echo ""
 
-DOOM_CHROOT_PATH="/mnt/home/${username}/doom_v0"
+DOOM_CHROOT_PATH="/mnt/home/${username}/d00m_v0"
 
 cp -r "$(realpath "$SCRIPT_DIR/..")" "$DOOM_CHROOT_PATH"
 
 # Fix ownership — the copy was written by root (live ISO user)
 # but must belong to the new user inside the installed system.
-arch-chroot /mnt chown -R "${username}:${username}" "/home/${username}/doom_v0"
+arch-chroot /mnt chown -R "${username}:${username}" "/home/${username}/d00m_v0"
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
 echo -e "  ${GREEN}${BOLD}Base system installed.${RESET}"
 echo ""
-echo -e "  doom_v0 is ready at: ${BOLD}~/doom_v0${RESET}"
+echo -e "  doom_v0 is ready at: ${BOLD}~/d00m_v0${RESET}"
 echo ""
 echo -e "  Next steps:"
 echo -e "    1. Remove the installation media"
 echo -e "    2. ${BOLD}reboot${RESET}"
 echo -e "    3. Log in as ${BOLD}${username}${RESET}"
-echo -e "    4. Run: ${BOLD}bash ~/doom_v0/doom_install.sh${RESET}"
+echo -e "    4. Run: ${BOLD}bash ~/d00m_v0/doom_install.sh${RESET}"
 echo ""

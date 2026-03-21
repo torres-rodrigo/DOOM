@@ -3,17 +3,19 @@
 # doom_v0 Install Script
 # =============================================================================
 # Run this after rebooting into the freshly installed Arch base system.
-# The repo should already be at ~/doom_v0 (copied by
+# The repo should already be at ~/d00m_v0 (copied by
 # archinstall_manager.sh before reboot).
 #
 # Usage:
-#   bash ~/doom_v0/doom_install.sh
+#   bash ~/d00m_v0/doom_install.sh
 # =============================================================================
 
 set -eEo pipefail
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-export DOOM_PATH="$HOME/doom_v0"
+# Resolve DOOM_PATH from the script's own location so it works regardless
+# of where the directory is placed or what it is named.
+export DOOM_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export DOOM_INSTALL="$DOOM_PATH/install"
 export DOOM_INSTALL_LOG_FILE="/var/log/doom-install.log"
 
