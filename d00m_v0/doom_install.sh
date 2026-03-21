@@ -85,6 +85,9 @@ mkdir -p \
 # ── Phase 1: Helpers (logging, error recovery, presentation) ──────────────────
 source "$DOOM_INSTALL/helpers/000_doom.sh"
 
+print_logo
+start_install_log
+
 # ── Phase 2: Preflight (guard checks, pacman init, markers) ───────────────────
 source "$DOOM_INSTALL/preflight/001_doom.sh"
 
