@@ -116,6 +116,7 @@ alias grl='git reset --hard HEAD'                                # git reset loc
 alias gbl='git xdblame'                                          # git blame
 alias grv='git revert -n'                                        # git revert and stage <commit hashes>
 alias grvc='git revert'                                          # git revert and commit <commit hashes>
+alias gcl='git clone'                                            # git clone
 
 # ── Search functions ──────────────────────────────────────────────────────────
 zle_z() { zd; zle reset-prompt; }
