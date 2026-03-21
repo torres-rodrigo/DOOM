@@ -85,6 +85,11 @@ mkdir -p \
 # ── Phase 1: Helpers (logging, error recovery, presentation) ──────────────────
 source "$DOOM_INSTALL/helpers/000_doom.sh"
 
+# Reset any leftover terminal state from a previous run (scroll regions, hidden cursor)
+printf "\033[r"
+show_cursor
+clear
+
 print_logo
 start_install_log
 

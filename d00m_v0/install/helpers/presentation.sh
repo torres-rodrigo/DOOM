@@ -58,22 +58,38 @@ clear_logo() {
 
 # Primary step indicator — shown for each major install step
 print_step() {
-  echo -e "${PADDING_LEFT_SPACES}${BOLD}${GREEN}==>${RESET} ${BOLD}$1${RESET}"
+  if command -v gum &>/dev/null; then
+    gum style --foreground 2 --bold "    ==> $1"
+  else
+    echo -e "${PADDING_LEFT_SPACES}${BOLD}${GREEN}==>${RESET} ${BOLD}$1${RESET}"
+  fi
 }
 
 # Informational sub-message
 print_info() {
-  echo -e "${PADDING_LEFT_SPACES}${CYAN}   →${RESET} $1"
+  if command -v gum &>/dev/null; then
+    gum style --foreground 6 "       → $1"
+  else
+    echo -e "${PADDING_LEFT_SPACES}${CYAN}   →${RESET} $1"
+  fi
 }
 
 # Non-fatal warning
 print_warn() {
-  echo -e "${PADDING_LEFT_SPACES}${YELLOW}  !${RESET} $1"
+  if command -v gum &>/dev/null; then
+    gum style --foreground 3 "      ! $1"
+  else
+    echo -e "${PADDING_LEFT_SPACES}${YELLOW}  !${RESET} $1"
+  fi
 }
 
 # Error message (does not exit by itself)
 print_error() {
-  echo -e "${PADDING_LEFT_SPACES}${RED}  ✗${RESET} $1"
+  if command -v gum &>/dev/null; then
+    gum style --foreground 1 "      ✗ $1"
+  else
+    echo -e "${PADDING_LEFT_SPACES}${RED}  ✗${RESET} $1"
+  fi
 }
 
 show_cursor() {
