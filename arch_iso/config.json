@@ -101,6 +101,10 @@
     "packages": [
         "base",
         "base-devel",
+        "linux-headers",
+        "linux-firmware",
+        "btrfs-progs",
+        "dosfstools",
         "neovim",
         "git",
         "lazygit",
