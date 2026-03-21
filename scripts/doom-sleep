@@ -1,0 +1,3 @@
+#!/bin/bash
+# Suspend the system. Bind this to a key in Mango WM.
+exec systemctl suspend

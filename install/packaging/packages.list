@@ -120,6 +120,9 @@ swayosd               # Volume and brightness OSD overlay
 # ── Display Output ────────────────────────────────────────────────────────────
 wlr-randr             # Wayland output management for wlroots compositors (resolution, scale, on/off)
 
+# ── Screen Lock ───────────────────────────────────────────────────────────────
+swaylock              # Wayland screen locker for wlroots compositors — triggered only by user input
+
 # ── Fonts ─────────────────────────────────────────────────────────────────────
 fontconfig            # Font rendering configuration
 noto-fonts            # Unicode coverage — no missing glyphs

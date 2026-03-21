@@ -10,6 +10,7 @@ mkdir -p \
     "$HOME/.config/gtk-3.0" \
     "$HOME/.config/gtk-4.0" \
     "$HOME/.config/mako" \
+    "$HOME/.config/swaylock" \
     "$HOME/.config/btop/themes" \
     "$HOME/.config/starship"
 
