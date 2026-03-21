@@ -1,0 +1,73 @@
+[alias]
+    xlog = log --all --graph --decorate
+    xblame = blame -w -C -C -C
+    xstatus = status -b
+    xdiff = diff --patch-with-stat
+    xbranch = branch -v
+    xdelta = -c core.pager=delta diff --diff-algorithm=patience
+    xdeltas = -c core.pager=delta -c delta.side-by-side=true diff --diff-algorithm=patience
+    xdblame = -c core.pager=delta blame -w -C -C -C
+
+[branch]
+    sort = -committerdate
+
+[commit]
+    verbose = true
+
+[color "diff"]
+    oldMoved = 201
+    newMoved = magenta
+
+[core]
+    excludesFile = ~/.config/git/ignore
+
+[delta]
+    line-numbers = true
+    navigate = true
+    keep-plus-minus-markers = true
+    file-style = "yellow bold"
+    file-decoration-style = "white ul"
+    hyperlinks = true
+    hyperlinks-file-link-format = "zed://file{path}:{line}"
+
+[diff]
+    algorithm = histogram
+    mnemonicPrefix = true
+    renames = true
+    colorMoved = default
+    colorMovedWS = allow-indentation-change
+
+[fetch]
+    prune = true
+    pruneTags = true
+    tags = true
+
+[init]
+    defaultBranch = master
+
+[interactive]
+    singleKey = true
+
+[push]
+    autoSetupRemote = true
+    followTags = true
+
+[pull]
+    rebase = true
+
+[rebase]
+    autoStash = true
+
+[status]
+    branch = true
+    showStash = true
+    showUntrackedFiles = all
+
+[tag]
+    sort = -taggerdate
+
+[url "git@github.com:torres-rodrigo/"]
+insteadOf = "rt:"
+
+[url "git@github.com:"]
+insteadOf = "gh:"

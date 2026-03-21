@@ -1,0 +1,106 @@
+# Matugen config — d00m_v0
+# Templates are rendered on every `matugen color hex <accent>` or `matugen image <wallpaper>` run.
+# Post-hooks reload live apps; dead-process errors are suppressed with `|| :`.
+
+[config]
+
+# -----------------------------------------------------------------------------
+# GTK & Qt
+# -----------------------------------------------------------------------------
+
+[templates.gtk3]
+input_path  = '~/.config/matugen/templates/gtk-colors.css'
+output_path = '~/.config/matugen/generated/gtk-3.css'
+post_hook   = '''
+  mkdir -p "$HOME/.config/gtk-3.0"
+  ln -nfs "$HOME/.config/matugen/generated/gtk-3.css" "$HOME/.config/gtk-3.0/gtk.css"
+'''
+
+[templates.gtk4]
+input_path  = '~/.config/matugen/templates/gtk-colors.css'
+output_path = '~/.config/matugen/generated/gtk-4.css'
+post_hook   = '''
+  mkdir -p "$HOME/.config/gtk-4.0"
+  ln -nfs "$HOME/.config/matugen/generated/gtk-4.css" "$HOME/.config/gtk-4.0/gtk.css"
+'''
+
+[templates.qt5ct]
+input_path  = '~/.config/matugen/templates/qtct-colors.conf'
+output_path = '~/.config/matugen/generated/qt5ct-colors.conf'
+
+[templates.qt6ct]
+input_path  = '~/.config/matugen/templates/qtct-colors.conf'
+output_path = '~/.config/matugen/generated/qt6ct-colors.conf'
+
+# -----------------------------------------------------------------------------
+# Notifications
+# -----------------------------------------------------------------------------
+
+[templates.mako]
+input_path  = '~/.config/matugen/templates/mako'
+output_path = '~/.config/mako/config'
+post_hook   = 'makoctl reload || :'
+
+# -----------------------------------------------------------------------------
+# On-screen display
+# -----------------------------------------------------------------------------
+
+[templates.swayosd]
+input_path  = '~/.config/matugen/templates/swayosd-colors.css'
+output_path = '~/.config/matugen/generated/swayosd-colors.css'
+post_hook   = '''
+  pkill -x swayosd-server || :
+  sleep 0.1
+  uwsm app -- swayosd-server >/dev/null 2>&1 & disown
+'''
+
+# -----------------------------------------------------------------------------
+# Terminal
+# -----------------------------------------------------------------------------
+
+[templates.wezterm]
+input_path  = '~/.config/matugen/templates/wezterm-colors.lua'
+output_path = '~/.config/matugen/generated/wezterm-colors.lua'
+post_hook   = 'wezterm cli reload-config 2>/dev/null || :'
+
+# -----------------------------------------------------------------------------
+# Editor
+# -----------------------------------------------------------------------------
+
+[templates.neovim]
+input_path  = '~/.config/matugen/templates/neovim/template.lua'
+output_path = '~/.config/matugen/generated/neovim-colors.lua'
+post_hook   = 'pkill -SIGUSR1 nvim || :'
+
+# -----------------------------------------------------------------------------
+# Shell prompt
+# -----------------------------------------------------------------------------
+
+[templates.starship]
+input_path  = '~/.config/matugen/templates/starship.toml'
+output_path = '~/.config/matugen/generated/starship.toml'
+post_hook   = '''
+  mkdir -p "$HOME/.config/starship"
+  ln -nfs "$HOME/.config/matugen/generated/starship.toml" "$HOME/.config/starship/starship.toml"
+'''
+
+# -----------------------------------------------------------------------------
+# System monitor
+# -----------------------------------------------------------------------------
+
+[templates.btop]
+input_path  = '~/.config/matugen/templates/btop.theme'
+output_path = '~/.config/matugen/generated/btop-colors.theme'
+post_hook   = '''
+  mkdir -p "$HOME/.config/btop/themes"
+  ln -nfs "$HOME/.config/matugen/generated/btop-colors.theme" "$HOME/.config/btop/themes/matugen.theme"
+'''
+
+# -----------------------------------------------------------------------------
+# Done
+# -----------------------------------------------------------------------------
+
+[templates.conclude_notify]
+input_path  = '/dev/null'
+output_path = '/dev/null'
+post_hook   = 'notify-send -i applications-graphics-symbolic "DOOM Theme" "Colors applied" 2>/dev/null || :'

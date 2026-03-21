@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# doom-theme-reset — Remove all matugen-generated colors and revert apps to their defaults.
+
+set -euo pipefail
+
+GENERATED="${XDG_CONFIG_HOME:-$HOME/.config}/matugen/generated"
+
+# ── Remove generated color files ──────────────────────────────────────────────
+rm -f \
+    "$GENERATED/gtk-3.css" \
+    "$GENERATED/gtk-4.css" \
+    "$GENERATED/qt5ct-colors.conf" \
+    "$GENERATED/qt6ct-colors.conf" \
+    "$GENERATED/swayosd-colors.css" \
+    "$GENERATED/wezterm-colors.lua" \
+    "$GENERATED/neovim-colors.lua" \
+    "$GENERATED/starship.toml" \
+    "$GENERATED/btop-colors.theme"
+
+# ── Remove symlinks created by post-hooks ─────────────────────────────────────
+rm -f \
+    "$HOME/.config/gtk-3.0/gtk.css" \
+    "$HOME/.config/gtk-4.0/gtk.css" \
+    "$HOME/.config/btop/themes/matugen.theme" \
+    "$HOME/.config/starship/starship.toml"
+
+# ── Mako: remove generated config so mako uses built-in defaults ──────────────
+rm -f "$HOME/.config/mako/config"
+makoctl reload 2>/dev/null || :
+
+# ── SwayOSD: restart so it drops the generated CSS ────────────────────────────
+pkill -x swayosd-server 2>/dev/null || :
+sleep 0.1
+uwsm app -- swayosd-server >/dev/null 2>&1 & disown
+
+# ── WezTerm: reload — wezterm.lua falls back to Tomorrow Night automatically ──
+wezterm cli reload-config 2>/dev/null || :
+
+# ── Neovim: signal running instances — matugen.lua silently skips missing file ─
+pkill -SIGUSR1 nvim 2>/dev/null || :
+
+printf 'DOOM: matugen colors cleared — apps reverted to defaults\n'
+notify-send "DOOM Theme" "Colors reset to defaults" 2>/dev/null || :

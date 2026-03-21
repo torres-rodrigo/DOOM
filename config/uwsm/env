@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# ── Locale ────────────────────────────────────────────────────────────────────
+# Force UTF-8 character mapping only if the system locale isn't already UTF-8.
+# Avoids overriding a non-English user's language while guaranteeing TUI compat.
+case "${LANG:-}" in
+    *[Uu][Tt][Ff]8* | *[Uu][Tt][Ff]-8*) ;;
+    *) export LC_CTYPE="C.UTF-8" ;;
+esac
+
+# ── CPU ───────────────────────────────────────────────────────────────────────
+export OMP_NUM_THREADS=$(nproc)
+
+# ── Qt ────────────────────────────────────────────────────────────────────────
+export QT_QPA_PLATFORM="wayland;xcb"
+export QT_QPA_PLATFORMTHEME=qt6ct
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+export QT_AUTO_SCREEN_SCALE_FACTOR=1
+
+# ── GTK ───────────────────────────────────────────────────────────────────────
+export GDK_BACKEND="wayland,x11"
+
+# ── SDL ───────────────────────────────────────────────────────────────────────
+export SDL_VIDEODRIVER="wayland,x11"
+
+# ── Cursor ────────────────────────────────────────────────────────────────────
+export XCURSOR_THEME=DoomCursor
+export XCURSOR_SIZE=32
+export XCURSOR_SIZE=$HOME/.local/share/icons
+
+# ── Applications ──────────────────────────────────────────────────────────────
+export EDITOR=nvim
+export VISUAL=nvim
+export TERMINAL=wezterm

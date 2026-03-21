@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+# doom-cursor — Apply a cursor theme system-wide.
+#
+# Usage:
+#   doom-cursor <theme> [size]   Apply a cursor theme (size defaults to 24)
+#   doom-cursor --list           List installed cursor themes in ~/.local/share/icons
+#   doom-cursor --help
+
+set -euo pipefail
+
+ICONS_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/icons"
+UWSM_ENV="${XDG_CONFIG_HOME:-$HOME/.config}/uwsm/env"
+DEFAULT_SIZE=24
+
+# ── helpers ──────────────────────────────────────────────────────────────────
+
+die()  { printf 'doom-cursor: %s\n' "$*" >&2; exit 1; }
+usage() {
+    cat >&2 <<'EOF'
+Usage:
+  doom-cursor <theme> [size]   Apply a cursor theme (default size: 24)
+  doom-cursor --list           List installed themes in ~/.local/share/icons
+  doom-cursor --help           Show this help
+EOF
+    exit 1
+}
+
+list_themes() {
+    printf 'Installed cursor themes:\n'
+    for d in "$ICONS_DIR"/*/; do
+        [[ -d "${d}cursors" ]] || continue
+        printf '  %s\n' "$(basename "$d")"
+    done
+}
+
+# ── argument parsing ──────────────────────────────────────────────────────────
+
+[[ $# -eq 0 ]] && usage
+
+case "$1" in
+    --help|-h) usage ;;
+    --list|-l) list_themes; exit 0 ;;
+    -*) die "unknown option: $1" ;;
+esac
+
+THEME="$1"
+SIZE="${2:-$DEFAULT_SIZE}"
+
+[[ -d "$ICONS_DIR/$THEME/cursors" ]] \
+    || die "theme not found: '$THEME'  (run --list to see installed themes)"
+
+# ── Layer 1: gsettings (GTK3/GTK4 + portals) ──────────────────────────────────
+
+if command -v gsettings >/dev/null 2>&1; then
+    gsettings set org.gnome.desktop.interface cursor-theme "$THEME"
+    gsettings set org.gnome.desktop.interface cursor-size  "$SIZE"
+fi
+
+# ── Layer 2: UWSM env (Wayland-native apps at next session start) ─────────────
+
+if [[ -f "$UWSM_ENV" ]]; then
+    # Update existing lines if present, otherwise append
+    if grep -q '^export XCURSOR_THEME=' "$UWSM_ENV"; then
+        sed -i "s|^export XCURSOR_THEME=.*|export XCURSOR_THEME=$THEME|" "$UWSM_ENV"
+    else
+        printf 'export XCURSOR_THEME=%s\n' "$THEME" >> "$UWSM_ENV"
+    fi
+
+    if grep -q '^export XCURSOR_SIZE=' "$UWSM_ENV"; then
+        sed -i "s|^export XCURSOR_SIZE=.*|export XCURSOR_SIZE=$SIZE|" "$UWSM_ENV"
+    else
+        printf 'export XCURSOR_SIZE=%s\n' "$SIZE" >> "$UWSM_ENV"
+    fi
+
+    # XCURSOR_PATH: needed by some GNOME apps on Wayland to find themes in
+    # ~/.local/share/icons (XDG path) rather than the legacy ~/.local/share/icons.
+    if grep -q '^export XCURSOR_PATH=' "$UWSM_ENV"; then
+        sed -i 's|^export XCURSOR_PATH=.*|export XCURSOR_PATH=$HOME/.local/share/icons:/usr/share/icons|' "$UWSM_ENV"
+    else
+        printf 'export XCURSOR_PATH=$HOME/.local/share/icons:/usr/share/icons\n' >> "$UWSM_ENV"
+    fi
+fi
+
+# ── Layer 3: current session (best-effort, no Wayland root cursor without compositor API) ──
+
+export XCURSOR_THEME="$THEME"
+export XCURSOR_SIZE="$SIZE"
+export XCURSOR_PATH="$HOME/.local/share/icons:/usr/share/icons"
+
+# ── Done ──────────────────────────────────────────────────────────────────────
+
+printf 'doom-cursor: applied %s at %spx\n' "$THEME" "$SIZE"
+printf '  gsettings       → updated\n'
+printf '  uwsm env        → XCURSOR_THEME, XCURSOR_SIZE, XCURSOR_PATH updated\n'
+printf '  current session → env vars exported\n'
+printf '  compositor      → reload mango WM or restart session for the desktop cursor\n'
+notify-send "DOOM Cursor" "Theme: $THEME  Size: ${SIZE}px" 2>/dev/null || :

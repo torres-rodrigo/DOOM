@@ -1,0 +1,163 @@
+# =============================================================================
+# doom_v0 Base Packages
+# =============================================================================
+
+# ── Shell ─────────────────────────────────────────────────────────────────────
+zsh
+zsh-autosuggestions       # Fish-style inline command suggestions
+zsh-completions           # Additional completion definitions
+zsh-syntax-highlighting   # Fish-style syntax highlighting for the command line
+
+# ── Filesystem ────────────────────────────────────────────────────────────────
+btrfs-progs           # Btrfs filesystem utilities
+exfatprogs            # exFAT filesystem support
+
+# ── XDG ───────────────────────────────────────────────────────────────────────
+xdg-desktop-portal    # Base portal interface for sandboxed apps
+xdg-desktop-portal-gtk # GTK portal backend
+#xdg-desktop-portal-hyprland
+
+# ── Security & Authentication ──────────────────────────────────────────────────
+gnome-keyring         # Secure secret/credential storage
+libfido2              # FIDO2/Yubikey hardware key library
+libsecret             # Library for accessing GNOME Keyring
+pam-u2f               # PAM module for FIDO2/Yubikey login
+polkit-gnome          # GUI authentication agent for privileged ops
+ufw                   # Uncomplicated Firewall
+
+# ── System Tools ──────────────────────────────────────────────────────────────
+bolt                  # Thunderbolt device authorization manager
+libnotify             # notify-send desktop notification tool
+upower                # Battery and power device information
+zram-generator        # Compressed swap in RAM
+
+# ── Session Management ────────────────────────────────────────────────────────
+uwsm                  # Universal Wayland Session Manager
+
+# ── Qt Wayland ────────────────────────────────────────────────────────────────
+qt5-wayland           # Qt5 Wayland platform backend
+qt6-wayland           # Qt6 Wayland platform backend
+
+# ── Terminal ──────────────────────────────────────────────────────────────────
+wezterm               # GPU-accelerated, Lua-configured terminal
+
+# ── Terminal Tools ────────────────────────────────────────────────────────────
+bat                   # cat with syntax highlighting and line numbers
+btop                  # Interactive TUI resource monitor
+caligula              # TUI for dd / disk imaging
+clang                 # C/C++ compiler (pulls llvm in as a dependency)
+curl                  # HTTP/HTTPS/FTP transfer tool
+dust                  # du replacement — visual disk usage tree
+eza                   # ls replacement with icons and git info
+expac                 # Pacman data extraction utility
+fastfetch             # Fast system info display
+fd                    # find replacement — faster, simpler syntax
+ffmpeg                # Media processing Swiss Army knife
+ffmpegthumbnailer     # Video thumbnail generation for file managers
+fzf                   # Fuzzy finder for files, history, anything
+git-delta             # Enhanced diff viewer with syntax highlighting
+github-cli            # GitHub CLI (gh)
+gopass                # CLI password manager (git + GPG based)
+gum                   # Shell script UI components
+hledger               # Plain-text double-entry accounting
+inetutils             # Network tools: hostname, ftp, etc.
+jq                    # JSON processor and pretty-printer
+jujutsu               # VCS with first-class conflict handling
+less                  # Terminal file pager
+llvm                  # LLVM compiler infrastructure (REDUNDANT: clang installs this automatically)
+luarocks              # Lua package manager
+man-db                # Manual page viewer (NOTE: was 'man' which is not a valid Arch package)
+mise                  # Polyglot dev tool version manager
+mold                  # Modern high-speed linker — drastically cuts AUR package link times
+ncdu                  # Interactive disk usage navigator
+neovim                # Lua-extensible modal text editor
+pacman-contrib        # Pacman helper scripts (paccache, etc.)
+ripgrep               # grep replacement (rg) — blazing fast
+starship              # Fast cross-shell prompt
+stow                  # Symlink-based package manager for managing dotfiles
+tree-sitter-cli       # CLI for building Tree-sitter parsers
+unzip                 # ZIP archive extraction
+wget                  # File downloader
+
+# ── Display Manager / Boot ────────────────────────────────────────────────────
+greetd                # Minimal display manager daemon
+greetd-tuigreet       # TUI greeter frontend for greetd
+plymouth              # Boot splash screen animation
+
+# ── Audio ─────────────────────────────────────────────────────────────────────
+pipewire              # Modern audio/video server
+pipewire-alsa         # ALSA compatibility via PipeWire
+pipewire-jack         # JACK compatibility via PipeWire
+pipewire-pulse        # PulseAudio compatibility via PipeWire
+playerctl             # Media player control via MPRIS
+wireplumber           # PipeWire session/policy manager
+
+# ── Notifications ─────────────────────────────────────────────────────────────
+mako                  # Lightweight Wayland notification daemon
+
+# ── Clipboard ─────────────────────────────────────────────────────────────────
+cliphist              # Clipboard history manager
+wl-clipboard          # Wayland clipboard CLI (wl-copy / wl-paste)
+
+# ── Theming ───────────────────────────────────────────────────────────────────
+gnome-themes-extra    # Additional GTK themes (includes Adwaita dark)
+qt5ct                 # Qt5 theme configuration tool
+qt6ct                 # Qt6 theme configuration tool
+matugen               # Generates color schemes from wallpaper
+
+# ── Wallpaper ─────────────────────────────────────────────────────────────────
+swaybg                # Simple static wallpaper setter for Wayland
+
+# ── Screenshots & Screen Recording ────────────────────────────────────────────
+grim                  # Screenshot utility for Wayland
+gpu-screen-recorder   # Hardware-accelerated screen recorder
+satty                 # Screenshot annotation editor (Rust)
+slurp                 # Interactive region selector for Wayland
+
+# ── On-Screen Display ─────────────────────────────────────────────────────────
+swayosd               # Volume and brightness OSD overlay
+
+# ── Fonts ─────────────────────────────────────────────────────────────────────
+fontconfig            # Font rendering configuration
+noto-fonts            # Unicode coverage — no missing glyphs
+noto-fonts-emoji      # Emoji support
+ttf-cascadia-code-nerd # Primary coding font
+
+# ── Input ─────────────────────────────────────────────────────────────────────
+fcitx5                # Input method framework (CJK, special chars)
+fcitx5-gtk            # GTK integration for fcitx5
+fcitx5-qt             # Qt integration for fcitx5
+
+# ── Network ───────────────────────────────────────────────────────────────────
+iwd                   # Intel Wireless Daemon — modern, secure WPA backend (NOTE: was 'ifw' which is a typo)
+impala                # TUI WiFi manager
+
+# ── Bluetooth ───────────────────────────────────────────────────────────────────
+bluez                 # Bluetooth protocol stack
+bluez-utils           # Bluetooth CLI tools 
+bluetui               # Minimal TUI Bluetooth manager
+
+# ── Mango WM Dependencies ─────────────────────────────────────────────────────
+glibc                 # C standard library (REDUNDANT: always installed as part of Arch base)
+hwdata                # PCI/USB hardware ID databases
+libdisplay-info       # EDID and DisplayID parsing
+libdrm                # Linux Direct Rendering Manager userspace lib
+libinput              # Pointer, touchpad, and keyboard input
+libxkbcommon          # Keyboard keymap handling (XKB)
+libliftoff            # KMS/DRM hardware plane offloading
+meson                 # Build system (required to compile mango)
+ninja                 # Build executor (required to compile mango)
+pcre2                 # Perl-Compatible Regular Expressions v2
+pixman                # Low-level pixel manipulation library
+seatd                 # Minimal seat management daemon
+wayland               # Core Wayland client library
+wayland-protocols     # Standardized Wayland protocol extensions
+
+# GUI Progrmas
+firefox               # Web browser
+#gimp                  # Image editor
+#inkscape              # Vector graphics editor
+#libreoffice-fresh     # Full office suite
+#localsend             # Cross-platform local file sharing
+#obsidian              # Kknowledge management and note-taking app
+#thunar                # File manager

@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# doom-theme — Apply a DOOM color preset or generate colors from a wallpaper image.
+#
+# Usage:
+#   doom-theme <preset>            Apply a named preset  (e.g. catppuccin, gruvbox)
+#   doom-theme --wallpaper <path>  Generate from a wallpaper image
+#   doom-theme --list              List available presets
+#   doom-theme --help
+
+set -euo pipefail
+
+PRESETS_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/matugen/presets"
+
+# ── helpers ──────────────────────────────────────────────────────────────────
+
+die()  { printf 'doom-theme: %s\n' "$*" >&2; exit 1; }
+usage() {
+    cat >&2 <<'EOF'
+Usage:
+  doom-theme <preset>            Apply a named color preset
+  doom-theme --wallpaper <path>  Generate colors from a wallpaper image
+  doom-theme --list              List available presets
+  doom-theme --help              Show this help
+EOF
+    exit 1
+}
+
+list_presets() {
+    printf 'Available presets:\n'
+    for f in "$PRESETS_DIR"/*.toml; do
+        [[ -f $f ]] || continue
+        printf '  %s\n' "$(basename "$f" .toml)"
+    done
+}
+
+# ── argument parsing ──────────────────────────────────────────────────────────
+
+[[ $# -eq 0 ]] && usage
+
+case "$1" in
+    --help|-h)
+        usage
+        ;;
+    --list|-l)
+        list_presets
+        exit 0
+        ;;
+    --wallpaper|-w)
+        [[ $# -ge 2 ]] || die "missing path after --wallpaper"
+        WALLPAPER="$2"
+        [[ -f $WALLPAPER ]] || die "file not found: $WALLPAPER"
+        matugen image "$WALLPAPER"
+        ;;
+    -*)
+        die "unknown option: $1"
+        ;;
+    *)
+        PRESET="$1"
+        PRESET_FILE="$PRESETS_DIR/${PRESET}.toml"
+        [[ -f $PRESET_FILE ]] || die "preset not found: '$PRESET'  (run --list to see available)"
+        ACCENT=$(grep -m1 '^accent[[:space:]]*=' "$PRESET_FILE" \
+            | sed "s/.*=[[:space:]]*//;s/['\"]//g;s/[[:space:]]//g")
+        [[ -n $ACCENT ]] || die "preset '$PRESET' has no 'accent' key"
+        matugen color hex "$ACCENT"
+        ;;
+esac
