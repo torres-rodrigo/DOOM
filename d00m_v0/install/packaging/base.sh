@@ -17,6 +17,7 @@ sudo pacman -S --needed --noconfirm "${packages[@]}"
 # Set up Rust stable toolchain via rustup.
 # rustup itself is installed by pacman above, but it ships with no toolchain —
 # this call downloads and sets the stable compiler as the default.
+sudo pacman -S needed --noconfirm rustup
 if command -v rustup &>/dev/null; then
   echo "Setting up Rust stable toolchain..."
   rustup default stable
