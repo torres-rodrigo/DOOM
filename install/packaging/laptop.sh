@@ -18,6 +18,7 @@ echo "Battery detected — installing laptop packages..."
 
 laptop_packages=(
   acpi              # Battery and thermal info CLI
+  acpid             # ACPI event daemon — handles lid switch, power button, etc.
   brightnessctl     # Display backlight brightness control
   fprintd           # Fingerprint authentication daemon
   tlp               # Battery longevity optimization daemon
@@ -27,5 +28,6 @@ laptop_packages=(
 sudo pacman -S --needed --noconfirm "${laptop_packages[@]}"
 
 systemctl_enable tlp.service
+systemctl_enable acpid.service
 
 echo "Laptop packages: OK"

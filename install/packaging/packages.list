@@ -117,6 +117,9 @@ slurp                 # Interactive region selector for Wayland
 # ── On-Screen Display ─────────────────────────────────────────────────────────
 swayosd               # Volume and brightness OSD overlay
 
+# ── Display Output ────────────────────────────────────────────────────────────
+wlr-randr             # Wayland output management for wlroots compositors (resolution, scale, on/off)
+
 # ── Fonts ─────────────────────────────────────────────────────────────────────
 fontconfig            # Font rendering configuration
 noto-fonts            # Unicode coverage — no missing glyphs
