@@ -95,9 +95,13 @@ wireplumber           # PipeWire session/policy manager
 # ── Notifications ─────────────────────────────────────────────────────────────
 mako                  # Lightweight Wayland notification daemon
 
+# ── Launcher ──────────────────────────────────────────────────────────────────
+rofi                  # Launcher
+
 # ── Clipboard ─────────────────────────────────────────────────────────────────
 cliphist              # Clipboard history manager
 wl-clipboard          # Wayland clipboard CLI (wl-copy / wl-paste)
+wl-clip-persist       # Keeps clipboard content alive after source app closes
 
 # ── Theming ───────────────────────────────────────────────────────────────────
 gnome-themes-extra    # Additional GTK themes (includes Adwaita dark)

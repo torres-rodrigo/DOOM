@@ -1,0 +1,7 @@
+#!/bin/bash
+# Show clipboard history via rofi and restore the selected entry.
+# Text entries display as-is. Image entries display as [[ binary data X bytes ]]
+# and are correctly restored to clipboard when selected.
+# Bind this to a key in Mango WM.
+
+cliphist list | rofi -dmenu -p "Clipboard" | cliphist decode | wl-copy

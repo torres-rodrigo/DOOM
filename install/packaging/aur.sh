@@ -10,6 +10,6 @@ else
   echo "Docker not detected — skipping ufw-docker."
 fi
 
-paru -S mangowm-git --noconfirm --needed
+paru -S --noconfirm --needed mangowm-git
 
 echo "AUR packages: OK"
