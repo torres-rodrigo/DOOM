@@ -1,11 +1,8 @@
 # Install log helpers.
 #
-# Output model:
-#   - print_step()  prints the step name to the terminal (natural scroll)
-#   - run_logged()  shows a gum spinner while each subscript runs and writes
-#                   all stdout/stderr to $DOOM_INSTALL_LOG_FILE
-#   - sudo prompts  reach the terminal via /dev/tty, unaffected by redirects
-#   - start/stop_log_output are kept as no-ops for call-site compatibility
+# All script output is shown live in the terminal AND written to the log file
+# via tee. sudo password prompts and interactive selections are fully visible
+# because nothing is suppressed or redirected away from the terminal.
 
 start_log_output() { :; }
 stop_log_output()  { :; }
@@ -36,11 +33,9 @@ stop_install_log() {
   fi
 }
 
-# Run a subscript in a logged subshell.
-# Shows a gum spinner while the script runs; all output goes to the log file.
-# sudo password prompts reach the terminal via /dev/tty regardless of the
-# stdout/stderr redirect, so they are always visible.
-# Falls back to silent logging if gum is not yet available.
+# Run a subscript and show all its output live in the terminal.
+# tee writes the same output to the log file simultaneously.
+# sudo prompts and interactive selections are fully visible — nothing is hidden.
 run_logged() {
   local script="$1"
   local title
@@ -49,14 +44,8 @@ run_logged() {
 
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting: $script" >> "$DOOM_INSTALL_LOG_FILE"
 
-  if command -v gum &>/dev/null; then
-    gum spin --spinner dot --title "    $title" -- \
-      bash -c "source \"$script\" >> \"$DOOM_INSTALL_LOG_FILE\" 2>&1"
-  else
-    bash -c "source \"$script\"" >> "$DOOM_INSTALL_LOG_FILE" 2>&1
-  fi
-
-  local exit_code=$?
+  bash -c "source \"$script\"" 2>&1 | tee -a "$DOOM_INSTALL_LOG_FILE"
+  local exit_code=${PIPESTATUS[0]}
 
   if (( exit_code == 0 )); then
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] Completed: $script" >> "$DOOM_INSTALL_LOG_FILE"
