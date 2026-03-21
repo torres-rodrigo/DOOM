@@ -29,7 +29,9 @@ Research packages:
   skim, rust fzf replacement
   typst
   emacs
-  docker
+  docker/replaced by podman
+  add functionality to fzf scripts so that with a keybind we can go to dir or open file
+  nvidia drivers
 
 
 packages still missing/not fully confirmed
@@ -41,7 +43,8 @@ perf
 typst
 emacs
 linux image viewer nsxiv, nomacs
-delta
+direnv? I think it is not needed
+devbox
 
 make tab completion on zsh work like **<Tab> fzf
 
