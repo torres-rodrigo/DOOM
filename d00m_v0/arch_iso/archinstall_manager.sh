@@ -269,9 +269,10 @@ DOOM_CHROOT_PATH="/mnt/home/${username}/d00m_v0"
 
 cp -r "$(realpath "$SCRIPT_DIR/..")" "$DOOM_CHROOT_PATH"
 
-# Fix ownership — the copy was written by root (live ISO user)
-# but must belong to the new user inside the installed system.
-arch-chroot /mnt chown -R "${username}:${username}" "/home/${username}/d00m_v0"
+# Fix ownership — the live ISO runs as root, so any files written to the
+# mounted system are root-owned. Chown the entire home directory so that
+# ~/.local and any other directories created during the copy are user-owned.
+arch-chroot /mnt chown -R "${username}:${username}" "/home/${username}"
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
