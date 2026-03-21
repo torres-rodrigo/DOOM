@@ -1,0 +1,42 @@
+#!/bin/bash
+# Take a screenshot, copy it to clipboard, and offer annotation via satty.
+#
+# Usage:
+#   doom-screenshot          — interactive region selection
+#   doom-screenshot screen   — full screen capture
+#
+# Behaviour:
+#   - Screenshot is copied to clipboard (never auto-saved to disk)
+#   - A notification appears; clicking it opens satty for annotation/saving
+#   - Temp file is cleaned up after the notification is dismissed or satty closes
+
+mode="${1:-region}"
+tmp=$(mktemp /tmp/doom-screenshot-XXXX.png)
+
+cleanup() { rm -f "$tmp"; }
+trap cleanup EXIT
+
+case "$mode" in
+  region)
+    grim -g "$(slurp -d)" "$tmp" || exit 1
+    ;;
+  screen)
+    grim "$tmp" || exit 1
+    ;;
+  *)
+    echo "Usage: doom-screenshot [region|screen]" >&2
+    exit 1
+    ;;
+esac
+
+wl-copy < "$tmp"
+
+action=$(notify-send \
+  "Screenshot captured" \
+  "Copied to clipboard — click to annotate" \
+  --icon=camera-photo \
+  --expire-time=10000 \
+  --action="annotate=Open in Satty" \
+  --wait)
+
+[[ "$action" == "annotate" ]] && satty --filename "$tmp"
