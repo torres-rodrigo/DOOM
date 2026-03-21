@@ -12,12 +12,26 @@
 
 set -eEo pipefail
 
+# ── Guard: must not run as root ───────────────────────────────────────────────
+if [[ "$(id -u)" -eq 0 ]]; then
+    echo "Error: do not run this script as root or with sudo." >&2
+    exit 1
+fi
+
+# ── Correct HOME if the session set it incorrectly ────────────────────────────
+# greetd auto-login can leave HOME pointing at /root when PAM does not fully
+# initialise the user environment. Look up the true home from /etc/passwd.
+_true_home="$(getent passwd "$(id -un)" | cut -d: -f6)"
+if [[ "$HOME" != "$_true_home" ]]; then
+    export HOME="$_true_home"
+fi
+unset _true_home
+
 # ── Paths ─────────────────────────────────────────────────────────────────────
 # Resolve DOOM_PATH from the script's own location so it works regardless
 # of where the directory is placed or what it is named.
 export DOOM_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export DOOM_INSTALL="$DOOM_PATH/install"
-export DOOM_INSTALL_LOG_FILE="/var/log/doom-install.log"
 
 # ── XDG Base Directories ──────────────────────────────────────────────────────
 # Use :- so a pre-existing value in the environment is respected.
@@ -25,6 +39,9 @@ export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+
+# Log file lives under XDG_STATE_HOME so no root access is needed.
+export DOOM_INSTALL_LOG_FILE="$XDG_STATE_HOME/doom-install.log"
 
 # ── Tool Directories (XDG-compliant) ─────────────────────────────────────────
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"

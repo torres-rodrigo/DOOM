@@ -49,8 +49,7 @@ stop_log_output() {
 }
 
 start_install_log() {
-  sudo touch "$DOOM_INSTALL_LOG_FILE"
-  sudo chmod 666 "$DOOM_INSTALL_LOG_FILE"
+  touch "$DOOM_INSTALL_LOG_FILE"
   export DOOM_START_TIME=$(date '+%Y-%m-%d %H:%M:%S')
   echo "=== doom_v0 Installation Started: $DOOM_START_TIME ===" >> "$DOOM_INSTALL_LOG_FILE"
   start_log_output
