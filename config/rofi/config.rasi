@@ -1,0 +1,16 @@
+/* ~/.config/rofi/config.rasi
+ * DOOM — Rofi launcher configuration
+ */
+
+configuration {
+    modi:                "drun,run";
+    show-icons:          true;
+    drun-display-format: "{name}";
+    icon-theme:          "hicolor";
+    terminal:            "wezterm";
+    hover-select:        true;
+    me-select-entry:     "";
+    me-accept-entry:     "MousePrimary";
+}
+
+@theme "~/.config/rofi/themes/doom.rasi"
