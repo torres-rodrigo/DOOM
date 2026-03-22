@@ -26,7 +26,7 @@ export SDL_VIDEODRIVER="wayland,x11"
 # ── Cursor ────────────────────────────────────────────────────────────────────
 export XCURSOR_THEME=DoomCursor
 export XCURSOR_SIZE=32
-export XCURSOR_SIZE=$HOME/.local/share/icons
+export XCURSOR_PATH=$HOME/.local/share/icons:/usr/share/icons
 
 # ── Applications ──────────────────────────────────────────────────────────────
 export EDITOR=nvim

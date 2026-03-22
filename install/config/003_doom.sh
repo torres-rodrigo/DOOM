@@ -1,6 +1,9 @@
 print_step "Deploying dotfiles"
 run_logged $DOOM_INSTALL/config/dotfiles.sh
 
+print_step "Installing cursor theme"
+run_logged $DOOM_INSTALL/config/cursor.sh
+
 print_step "Installing utility scripts"
 run_logged $DOOM_INSTALL/config/scripts.sh
 
