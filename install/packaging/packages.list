@@ -153,8 +153,9 @@ hwdata                # PCI/USB hardware ID databases
 libdisplay-info       # EDID and DisplayID parsing
 libdrm                # Linux Direct Rendering Manager userspace lib
 libinput              # Pointer, touchpad, and keyboard input
-libxkbcommon          # Keyboard keymap handling (XKB)
 libliftoff            # KMS/DRM hardware plane offloading
+libxcb                # X11 client-side library
+libxkbcommon          # Keyboard keymap handling (XKB)
 meson                 # Build system (required to compile mango)
 ninja                 # Build executor (required to compile mango)
 pcre2                 # Perl-Compatible Regular Expressions v2
@@ -162,6 +163,7 @@ pixman                # Low-level pixel manipulation library
 seatd                 # Minimal seat management daemon
 wayland               # Core Wayland client library
 wayland-protocols     # Standardized Wayland protocol extensions
+xorg-xwayland         # run X clients under wayland
 
 # GUI Progrmas
 firefox               # Web browser
