@@ -17,7 +17,7 @@ sudo pacman -S --needed --noconfirm "${packages[@]}"
 # Set up Rust stable toolchain via rustup.
 # rustup itself is installed by pacman above, but it ships with no toolchain —
 # this call downloads and sets the stable compiler as the default.
-sudo pacman -S needed --noconfirm rustup
+sudo pacman -S --needed --noconfirm rustup
 if command -v rustup &>/dev/null; then
   echo "Setting up Rust stable toolchain..."
   rustup default stable
@@ -30,14 +30,17 @@ mkdir -p "$XDG_CONFIG_HOME/pacman"
 cp "$DOOM_PATH/config/pacman/makepkg.conf" "$XDG_CONFIG_HOME/pacman/makepkg.conf"
 echo "makepkg: optimized config applied"
 
-# Install paru (AUR helper) if not already present
+# Install paru (AUR helper) if not already present.
+# Built from source (not paru-bin) so it compiles against the system's current
+# libalpm — avoids the shared library mismatch that paru-bin binaries cause
+# when the system's pacman version differs from what the binary was built against.
 if ! command -v paru &>/dev/null; then
   echo "Installing paru AUR helper..."
   tmpdir=$(mktemp -d)
-  git clone --depth 1 https://aur.archlinux.org/paru-bin.git "$tmpdir/paru"
+  git clone --depth 1 https://aur.archlinux.org/paru.git "$tmpdir/paru"
   cd "$tmpdir/paru"
   makepkg -si --noconfirm
-  cd -
+  cd "$DOOM_PATH"
   rm -rf "$tmpdir"
 fi
 
