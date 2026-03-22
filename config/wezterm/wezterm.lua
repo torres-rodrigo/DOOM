@@ -10,13 +10,16 @@ config.prefer_egl = true
 
 config.automatically_reload_config = true
 
-local colors_file = wezterm.home_dir .. '/.config/matugen/generated/wezterm-colors.lua'
-local ok, matugen_colors = pcall(dofile, colors_file)
-if ok and type(matugen_colors) == 'table' then
-    config.colors = matugen_colors
-else
-    config.color_scheme = 'Tomorrow Night (Gogh)'
-end
+-- matugen color loading disabled — using built-in fallback by default.
+-- To re-enable, uncomment the block below and comment out the color_scheme line.
+-- local colors_file = wezterm.home_dir .. '/.config/matugen/generated/wezterm-colors.lua'
+-- local ok, matugen_colors = pcall(dofile, colors_file)
+-- if ok and type(matugen_colors) == 'table' then
+--     config.colors = matugen_colors
+-- else
+--     config.color_scheme = 'Tomorrow Night (Gogh)'
+-- end
+config.color_scheme = 'Tomorrow Night (Gogh)'
 
 config.max_fps = 240
 config.animation_fps = 240
