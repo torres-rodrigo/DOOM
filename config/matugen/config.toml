@@ -55,13 +55,14 @@ post_hook   = '''
 '''
 
 # -----------------------------------------------------------------------------
-# Terminal
+# Terminal (disabled — wezterm uses its built-in fallback by default)
+# Uncomment to have matugen generate wezterm colors on each theme switch.
 # -----------------------------------------------------------------------------
 
-[templates.wezterm]
-input_path  = '~/.config/matugen/templates/wezterm-colors.lua'
-output_path = '~/.config/matugen/generated/wezterm-colors.lua'
-post_hook   = 'wezterm cli reload-config 2>/dev/null || :'
+# [templates.wezterm]
+# input_path  = '~/.config/matugen/templates/wezterm-colors.lua'
+# output_path = '~/.config/matugen/generated/wezterm-colors.lua'
+# post_hook   = 'wezterm cli reload-config 2>/dev/null || :'
 
 # -----------------------------------------------------------------------------
 # Editor
@@ -73,16 +74,17 @@ output_path = '~/.config/matugen/generated/neovim-colors.lua'
 post_hook   = 'pkill -SIGUSR1 nvim || :'
 
 # -----------------------------------------------------------------------------
-# Shell prompt
+# Shell prompt (disabled — starship uses its built-in defaults by default)
+# Uncomment to have matugen generate starship colors on each theme switch.
 # -----------------------------------------------------------------------------
 
-[templates.starship]
-input_path  = '~/.config/matugen/templates/starship.toml'
-output_path = '~/.config/matugen/generated/starship.toml'
-post_hook   = '''
-  mkdir -p "$HOME/.config/starship"
-  ln -nfs "$HOME/.config/matugen/generated/starship.toml" "$HOME/.config/starship/starship.toml"
-'''
+# [templates.starship]
+# input_path  = '~/.config/matugen/templates/starship.toml'
+# output_path = '~/.config/matugen/generated/starship.toml'
+# post_hook   = '''
+#   mkdir -p "$HOME/.config/starship"
+#   ln -nfs "$HOME/.config/matugen/generated/starship.toml" "$HOME/.config/starship/starship.toml"
+# '''
 
 # -----------------------------------------------------------------------------
 # System monitor
