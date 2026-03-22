@@ -8,6 +8,8 @@
 
 /* ── Colors ─────────────────────────────────────────────────────────────────── */
 * {
+    font: "CaskaydiaCove Nerd Font SemiBold 15";
+
     bg:       #1a1a1a;
     bg-alt:   #111111;
     fg:       #e0e0e0;
@@ -31,7 +33,7 @@ window {
     x-offset:         0px;
     y-offset:         0px;
 
-    width:            520px;
+    width:            970px;
     background-color: @bg;
 
     /* Flat top (flush with screen edge), rounded bottom */
@@ -67,7 +69,7 @@ entry {
 /* ── Results list ────────────────────────────────────────────────────────────── */
 listview {
     background-color: transparent;
-    lines:            8;
+    lines:            9;
     scrollbar:        false;
     spacing:          2px;
     padding:          4px 0px 0px 0px;
@@ -101,7 +103,7 @@ element selected.urgent {
 }
 
 element-icon {
-    size:             22px;
+    size:             32px;
 }
 
 element-text {
