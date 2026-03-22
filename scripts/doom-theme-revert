@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+# doom-theme-revert — Remove matugen colors for a specific app and revert it to defaults.
+# To reset ALL apps at once use doom-theme-reset instead.
+#
+# Usage:
+#   doom-theme-revert <app>    Revert a specific app to its default colorscheme
+#   doom-theme-revert --list   List all managed apps
+
+set -euo pipefail
+
+GENERATED="${XDG_CONFIG_HOME:-$HOME/.config}/matugen/generated"
+CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+die()   { printf 'doom-theme-revert: %s\n' "$*" >&2; exit 1; }
+
+usage() {
+    cat >&2 <<'EOF'
+Usage:
+  doom-theme-revert <app>    Remove matugen colors for an app and reload it
+  doom-theme-revert --list   List all managed apps
+  doom-theme-revert --help   Show this help
+EOF
+    exit 1
+}
+
+list_apps() {
+    printf 'Managed apps:\n'
+    printf '  wezterm    Terminal — falls back to Tomorrow Night (Gogh)\n'
+    printf '  starship   Shell prompt — falls back to starship built-in defaults\n'
+    printf '  neovim     Editor — matugen.lua skips silently on next load\n'
+    printf '  btop       System monitor\n'
+    printf '  mako       Notification daemon — uses mako built-in defaults\n'
+    printf '  swayosd    On-screen display — restarted without theme CSS\n'
+    printf '  swaylock   Screen locker — uses swaylock built-in defaults\n'
+    printf '  gtk        GTK 3 + 4 themes\n'
+    printf '  qt         Qt 5 + 6 themes\n'
+}
+
+[[ $# -eq 0 ]] && usage
+
+case "$1" in
+    --help|-h)
+        usage
+        ;;
+    --list|-l)
+        list_apps
+        exit 0
+        ;;
+    wezterm)
+        rm -f "$GENERATED/wezterm-colors.lua"
+        wezterm cli reload-config 2>/dev/null || :
+        printf 'wezterm: reverted — falling back to Tomorrow Night (Gogh)\n'
+        ;;
+    starship)
+        rm -f "$GENERATED/starship.toml" "$CONFIG/starship/starship.toml"
+        printf 'starship: reverted — using starship built-in defaults\n'
+        ;;
+    neovim)
+        rm -f "$GENERATED/neovim-colors.lua"
+        pkill -SIGUSR1 nvim 2>/dev/null || :
+        printf 'neovim: reverted — matugen.lua will skip silently on next load\n'
+        ;;
+    btop)
+        rm -f "$GENERATED/btop-colors.theme" "$CONFIG/btop/themes/matugen.theme"
+        printf 'btop: reverted — remove the matugen theme entry from btop config if set\n'
+        ;;
+    mako)
+        rm -f "$CONFIG/mako/config"
+        makoctl reload 2>/dev/null || :
+        printf 'mako: reverted — using mako built-in defaults\n'
+        ;;
+    swayosd)
+        rm -f "$GENERATED/swayosd-colors.css"
+        pkill -x swayosd-server 2>/dev/null || :
+        sleep 0.1
+        uwsm app -- swayosd-server >/dev/null 2>&1 & disown
+        printf 'swayosd: reverted and restarted\n'
+        ;;
+    swaylock)
+        rm -f "$CONFIG/swaylock/config"
+        printf 'swaylock: reverted — using swaylock built-in defaults on next lock\n'
+        ;;
+    gtk)
+        rm -f "$GENERATED/gtk-3.css" "$GENERATED/gtk-4.css" \
+              "$CONFIG/gtk-3.0/gtk.css" "$CONFIG/gtk-4.0/gtk.css"
+        printf 'gtk: reverted — GTK apps will use their default theme\n'
+        ;;
+    qt)
+        rm -f "$GENERATED/qt5ct-colors.conf" "$GENERATED/qt6ct-colors.conf"
+        printf 'qt: reverted — restart Qt apps to pick up the change\n'
+        ;;
+    *)
+        die "unknown app: '$1'  (run --list to see managed apps)"
+        ;;
+esac
+
+notify-send "DOOM Theme" "Reverted $1 to default colors" 2>/dev/null || :
