@@ -13,7 +13,7 @@ vt = 1
 
 [default_session]
 # Auto-login directly into mango WM via UWSM (no greeter prompt after LUKS)
-command = "uwsm start mangowc"
+command = "uwsm start mango"
 user = "$USER"
 EOF
 
@@ -21,4 +21,4 @@ EOF
 # launch the Wayland session mid-installation. Enable only; start on reboot.
 sudo systemctl enable greetd.service
 
-echo "greetd configured: auto-login as $USER → mangowc"
+echo "greetd configured: auto-login as $USER → mango"

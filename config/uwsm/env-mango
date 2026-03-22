@@ -2,7 +2,7 @@
 
 # ── Session ───────────────────────────────────────────────────────────────────
 # UWSM sets XDG_CURRENT_DESKTOP, XDG_SESSION_TYPE, XDG_SESSION_DESKTOP automatically.
-export DESKTOP_SESSION=mangowc
+export DESKTOP_SESSION=mango
 
 # ── PATH ──────────────────────────────────────────────────────────────────────
 # UWSM does not source .zshenv so PATH must be set explicitly here.
