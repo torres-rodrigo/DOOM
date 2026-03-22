@@ -76,6 +76,7 @@ alias ....l='cd ../../.. && eza -lha --icons --group-directories-first'
 # ── Git ───────────────────────────────────────────────────────────────────────
 alias gf='git fetch'                                             # git fetch
 alias gp='git pull'                                              # git pull
+alias gfp='git fetch && git pull'                                # git fetch & git pull
 ga() {                                                           # git add interactive
     local files
     files=($(git status --porcelain | rg "^.[^ }]" | cut -c4- \
@@ -91,7 +92,7 @@ alias gau='git add -u'                                           # git add updat
 alias gap='git add --patch'                                      # git add patch
 gc() { [[ $# -eq 0 ]] && git commit || git commit -m "$*"; }     # git commit
 alias gca='git commit --amend'                                   # git commit amend
-alias guc='git reset HEAD~1 --soft'                              # git undo commit but keep changes'
+alias guc='git reset HEAD~1 --soft'                              # git undo commit but keep changes
 alias guch='git reset HEAD~1 --hard'                             # git undo commit and discard changes
 alias gpu='git push'                                             # git push
 alias gst='git xstatus'                                          # git status
