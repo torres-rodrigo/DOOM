@@ -11,6 +11,9 @@ configuration {
     hover-select:        true;
     me-select-entry:     "";
     me-accept-entry:     "MousePrimary";
+    matching:            "fuzzy";
+    sort:                true;
+    sorting-method:      "fzf";
 }
 
 @theme "~/.config/rofi/themes/doom.rasi"
