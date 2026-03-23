@@ -24,7 +24,7 @@ config.color_scheme = 'Tomorrow Night (Gogh)'
 config.max_fps = 240
 config.animation_fps = 240
 
-config.font = wezterm.font_with_fallback { 'DOOMNerdFont SemiBold', 'CaskaydiaCove NF SemiBold', 'JetBrains Mono NL SemiBold' }
+config.font = wezterm.font_with_fallback { 'DOOM Nerd Font SemiBold', 'CaskaydiaCove NF SemiBold', 'JetBrains Mono NL SemiBold' }
 config.font_size = 17
 config.line_height = 1.1
 
