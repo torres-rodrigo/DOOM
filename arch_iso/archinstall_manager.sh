@@ -246,6 +246,22 @@ sed -i "s|__ROOT_SIZE__|${root_size_gib}|g" "$ARCHINSTALL_CONFIG"
 echo -e "  ${GREEN}Config files ready.${RESET}"
 echo ""
 
+# ── Optimize mirrors ──────────────────────────────────────────────────────────
+# reflector is not on the live ISO by default — install it first.
+# It rewrites /etc/pacman.d/mirrorlist with the fastest current mirrors.
+# archinstall uses that file for pacstrap downloads and copies it into the new
+# system, so this single step speeds up both the install and post-reboot pacman.
+echo -e "  ${CYAN}Finding fastest mirrors...${RESET}"
+sudo pacman -S --noconfirm --needed reflector
+reflector \
+  --latest 20 \
+  --sort rate \
+  --protocol https \
+  --download-timeout 5 \
+  --save /etc/pacman.d/mirrorlist
+echo -e "  ${GREEN}Mirrors optimized.${RESET}"
+echo ""
+
 # ── Run archinstall ───────────────────────────────────────────────────────────
 # --config  provides all system configuration (disk layout, packages, etc.)
 # --creds   provides credentials (passwords and user accounts)
