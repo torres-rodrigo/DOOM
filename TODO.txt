@@ -75,6 +75,9 @@ TODO
   add contrl functionality to terminal ctrl + e open file browser
   kill process function
   Make it work directly from the archlinux iso?
+  kokoro tts
+  tesseract text extractor
+  os zoom 
 
 wezterm
 { key = 'phys:Space', mods = 'SHIFT|CTRL', action = act.QuickSelect },
