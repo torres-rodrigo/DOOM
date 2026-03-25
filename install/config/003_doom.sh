@@ -36,3 +36,6 @@ run_logged $DOOM_INSTALL/config/hardware/mango.sh
 
 print_step "Configuring firewall"
 run_logged $DOOM_INSTALL/config/security/firewall.sh
+
+print_step "Applying kernel tuning"
+run_logged $DOOM_INSTALL/config/sysctl.sh
