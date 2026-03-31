@@ -166,7 +166,7 @@ wayland-protocols     # Standardized Wayland protocol extensions
 xorg-xwayland         # run X clients under wayland
 
 # GUI Progrmas
-firefox               # Web browser
+firefox                # Web browser
 #gimp                  # Image editor
 #inkscape              # Vector graphics editor
 #libreoffice-fresh     # Full office suite
