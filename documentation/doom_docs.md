@@ -1713,6 +1713,8 @@ Maintain regular git diff and use an alias for delta diff
 ```
 good note to add to gl aka git log, -p: shows diff changes added in commit
 Make function for the advance git command where it prompts you to enter the line numbers, maybe have a toggable preview as well
+Add a flag to ga to do a git add interactive
+make function to unstage changes same as ga
 ```
 [core]
   editor = nvim

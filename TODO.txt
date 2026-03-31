@@ -3,12 +3,7 @@ Symphony: https://github.com/vyrx-dev/dotfiles
 omarchy
 
 CHECK:
-  script to change the shell from bash to zsh on reboot
 
-
-Fonts:
-  My custom caskadia
-  Excalidraw Font
 
 Research packages:
   gopass research
@@ -43,8 +38,6 @@ perf
 typst
 emacs
 linux image viewer nsxiv, nomacs
-direnv? I think it is not needed
-devbox
 
 make tab completion on zsh work like **<Tab> fzf
 
@@ -54,6 +47,8 @@ systemd startup delay
 /boot/loader/loader.conf
 
 TODO
+  make bat always use colors
+  make rg functions and config
   vz function should write to the terminal the selected items
   Finish up fastfetch config Image
   wezterm copy command shortcut && delete entire line command, integrate multiplexer, and cool commands that i am missing for searches

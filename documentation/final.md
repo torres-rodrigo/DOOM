@@ -1,12 +1,3 @@
-# FINAL APPROACH
-
-# PRE CHROOT
-Just run archinstall, and small config later
-
-# POST CHROOT
-Seems to me mostly archinstall things with small optimazations
-ASK ABOUT PACKAGES THAT GET INSTALLED THAT I DONT KNOW ABOUT
-
 ask if there are any easy configurations that cachy linux uses that are overall better than arch linux defaults
 AUR improvements
 Pacman verification that valid users set up the packages
@@ -17,6 +8,3 @@ Enables a systemd service that automatically copies the latest systemd-boot EFI 
 
 - `2>/dev/null` — suppresses output if the service isn't found.
 - `|| true` — prevents `set -e` from aborting if the service doesn't exist on older systemd versions. Silently skips.
-
-zram either archinstall default or 8gb
-
