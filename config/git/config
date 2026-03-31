@@ -19,6 +19,7 @@
     newMoved = magenta
 
 [core]
+    editor = nvim
     excludesFile = ~/.config/git/ignore
 
 [delta]
