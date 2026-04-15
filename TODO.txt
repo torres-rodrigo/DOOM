@@ -2,6 +2,23 @@ CalOS: https://github.com/criticalart/calos
 Symphony: https://github.com/vyrx-dev/dotfiles
 omarchy
 
+functionality:
+- mango fully configured
+- screenshot/screenrecording util
+- Neovim setup
+- pdf reader and editor
+- obsidian setup
+- usefull scripts and actual ergonomic way to call them
+- programming languages setup
+- gopass setup
+- image viewer
+- zen browser config with profiles, hardened, extensions, bookmarks
+- firewall
+- minimal bar
+- volumen and brightness toggles
+- clipboard history
+- monitors setup
+
 CHECK:
 
 
@@ -21,7 +38,6 @@ Research packages:
   perf ?
   obsidian cli
   recent projects script, fzf , templates?
-  skim, rust fzf replacement
   typst
   emacs
   docker/replaced by podman
@@ -72,7 +88,8 @@ TODO
   Make it work directly from the archlinux iso?
   kokoro tts
   tesseract text extractor
-  os zoom 
+  os zoom
+  apperance apps for consistency, themes and icons
 
 wezterm
 { key = 'phys:Space', mods = 'SHIFT|CTRL', action = act.QuickSelect },
@@ -312,8 +329,6 @@ myMethod() {
 }
  
 curl "wttr.in"
-
-
 
 Logo
 start with "italic" inverted satanic cross
