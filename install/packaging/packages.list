@@ -130,7 +130,9 @@ swaylock              # Wayland screen locker for wlroots compositors — trigge
 # ── Fonts ─────────────────────────────────────────────────────────────────────
 fontconfig            # Font rendering configuration
 noto-fonts            # Unicode coverage — no missing glyphs
+noto-fonts-cjk
 noto-fonts-emoji      # Emoji support
+noto-fonts-extra
 ttf-cascadia-code-nerd # Primary coding font
 
 # ── Input ─────────────────────────────────────────────────────────────────────
