@@ -8,35 +8,35 @@
 
 // In-memory structures
 
-&nbsp; HashMap<String, HashSet<u64>>     // tag -> file IDs
+HashMap<String, HashSet<u64>>     // tag -> file IDs
 
-&nbsp; HashMap<u64, FileMetadata>        // file ID -> metadata
-
-
-
-&nbsp; // Serialize to disk with something like:
-
-&nbsp; bincode or postcard for serialization
-
-&nbsp; memmap2 for memory-mapped files
+HashMap<u64, FileMetadata>        // file ID -> metadata
 
 
 
-&nbsp; Performance:
+// Serialize to disk with something like:
 
-&nbsp; - Search: O(1) hash lookup = nanoseconds to microseconds
+bincode or postcard for serialization
 
-&nbsp; - Load time: Memory-map the file = instant startup
-
-&nbsp; - Write: Batch updates, periodic flush to disk
+memmap2 for memory-mapped files
 
 
 
-&nbsp; This is the absolute fastest approach. You control everything.
+Performance:
+
+- Search: O(1) hash lookup = nanoseconds to microseconds
+
+- Load time: Memory-map the file = instant startup
+
+- Write: Batch updates, periodic flush to disk
+
+
+
+This is the absolute fastest approach. You control everything.
 
 ```
 
-&nbsp; 
+
 
 
 
@@ -44,27 +44,27 @@
 
 ```
 
-&nbsp; You're right - Tantivy already handles persistence. It writes indexes to disk and has document storage built-in.
+You're right - Tantivy already handles persistence. It writes indexes to disk and has document storage built-in.
 
 
 
-&nbsp; // Tantivy stores both:
+// Tantivy stores both:
 
-&nbsp; // - The inverted index (tags -> documents)
+// - The inverted index (tags -> documents)
 
-&nbsp; // - The document store (file metadata)
+// - The document store (file metadata)
 
 
 
-&nbsp; Performance:
+Performance:
 
-&nbsp; - Search: 1 microsecond per document
+- Search: 1 microsecond per document
 
-&nbsp; - Indexing: Multi-threaded, highly optimized
+- Indexing: Multi-threaded, highly optimized
 
-&nbsp; - Persistence: Built-in, crash-safe
+- Persistence: Built-in, crash-safe
 
-&nbsp; - Startup: Loads index from disk automatically
+- Startup: Loads index from disk automatically
 
 ```
 
@@ -86,13 +86,13 @@ First, your benchmark of 1 second for 1 million files is incredibly generous. Wi
 
 &nbsp;The Math
 
-&nbsp; With a HashMap<String, HashSet<u64>>:
+With a HashMap<String, HashSet<u64>>:
 
-&nbsp; - Hash lookup: O(1) ≈ 50-200 nanoseconds
+- Hash lookup: O(1) ≈ 50-200 nanoseconds
 
-&nbsp; - Set intersection (5 tags): ≈ 1-10 microseconds
+- Set intersection (5 tags): ≈ 1-10 microseconds
 
-&nbsp; - 1 million files with 10 tags each: < 1 millisecond
+- 1 million files with 10 tags each: < 1 millisecond
 
 
 
@@ -100,57 +100,57 @@ Search/Query Performance
 
 
 
-&nbsp; - Single tag query: < 1ms (microseconds ideally)
+- Single tag query: < 1ms (microseconds ideally)
 
-&nbsp; - Multi-tag AND query (3-5 tags): < 10ms
+- Multi-tag AND query (3-5 tags): < 10ms
 
-&nbsp; - Complex boolean queries: < 50ms
+- Complex boolean queries: < 50ms
 
-&nbsp; - Full-text search (if using Tantivy): < 100ms
+- Full-text search (if using Tantivy): < 100ms
 
-&nbsp; - Search 10 million files: < 100ms for tag queries
-
-
-
-&nbsp; Indexing Performance
+- Search 10 million files: < 100ms for tag queries
 
 
 
-&nbsp; - Initial index build (1M files): < 30 seconds
-
-&nbsp; - Incremental tag update (single file): < 1ms
-
-&nbsp; - Batch tag operations (1000 files): < 100ms
+Indexing Performance
 
 
 
-&nbsp; Application Performance
+- Initial index build (1M files): < 30 seconds
+
+- Incremental tag update (single file): < 1ms
+
+- Batch tag operations (1000 files): < 100ms
 
 
 
-&nbsp; - Startup time (loading index): < 2 seconds for 1M files
-
-&nbsp; - Memory usage: ~100-500 MB for 1M files with metadata
-
-&nbsp; - UI responsiveness: 60 FPS when scrolling through results
-
-&nbsp; - File system watch latency: < 100ms to detect new files
+Application Performance
 
 
 
-&nbsp; UI Rendering
+- Startup time (loading index): < 2 seconds for 1M files
+
+- Memory usage: ~100-500 MB for 1M files with metadata
+
+- UI responsiveness: 60 FPS when scrolling through results
+
+- File system watch latency: < 100ms to detect new files
 
 
 
-&nbsp; - Render 1000 visible file entries: 16ms (60 FPS)
-
-&nbsp; - Filter/search results update: < 16ms to maintain 60 FPS
-
-&nbsp; - Thumbnail loading: Async, non-blocking
+UI Rendering
 
 
 
-&nbsp; A good real-world benchmark: "Search 5 million files with 3 tag filters and display results in under 50ms"
+- Render 1000 visible file entries: 16ms (60 FPS)
+
+- Filter/search results update: < 16ms to maintain 60 FPS
+
+- Thumbnail loading: Async, non-blocking
+
+
+
+A good real-world benchmark: "Search 5 million files with 3 tag filters and display results in under 50ms"
 
 ```
 
@@ -164,25 +164,25 @@ Search/Query Performance
 
 &nbsp;1. egui (Easiest + Fast)
 
-&nbsp; - Immediate mode, write regular Rust
+- Immediate mode, write regular Rust
 
-&nbsp; - Used in production by many projects
+- Used in production by many projects
 
-&nbsp; - Very lightweight and simple
+- Very lightweight and simple
 
-&nbsp; - https://www.boringcactus.com/2025/04/13/2025-survey-of-rust-gui-libraries.html
+- https://www.boringcactus.com/2025/04/13/2025-survey-of-rust-gui-libraries.html
 
 
 
-&nbsp; 2. Iced (Modern + Scalable)
+2. Iced (Modern + Scalable)
 
-&nbsp; - https://byteiota.com/iced-0-14-rust-gui-gets-reactive-rendering-time-travel/
+- https://byteiota.com/iced-0-14-rust-gui-gets-reactive-rendering-time-travel/
 
-&nbsp; - Used by System76's COSMIC desktop
+- Used by System76's COSMIC desktop
 
-&nbsp; - Elm-inspired architecture, good for complex UIs
+- Elm-inspired architecture, good for complex UIs
 
-&nbsp; - Excellent performance for mostly-static UIs
+- Excellent performance for mostly-static UIs
 
 ```
 
@@ -202,40 +202,24 @@ Ratatui - The standard for Rust TUIs, excellent performance
 
 \### Structure
 
-&nbsp;Project Structure:
-
-&nbsp; src/
-
-&nbsp; ├── main.rs          # CLI parsing, routing to UI
-
-&nbsp; ├── core/
-
-&nbsp; │   ├── mod.rs       # Public API
-
-&nbsp; │   ├── index.rs     # Inverted index implementation
-
-&nbsp; │   ├── search.rs    # Query parsing \& execution
-
-&nbsp; │   ├── watcher.rs   # File system monitoring
-
-&nbsp; │   └── storage.rs   # Persistence (SQLite/bincode)
-
-&nbsp; ├── tui/
-
-&nbsp; │   ├── mod.rs       # TUI entry point
-
-&nbsp; │   ├── app.rs       # TUI state machine
-
-&nbsp; │   └── ui.rs        # Ratatui rendering
-
-&nbsp; └── gui/
-
-&nbsp;     ├── mod.rs       # GUI entry point
-
-&nbsp;     ├── app.rs       # Iced application
-
-&nbsp;     └── widgets.rs   # Custom widgets
-
+Project Structure:
+ src/
+ ├── main.rs          # CLI parsing, routing to UI
+ ├── core/
+ │   ├── mod.rs       # Public API
+ │   ├── index.rs     # Inverted index implementation
+ │   ├── search.rs    # Query parsing \& execution
+ │   ├── watcher.rs   # File system monitoring
+ │   └── storage.rs   # Persistence (SQLite/bincode)
+ ├── tui/
+ │   ├── mod.rs       # TUI entry point
+ │   ├── app.rs       # TUI state machine
+ │   └── ui.rs        # Ratatui rendering
+ └── gui/
+     ├── mod.rs       # GUI entry point
+     ├── app.rs       # Iced application
+     └── widgets.rs   # Custom widgets
+     
 \# NAMES
 
 ```
@@ -260,15 +244,15 @@ Ratatui - The standard for Rust TUIs, excellent performance
 
 Regular Names
 
-&nbsp; 1. Nexus - Central connection point for all files
+1. Nexus - Central connection point for all files
 
-&nbsp; 2. Sift - Quick file filtering
+2. Sift - Quick file filtering
 
-&nbsp; 3. Zenith - Peak file organization
+3. Zenith - Peak file organization
 
-&nbsp; 4. Catalyst - Accelerating file discovery
+4. Catalyst - Accelerating file discovery
 
-&nbsp; 5. Codex 
+5. Codex 
 
 
 
